@@ -396,6 +396,14 @@ Batua.create({
                             )}
                         </Highlight>
                     </div>
+                    <div className="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                        <p className="text-sm text-gray-700">
+                            <strong>Note:</strong> After creating Batua, you can
+                            use your regular wagmi/ethers libraries and Batua
+                            will behave like an injected wallet compatible with
+                            EIP-6963.
+                        </p>
+                    </div>
                 </div>
             </div>
         </div>
