@@ -22,7 +22,7 @@
                 "react-dom@^19.0.0",
                 "lucide-react@^0.471.1"
             ],
-            "registryDependencies": ["dialog", "button"],
+            "registryDependencies": ["dialog", "button", "alert"],
             "categories": ["wallet", "ethereum", "account-abstraction"],
             "files": [
                 {

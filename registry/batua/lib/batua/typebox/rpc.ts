@@ -10,7 +10,49 @@ import {
     Value
 } from "@/registry/batua/lib/batua/typebox/schema"
 
-export * from "@/registry/batua/lib/batua/typebox/request"
+import { eth_accounts } from "@/registry/batua/lib/batua/typebox/request"
+import { eth_chainId } from "@/registry/batua/lib/batua/typebox/request"
+import { eth_requestAccounts } from "@/registry/batua/lib/batua/typebox/request"
+import { eth_sendTransaction } from "@/registry/batua/lib/batua/typebox/request"
+import { eth_signTypedData_v4 } from "@/registry/batua/lib/batua/typebox/request"
+import { experimental_permissions } from "@/registry/batua/lib/batua/typebox/request"
+import { experimental_createAccount } from "@/registry/batua/lib/batua/typebox/request"
+import { experimental_grantPermissions } from "@/registry/batua/lib/batua/typebox/request"
+import { experimental_prepareUpgradeAccount } from "@/registry/batua/lib/batua/typebox/request"
+import { experimental_revokePermissions } from "@/registry/batua/lib/batua/typebox/request"
+import { experimental_upgradeAccount } from "@/registry/batua/lib/batua/typebox/request"
+import { personal_sign } from "@/registry/batua/lib/batua/typebox/request"
+import { batua_ping } from "@/registry/batua/lib/batua/typebox/request"
+import { wallet_connect } from "@/registry/batua/lib/batua/typebox/request"
+import { wallet_disconnect } from "@/registry/batua/lib/batua/typebox/request"
+import { wallet_getCallsStatus } from "@/registry/batua/lib/batua/typebox/request"
+import { wallet_getCapabilities } from "@/registry/batua/lib/batua/typebox/request"
+import { wallet_prepareCalls } from "@/registry/batua/lib/batua/typebox/request"
+import { wallet_sendCalls } from "@/registry/batua/lib/batua/typebox/request"
+import { wallet_sendPreparedCalls } from "@/registry/batua/lib/batua/typebox/request"
+
+export {
+    eth_accounts,
+    eth_chainId,
+    eth_requestAccounts,
+    eth_sendTransaction,
+    eth_signTypedData_v4,
+    experimental_permissions,
+    experimental_createAccount,
+    experimental_grantPermissions,
+    experimental_prepareUpgradeAccount,
+    experimental_revokePermissions,
+    experimental_upgradeAccount,
+    personal_sign,
+    batua_ping,
+    wallet_connect,
+    wallet_disconnect,
+    wallet_getCallsStatus,
+    wallet_getCapabilities,
+    wallet_prepareCalls,
+    wallet_sendCalls,
+    wallet_sendPreparedCalls
+}
 
 export const Request = Type.Union([
     RpcRequest.eth_accounts.Request,
