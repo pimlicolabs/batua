@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-namespace */
 import {
     Kind,
     type StaticDecode as StaticDecode_typebox,
@@ -13,10 +14,7 @@ import {
 export { Type } from "@sinclair/typebox/type"
 export { Value, Encode, Decode } from "@sinclair/typebox/value"
 
-import type {
-    DeepReadonly,
-    OneOf as OneOfType
-} from "@/registry/batua/batua/typebox/types"
+import type { DeepReadonly } from "@/registry/batua/batua/typebox/types"
 
 export function OneOf<schemas extends TSchema[]>(
     schemas: [...schemas]
@@ -32,8 +30,7 @@ export declare namespace OneOf {
     export interface ReturnType<T extends TSchema[] = TSchema[]>
         extends TSchema {
         [Kind]: "Union"
-        // @ts-expect-error
-        static: OneOfType<OneOfStatic<T, this["params"]>>
+        static: OneOfStatic<T, this["params"]>
     }
 
     export type OneOf<T extends TSchema[]> = T extends []

@@ -39,4 +39,5 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
+public/r/batua.json
 next-env.d.ts

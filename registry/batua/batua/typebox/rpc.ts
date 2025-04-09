@@ -38,6 +38,7 @@ export const Request = Type.Union([
 export function parseRequest(request: unknown): parseRequest.ReturnType {
     const raw = Value.Convert(Request, request)
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const method = RpcRequest[(raw as any).method as keyof typeof RpcRequest]
     if (method) {
         const error = Value.Errors(method.Request, raw).First()
@@ -61,6 +62,7 @@ export function parseRequest(request: unknown): parseRequest.ReturnType {
     } as never
 }
 
+/* eslint-disable @typescript-eslint/no-namespace */
 export declare namespace parseRequest {
     export type ReturnType = typeof Request extends Union<infer U>
         ? {

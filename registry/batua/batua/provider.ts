@@ -143,7 +143,7 @@ export const Provider = {
                                     }
                                 )
 
-                            if (receipts.status === "CONFIRMED") {
+                            if (receipts.status === "success") {
                                 txHash = receipts.receipts?.[0]?.transactionHash
                             }
                         }

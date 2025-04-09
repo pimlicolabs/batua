@@ -19,6 +19,7 @@ import {
 import { useState } from "react"
 import { Loader } from "lucide-react"
 import { formatEther } from "ox/Value"
+import type { Address, Hex } from "viem"
 
 export const SendCalls = ({
     onComplete,
@@ -124,7 +125,13 @@ export const SendCalls = ({
         setSendingTransaction(false)
     }
 
-    const calls = (queueRequest?.request.params as any)[0].calls as any
+    const calls = (
+        queueRequest?.request.params as [
+            {
+                calls: { to: Address; data: Hex; value: bigint }[]
+            }
+        ]
+    )[0].calls
 
     return (
         <Dialog open={!!queueRequest} onOpenChange={onOpenChange}>
@@ -136,7 +143,7 @@ export const SendCalls = ({
                     </DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
-                    {calls.map((call: any, index: number) => (
+                    {calls.map((call, index: number) => (
                         // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
                         <div key={index} className="border rounded-md p-3">
                             <p className="text-sm font-medium">

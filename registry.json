@@ -27,7 +27,8 @@
             "files": [
                 {
                     "path": "registry/batua/batua/components/Login.tsx",
-                    "type": "registry:component"
+                    "type": "registry:component",
+                    "target": "components/batua/Login.tsx"
                 },
                 {
                     "path": "registry/batua/batua/components/Main.tsx",

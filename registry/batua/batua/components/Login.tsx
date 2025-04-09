@@ -87,7 +87,7 @@ export const Login = ({
                     id: verifiedCredential.id,
                     publicKey: verifiedCredential.publicKey
                 }
-            } catch (error) {
+            } catch {
                 onComplete({
                     queueRequest: {
                         request: queueRequest.request,

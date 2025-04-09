@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-namespace */
 import * as C from "@/registry/batua/batua/typebox/capabilities"
 import * as Permissions from "@/registry/batua/batua/typebox/permissions"
 import * as Primitive from "@/registry/batua/batua/typebox/primitive"

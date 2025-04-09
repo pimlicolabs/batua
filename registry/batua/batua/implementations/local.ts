@@ -16,6 +16,7 @@ export const local = (): Implementation => {
     function getProvider(store: Store) {
         return Provider.from({
             async request(r) {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 const request = requestStore.prepare(r as any)
 
                 // When we receive a request, we need to add it to the queue.
@@ -58,6 +59,7 @@ export const local = (): Implementation => {
 
                             // If the request was successful, resolve with the result.
                             if (queued.status === "success")
+                                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                                 resolve(queued.result as any)
                             // Otherwise, reject with EIP-1193 Provider error.
                             else reject(Provider.parseError(queued.error))
@@ -104,19 +106,26 @@ export const local = (): Implementation => {
                     accounts
                 }
             },
-            getCallsStatus: async ({ userOperationHash, timeout }) => {
+            getCallsStatus: async ({ userOperationHash, timeout, store }) => {
                 const bundlerClient = getBundlerClient({
                     internal
                 })
 
+                const chainId = store.getState().chain.id
                 try {
                     const receipt =
                         await bundlerClient.waitForUserOperationReceipt({
                             hash: userOperationHash,
                             timeout: timeout ?? 1_000 // 1 second
                         })
+                    const userOpStatus = receipt.success
                     return {
-                        status: "CONFIRMED",
+                        id: userOperationHash,
+                        version: "1.0",
+                        status: "success",
+                        chainId,
+                        statusCode: userOpStatus ? 200 : 500,
+                        atomic: true,
                         receipts: [
                             {
                                 status: receipt.receipt.status,
@@ -128,9 +137,14 @@ export const local = (): Implementation => {
                             }
                         ]
                     }
-                } catch (e) {
+                } catch {
                     return {
-                        status: "PENDING"
+                        id: userOperationHash,
+                        version: "1.0",
+                        chainId,
+                        atomic: true,
+                        statusCode: 100,
+                        status: "pending"
                     }
                 }
             },
