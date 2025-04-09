@@ -1,13 +1,13 @@
-import * as Permissions from "./permissions"
-import * as Primitive from "./primitive"
-import * as Schema from "./schema"
-import { Type } from "./schema"
+import * as Permissions from "@/registry/batua/batua/typebox/permissions"
+import * as Primitive from "@/registry/batua/batua/typebox/primitive"
+import * as Schema from "@/registry/batua/batua/typebox/schema"
+import { Type } from "@/registry/batua/batua/typebox/schema"
 
 export namespace createAccount {
     export const Request = Type.Union([
         Type.Boolean(),
         Type.Object({
-            chainId: Schema.Optional(Primitive.Number),
+            chainId: Schema.Optional(Primitive.TypeboxNumber),
             label: Schema.Optional(Type.String())
         })
     ])

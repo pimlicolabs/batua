@@ -13,7 +13,10 @@ import {
 export { Type } from "@sinclair/typebox/type"
 export { Value, Encode, Decode } from "@sinclair/typebox/value"
 
-import type { DeepReadonly, OneOf as OneOfType } from "./types"
+import type {
+    DeepReadonly,
+    OneOf as OneOfType
+} from "@/registry/batua/batua/typebox/types"
 
 export function OneOf<schemas extends TSchema[]>(
     schemas: [...schemas]

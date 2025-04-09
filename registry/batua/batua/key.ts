@@ -1,5 +1,5 @@
-import type { Hex, WebAuthnP256 } from "ox"
-import type { Key } from "./type"
+import type { Hex } from "ox"
+import type { Key } from "@/registry/batua/batua/type"
 
 export const fromWebAuthnP256 = ({
     credential,

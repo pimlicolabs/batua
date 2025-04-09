@@ -1,11 +1,11 @@
 import { sepolia } from "viem/chains"
 import { http, createConfig } from "wagmi"
 import { coinbaseWallet } from "wagmi/connectors"
-import { Batua } from "@/registry/batua"
+import { Batua } from "@/registry/batua/batua"
 
 const pimlicoApiKey = process.env.NEXT_PUBLIC_PIMLICO_API_KEY || ""
 
-Batua.use({
+Batua.create({
     transports: {
         [sepolia.id]: {
             rpc: http("https://ethereum-sepolia-rpc.publicnode.com"),

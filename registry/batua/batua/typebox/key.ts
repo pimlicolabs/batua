@@ -1,10 +1,10 @@
-import * as Primitive from "../typebox/primitive"
-import * as Schema from "../typebox/schema"
-import { Type } from "../typebox/schema"
+import * as Primitive from "@/registry/batua/batua/typebox/primitive"
+import * as Schema from "@/registry/batua/batua/typebox/schema"
+import { Type } from "@/registry/batua/batua/typebox/schema"
 
 export const Base = Type.Object({
     /** The expiry of the key. */
-    expiry: Primitive.Number,
+    expiry: Primitive.TypeboxNumber,
     /** The hash of the key. */
     hash: Primitive.Hex,
     /** Public key. */
@@ -49,7 +49,7 @@ export type SignatureVerificationPermission = Schema.StaticDecode<
 
 export const SpendPermissions = Type.Array(
     Type.Object({
-        limit: Primitive.BigInt,
+        limit: Primitive.TypeboxBigInt,
         period: Type.Union([
             Type.Literal("minute"),
             Type.Literal("hour"),

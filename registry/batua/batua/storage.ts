@@ -1,5 +1,5 @@
 import { createStore, del, get, set } from "idb-keyval"
-import type { Storage } from "./type"
+import type { Storage } from "@/registry/batua/batua/type"
 
 export const idb = (): Storage => {
     const store =

@@ -1,11 +1,11 @@
-import * as Key from "./key"
-import * as Primitive from "./primitive"
-import * as Schema from "./schema"
-import { Type } from "./schema"
+import * as Key from "@/registry/batua/batua/typebox/key"
+import * as Primitive from "@/registry/batua/batua/typebox/primitive"
+import * as Schema from "@/registry/batua/batua/typebox/schema"
+import { Type } from "@/registry/batua/batua/typebox/schema"
 
 export const Permissions = Type.Object({
     address: Primitive.Address,
-    chainId: Schema.Optional(Primitive.Number),
+    chainId: Schema.Optional(Primitive.TypeboxNumber),
     expiry: Type.Number(),
     id: Primitive.Hex,
     key: Type.Pick(Key.Base, ["publicKey", "type"]),
@@ -21,7 +21,7 @@ export type Permissions = Schema.StaticDecode<typeof Permissions>
 
 export const Request = Type.Object({
     address: Schema.Optional(Primitive.Address),
-    chainId: Schema.Optional(Primitive.Number),
+    chainId: Schema.Optional(Primitive.TypeboxNumber),
     expiry: Type.Number({ minimum: 1 }),
     key: Schema.Optional(Permissions.properties.key),
     permissions: Permissions.properties.permissions

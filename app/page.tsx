@@ -8,7 +8,6 @@ import { useSendTransaction, useWaitForTransactionReceipt } from "wagmi"
 import { useCallback } from "react"
 import { useAccount, useConnect, useDisconnect } from "wagmi"
 import { Button } from "@/components/ui/button"
-import { Transaction } from "ox"
 
 // This page displays items from the custom registry.
 // You are free to implement this with your own design as needed.
@@ -24,10 +23,9 @@ export default function Home() {
         isPending
     } = useSendTransaction()
 
-    const { data: receipt, isPending: isReceiptPending } =
-        useWaitForTransactionReceipt({
-            hash: transactionReference
-        })
+    const { data: receipt } = useWaitForTransactionReceipt({
+        hash: transactionReference
+    })
 
     // console.log({
     //     transactionHash: transactionReference,

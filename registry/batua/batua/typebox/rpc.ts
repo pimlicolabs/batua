@@ -2,10 +2,15 @@ import * as Json from "ox/Json"
 import * as RpcResponse from "ox/RpcResponse"
 
 import type { Union } from "@sinclair/typebox/type"
-import * as RpcRequest from "./request"
-import { type StaticDecode, type StaticEncode, Type, Value } from "./schema"
+import * as RpcRequest from "@/registry/batua/batua/typebox/request"
+import {
+    type StaticDecode,
+    type StaticEncode,
+    Type,
+    Value
+} from "@/registry/batua/batua/typebox/schema"
 
-export * from "./request"
+export * from "@/registry/batua/batua/typebox/request"
 
 export const Request = Type.Union([
     RpcRequest.eth_accounts.Request,

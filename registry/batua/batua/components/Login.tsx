@@ -1,6 +1,6 @@
 "use client"
-import { type Bytes, Hex, WebAuthnP256 } from "ox"
-import type { QueuedRequest, Internal } from "../type"
+import { WebAuthnP256 } from "ox"
+import type { QueuedRequest, Internal } from "@/registry/batua/batua/type"
 import { Button } from "@/components/ui/button"
 import {
     Dialog,
@@ -12,25 +12,18 @@ import {
 import { AlertCircle, LogIn } from "lucide-react"
 import { Provider } from "ox"
 import { toKernelSmartAccount } from "permissionless/accounts"
-import { getClient } from "../helpers/getClient"
+import { getClient } from "@/registry/batua/batua/helpers/getClient"
 import {
     createWebAuthnCredential,
     entryPoint07Address,
     toWebAuthnAccount
 } from "viem/account-abstraction"
 import { createPasskeyServerClient } from "permissionless/clients/passkeyServer"
-import * as Key from "../key"
+import * as Key from "@/registry/batua/batua/key"
 import { useCallback, useState } from "react"
-import { Alert, AlertDescription } from "../../../components/ui/alert"
+import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Errors } from "ox"
 import { BaseError } from "viem"
-
-function toBytes(input: ArrayBufferView | ArrayBuffer): Uint8Array {
-    if (input instanceof ArrayBuffer) {
-        return new Uint8Array(input)
-    }
-    return new Uint8Array(input.buffer, input.byteOffset, input.byteLength)
-}
 
 export const Login = ({
     onComplete,

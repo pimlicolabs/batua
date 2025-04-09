@@ -1,11 +1,14 @@
 import { Hex, Provider, RpcRequest } from "ox"
-import type { Implementation, Internal, QueuedRequest, Store } from "../type"
+import type {
+    Implementation,
+    Internal,
+    Store
+} from "@/registry/batua/batua/type"
 
 import ReactDOM from "react-dom/client"
 import React from "react"
-import { Main } from "../components/Main"
-import type { GetCallsStatusReturnType } from "viem/experimental"
-import { getBundlerClient } from "@/registry/batua/helpers/getBundlerClient"
+import { Main } from "@/registry/batua/batua/components/Main"
+import { getBundlerClient } from "@/registry/batua/batua/helpers/getBundlerClient"
 
 export const local = (): Implementation => {
     const requestStore = RpcRequest.createStore()
@@ -82,7 +85,9 @@ export const local = (): Implementation => {
 
                 const accounts = await (async () => {
                     if (request.method === "eth_requestAccounts") {
-                        const address = await provider.request(request)
+                        const address = await provider.request({
+                            method: "eth_requestAccounts"
+                        })
                         return address.map(
                             (address) =>
                                 ({

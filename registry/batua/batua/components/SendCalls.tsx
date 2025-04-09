@@ -6,12 +6,12 @@ import {
     DialogHeader,
     DialogTitle
 } from "@/components/ui/dialog"
-import type { Internal, QueuedRequest } from "../type"
-import { Provider, PublicKey, RpcRequest } from "ox"
+import type { Internal, QueuedRequest } from "@/registry/batua/batua/type"
+import { Provider, RpcRequest } from "ox"
 import { Button } from "@/components/ui/button"
 import { toKernelSmartAccount } from "permissionless/accounts"
-import { getClient } from "../helpers/getClient"
-import { getSmartAccountClient } from "../helpers/getSmartAccountClient"
+import { getClient } from "@/registry/batua/batua/helpers/getClient"
+import { getSmartAccountClient } from "@/registry/batua/batua/helpers/getSmartAccountClient"
 import {
     entryPoint07Address,
     toWebAuthnAccount
@@ -19,7 +19,6 @@ import {
 import { useState } from "react"
 import { Loader } from "lucide-react"
 import { formatEther } from "ox/Value"
-import { getPaymasterClient } from "@/registry/batua/helpers/getPaymasterClient"
 
 export const SendCalls = ({
     onComplete,
@@ -125,7 +124,7 @@ export const SendCalls = ({
         setSendingTransaction(false)
     }
 
-    let calls = (queueRequest?.request.params as any)[0].calls as any
+    const calls = (queueRequest?.request.params as any)[0].calls as any
 
     return (
         <Dialog open={!!queueRequest} onOpenChange={onOpenChange}>

@@ -1,5 +1,5 @@
 import { http, type WalletCapabilities, type Chain, type Transport } from "viem"
-import type { Internal } from "../type"
+import type { Internal } from "@/registry/batua/batua/type"
 import {
     createPaymasterClient,
     type PaymasterClient,
@@ -11,7 +11,7 @@ import {
     type SmartAccountClient
 } from "permissionless"
 import { createPimlicoClient } from "permissionless/clients/pimlico"
-import { getPaymasterClient } from "@/registry/batua/helpers/getPaymasterClient"
+import { getPaymasterClient } from "@/registry/batua/batua/helpers/getPaymasterClient"
 
 const clientCache = new Map<
     string,

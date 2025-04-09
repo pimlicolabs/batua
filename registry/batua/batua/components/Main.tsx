@@ -1,7 +1,7 @@
-import React, { useEffect } from "react"
-import type { QueuedRequest, Internal } from "../type"
-import { Login } from "./Login"
-import { SendCalls } from "./SendCalls"
+import React from "react"
+import type { QueuedRequest, Internal } from "@/registry/batua/batua/type"
+import { Login } from "@/registry/batua/batua/components/Login"
+import { SendCalls } from "@/registry/batua/batua/components/SendCalls"
 
 export const Main = ({ internal }: { internal: Internal }) => {
     const [queueRequest, setQueueRequest] =

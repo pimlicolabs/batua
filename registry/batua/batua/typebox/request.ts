@@ -1,8 +1,8 @@
-import * as C from "./capabilities"
-import * as Permissions from "./permissions"
-import * as Primitive from "./primitive"
-import * as Schema from "./schema"
-import { Type } from "./schema"
+import * as C from "@/registry/batua/batua/typebox/capabilities"
+import * as Permissions from "@/registry/batua/batua/typebox/permissions"
+import * as Primitive from "@/registry/batua/batua/typebox/primitive"
+import * as Schema from "@/registry/batua/batua/typebox/schema"
+import { Type } from "@/registry/batua/batua/typebox/schema"
 
 export namespace eth_accounts {
     export const Request = Type.Object({
@@ -41,11 +41,11 @@ export namespace eth_sendTransaction {
         method: Type.Literal("eth_sendTransaction"),
         params: Type.Tuple([
             Type.Object({
-                chainId: Schema.Optional(Primitive.Number),
+                chainId: Schema.Optional(Primitive.TypeboxNumber),
                 data: Schema.Optional(Primitive.Hex),
                 from: Primitive.Address,
                 to: Primitive.Address,
-                value: Schema.Optional(Primitive.BigInt)
+                value: Schema.Optional(Primitive.TypeboxBigInt)
             })
         ])
     })
@@ -69,7 +69,7 @@ export namespace eth_signTypedData_v4 {
 export namespace experimental_createAccount {
     export const Parameters = Type.Intersect([
         Type.Object({
-            chainId: Schema.Optional(Primitive.Number),
+            chainId: Schema.Optional(Primitive.TypeboxNumber),
             label: Schema.Optional(Type.String())
         })
     ])
@@ -133,7 +133,7 @@ export namespace experimental_prepareUpgradeAccount {
 
     export const Parameters = Type.Object({
         address: Primitive.Address,
-        chainId: Schema.Optional(Primitive.Number),
+        chainId: Schema.Optional(Primitive.TypeboxNumber),
         capabilities: Schema.Optional(Capabilities),
         label: Schema.Optional(Type.String())
     })
@@ -332,7 +332,7 @@ export namespace wallet_prepareCalls {
             Type.Object({
                 to: Primitive.Address,
                 data: Schema.Optional(Primitive.Hex),
-                value: Schema.Optional(Primitive.BigInt)
+                value: Schema.Optional(Primitive.TypeboxBigInt)
             })
         ),
         key: Type.Object({
@@ -345,7 +345,7 @@ export namespace wallet_prepareCalls {
             ])
         }),
         capabilities: Schema.Optional(Capabilities),
-        chainId: Schema.Optional(Primitive.Number),
+        chainId: Schema.Optional(Primitive.TypeboxNumber),
         from: Schema.Optional(Primitive.Address),
         version: Schema.Optional(Type.String())
     })
@@ -366,7 +366,7 @@ export namespace wallet_prepareCalls {
                 type: Type.Literal("delegated")
             }),
             calls: Parameters.properties.calls,
-            nonce: Primitive.BigInt
+            nonce: Primitive.TypeboxBigInt
         }),
         digest: Primitive.Hex,
         key: Parameters.properties.key

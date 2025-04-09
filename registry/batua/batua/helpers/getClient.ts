@@ -1,18 +1,14 @@
-import type { Chain, Client, Transport } from "viem"
-import type { Internal } from "../type"
-import {
-    type BundlerClient,
-    createBundlerClient
-} from "viem/account-abstraction"
+import { createClient, type Chain, type Client, type Transport } from "viem"
+import type { Internal } from "@/registry/batua/batua/type"
 
-const clientCache = new Map<string, BundlerClient<Transport, Chain>>()
+const clientCache = new Map<string, Client<Transport, Chain>>()
 
-export const getBundlerClient = <chains extends readonly [Chain, ...Chain[]]>({
+export const getClient = ({
     internal,
     chainId
-}: { internal: Internal; chainId?: number | undefined }): BundlerClient<
+}: { internal: Internal; chainId: number | undefined }): Client<
     Transport,
-    chains[number]
+    Chain
 > => {
     const { config, id, store } = internal
     const { chains } = config
@@ -35,9 +31,9 @@ export const getBundlerClient = <chains extends readonly [Chain, ...Chain[]]>({
 
         return client
     }
-    const client = createBundlerClient({
+    const client = createClient({
         chain,
-        transport: transport.bundler,
+        transport: transport.rpc,
         pollingInterval: 1_000
     })
     clientCache.set(key, client)

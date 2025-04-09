@@ -1,78 +1,113 @@
 {
     "$schema": "https://ui.shadcn.com/schema/registry.json",
-    "name": "acme",
-    "homepage": "https://acme.com",
+    "name": "batua",
+    "homepage": "https://batua.xyz",
+    "author": "Pimlico Labs",
+    "description": "A wallet provider for Ethereum applications",
     "items": [
         {
             "name": "batua",
             "type": "registry:block",
             "title": "Batua",
-            "description": "A wallet provider for wagmi.",
-            "registryDependencies": ["dialog"],
+            "description": "A wallet provider for wagmi with support for account abstraction.",
+            "dependencies": [
+                "ox@^0.6.12",
+                "permissionless@^0.2.40",
+                "zustand@^5.0.3",
+                "viem@^2.25.0",
+                "mipd@^0.0.7",
+                "@sinclair/typebox@^0.34.33",
+                "idb-keyval@^6.2.1",
+                "react@^19.0.0",
+                "react-dom@^19.0.0",
+                "lucide-react@^0.471.1"
+            ],
+            "registryDependencies": ["dialog", "button"],
+            "categories": ["wallet", "ethereum", "account-abstraction"],
             "files": [
                 {
-                    "path": "registry/batua/index.ts",
-                    "type": "registry:block"
+                    "path": "registry/batua/batua/components/Login.tsx",
+                    "type": "registry:component"
                 },
                 {
-                    "path": "registry/batua/key.ts",
-                    "type": "registry:block"
+                    "path": "registry/batua/batua/components/Main.tsx",
+                    "type": "registry:component"
                 },
                 {
-                    "path": "registry/batua/provider.ts",
-                    "type": "registry:block"
+                    "path": "registry/batua/batua/components/SendCalls.tsx",
+                    "type": "registry:component"
                 },
                 {
-                    "path": "registry/batua/storage.ts",
-                    "type": "registry:block"
+                    "path": "registry/batua/batua/index.ts",
+                    "type": "registry:lib"
                 },
                 {
-                    "path": "registry/batua/type.ts",
-                    "type": "registry:block"
+                    "path": "registry/batua/batua/key.ts",
+                    "type": "registry:lib"
                 },
                 {
-                    "path": "registry/batua/implementations/local.ts",
-                    "type": "registry:block"
+                    "path": "registry/batua/batua/provider.ts",
+                    "type": "registry:lib"
                 },
                 {
-                    "path": "registry/batua/typebox/capabilities.ts",
-                    "type": "registry:block"
+                    "path": "registry/batua/batua/storage.ts",
+                    "type": "registry:lib"
                 },
                 {
-                    "path": "registry/batua/typebox/key.ts",
-                    "type": "registry:block"
+                    "path": "registry/batua/batua/type.ts",
+                    "type": "registry:lib"
                 },
                 {
-                    "path": "registry/batua/typebox/permissions.ts",
-                    "type": "registry:block"
+                    "path": "registry/batua/batua/implementations/local.ts",
+                    "type": "registry:lib"
                 },
                 {
-                    "path": "registry/batua/typebox/primitive.ts",
-                    "type": "registry:block"
+                    "path": "registry/batua/batua/helpers/getBundlerClient.ts",
+                    "type": "registry:lib"
                 },
                 {
-                    "path": "registry/batua/typebox/request.ts",
-                    "type": "registry:block"
+                    "path": "registry/batua/batua/helpers/getClient.ts",
+                    "type": "registry:lib"
                 },
                 {
-                    "path": "registry/batua/typebox/rpc.ts",
-                    "type": "registry:block"
+                    "path": "registry/batua/batua/helpers/getPaymasterClient.ts",
+                    "type": "registry:lib"
                 },
                 {
-                    "path": "registry/batua/typebox/schema.ts",
-                    "type": "registry:block"
+                    "path": "registry/batua/batua/helpers/getSmartAccountClient.ts",
+                    "type": "registry:lib"
                 },
                 {
-                    "path": "registry/batua/typebox/types.ts",
-                    "type": "registry:block"
+                    "path": "registry/batua/batua/typebox/capabilities.ts",
+                    "type": "registry:lib"
                 },
                 {
-                    "path": "registry/batua/helpers/getClient.ts",
-                    "type": "registry:block"
+                    "path": "registry/batua/batua/typebox/key.ts",
+                    "type": "registry:lib"
                 },
                 {
-                    "path": "registry/batua/components/Main.tsx",
-                    "type": "registry:block"
+                    "path": "registry/batua/batua/typebox/permissions.ts",
+                    "type": "registry:lib"
+                },
+                {
+                    "path": "registry/batua/batua/typebox/primitive.ts",
+                    "type": "registry:lib"
+                },
+                {
+                    "path": "registry/batua/batua/typebox/request.ts",
+                    "type": "registry:lib"
+                },
+                {
+                    "path": "registry/batua/batua/typebox/rpc.ts",
+                    "type": "registry:lib"
+                },
+                {
+                    "path": "registry/batua/batua/typebox/schema.ts",
+                    "type": "registry:lib"
+                },
+                {
+                    "path": "registry/batua/batua/typebox/types.ts",
+                    "type": "registry:lib"
                 }
             ]
         }

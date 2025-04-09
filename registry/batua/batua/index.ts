@@ -1,11 +1,16 @@
 import { type Chain, base, baseSepolia, sepolia } from "viem/chains"
 import { http, type Transport } from "viem"
-import type { Implementation, Internal, State, Storage } from "./type"
-import { Provider } from "./provider"
-import { local } from "./implementations/local"
+import type {
+    Implementation,
+    Internal,
+    State,
+    Storage
+} from "@/registry/batua/batua/type"
+import { Provider } from "@/registry/batua/batua/provider"
+import { local } from "@/registry/batua/batua/implementations/local"
 import { createStore } from "zustand/vanilla"
 import { persist, subscribeWithSelector } from "zustand/middleware"
-import { idb } from "./storage"
+import { idb } from "@/registry/batua/batua/storage"
 
 const defaultConfig = {
     chains: [sepolia, baseSepolia, base],
@@ -47,7 +52,7 @@ export type Config<
 }
 
 export const Batua = {
-    use: <
+    create: <
         chains extends readonly [Chain, ...Chain[]] = readonly [
             Chain,
             ...Chain[]

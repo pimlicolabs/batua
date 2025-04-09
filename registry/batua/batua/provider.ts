@@ -1,8 +1,8 @@
 import { announceProvider } from "mipd"
 import { Address, Hex, Provider as ProviderOx } from "ox"
-import type { Internal } from "./type"
-import { getClient as getClientHelper } from "./helpers/getClient"
-import * as Rpc from "./typebox/rpc"
+import type { Internal } from "@/registry/batua/batua/type"
+import { getClient as getClientHelper } from "@/registry/batua/batua/helpers/getClient"
+import * as Rpc from "@/registry/batua/batua/typebox/rpc"
 
 export const Provider = {
     from: ({ internal }: { internal: Internal }) => {
