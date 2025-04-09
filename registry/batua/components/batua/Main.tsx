@@ -55,7 +55,5 @@ export const Main = ({ internal }: { internal: Internal }) => {
         )
     }
 
-    return (
-        <div>{queueRequest ? JSON.stringify(queueRequest) : "No request"}</div>
-    )
+    return null
 }

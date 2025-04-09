@@ -16,19 +16,20 @@ const defaultConfig = {
     chains: [sepolia, baseSepolia, base],
     announceProvider: true,
     storage: idb(),
-    transports: {
-        // TODO: Add transports for all chains
-        [sepolia.id]: {
-            rpc: http(),
-            bundler: http(`https://public.pimlico.io/v2/${sepolia.id}/rpc`)
+    rpc: {
+        transports: {
+            [sepolia.id]: http(`https://public.pimlico.io/v2/${sepolia.id}/rpc`)
+        }
+    },
+    paymaster: {
+        transports: {
+            [sepolia.id]: http(`https://public.pimlico.io/v2/${sepolia.id}/rpc`)
         },
-        [baseSepolia.id]: {
-            rpc: http(),
-            bundler: http(`https://public.pimlico.io/v2/${baseSepolia.id}/rpc`)
-        },
-        [base.id]: {
-            rpc: http(),
-            bundler: http(`https://public.pimlico.io/v2/${base.id}/rpc`)
+        context: {}
+    },
+    bundler: {
+        transports: {
+            [sepolia.id]: http(`https://public.pimlico.io/v2/${sepolia.id}/rpc`)
         }
     },
     implementation: local()
@@ -41,14 +42,16 @@ export type Config<
     chains: chains | readonly [Chain, ...Chain[]]
     implementation: Implementation
     storage: Storage
-    transports: Record<
-        chains[number]["id"],
-        {
-            rpc: Transport
-            bundler: Transport
-            paymaster?: Transport
-        }
-    >
+    rpc: {
+        transports: Record<chains[number]["id"], Transport>
+    }
+    paymaster?: {
+        transports: Record<chains[number]["id"], Transport>
+        context: unknown
+    }
+    bundler: {
+        transports: Record<chains[number]["id"], Transport>
+    }
 }
 
 export const Batua = {
@@ -62,20 +65,24 @@ export const Batua = {
         announceProvider?: boolean
         storage?: Storage
         implementation?: Implementation | null
-        transports?: Record<
-            chains[number]["id"],
-            {
-                rpc?: Transport
-                bundler?: Transport
-                paymaster?: Transport
-            }
-        >
+        rpc?: {
+            transports: Record<chains[number]["id"], Transport>
+        }
+        paymaster?: {
+            transports: Record<chains[number]["id"], Transport>
+            context: unknown
+        }
+        bundler?: {
+            transports: Record<chains[number]["id"], Transport>
+        }
     }) => {
         const config: Config = {
             storage: parameters?.storage ?? defaultConfig.storage,
             chains: parameters?.chains ?? defaultConfig.chains,
             announceProvider: parameters?.announceProvider ?? true,
-            transports: parameters?.transports ?? defaultConfig.transports,
+            rpc: parameters?.rpc ?? defaultConfig.rpc,
+            paymaster: parameters?.paymaster ?? defaultConfig.paymaster,
+            bundler: parameters?.bundler ?? defaultConfig.bundler,
             implementation:
                 parameters?.implementation ?? defaultConfig.implementation
         }

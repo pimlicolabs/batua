@@ -54,7 +54,7 @@ export const Login = ({
                 const passkeyServerClient = createPasskeyServerClient({
                     chain: client.chain,
                     transport:
-                        internal.config.transports[client.chain.id].bundler
+                        internal.config.bundler.transports[client.chain.id]
                 })
 
                 const userName = crypto.randomUUID()
@@ -139,7 +139,7 @@ export const Login = ({
             })
             const passkeyServerClient = createPasskeyServerClient({
                 chain: client.chain,
-                transport: internal.config.transports[client.chain.id].bundler
+                transport: internal.config.bundler.transports[client.chain.id]
             })
 
             const challenge = await passkeyServerClient.startAuthentication()
@@ -193,6 +193,7 @@ export const Login = ({
                 }
             })
         } catch (error) {
+            console.log(error)
             const { code, errorMessage } = (() => {
                 if (
                     error instanceof Error &&

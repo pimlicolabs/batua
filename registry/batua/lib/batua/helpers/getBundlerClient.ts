@@ -21,7 +21,7 @@ export const getBundlerClient = ({
     const chain = chains.find((chain) => chain.id === chainId || state.chain.id)
     if (!chain) throw new Error("chain not found")
 
-    const transport = config.transports[chain.id]
+    const transport = config.bundler.transports[chain.id]
     if (!transport) throw new Error("transport not found")
 
     const key = [id, chainId].filter(Boolean).join(":")
@@ -37,7 +37,7 @@ export const getBundlerClient = ({
     }
     const client = createBundlerClient({
         chain,
-        transport: transport.bundler,
+        transport: transport,
         pollingInterval: 1_000
     })
     clientCache.set(key, client)

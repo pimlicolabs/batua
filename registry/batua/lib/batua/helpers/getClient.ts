@@ -17,7 +17,7 @@ export const getClient = ({
     const chain = chains.find((chain) => chain.id === chainId || state.chain.id)
     if (!chain) throw new Error("chain not found")
 
-    const transport = config.transports[chain.id]
+    const transport = config.rpc.transports[chain.id]
     if (!transport) throw new Error("transport not found")
 
     const key = [id, chainId].filter(Boolean).join(":")
@@ -33,7 +33,7 @@ export const getClient = ({
     }
     const client = createClient({
         chain,
-        transport: transport.rpc,
+        transport: transport,
         pollingInterval: 1_000
     })
     clientCache.set(key, client)

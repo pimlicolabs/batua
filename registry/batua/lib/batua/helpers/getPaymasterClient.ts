@@ -21,11 +21,8 @@ export const getPaymasterClient = ({
     const chain = chains.find((chain) => chain.id === chainId || state.chain.id)
     if (!chain) throw new Error("chain not found")
 
-    const transport = config.transports[chain.id]
+    const transport = config.paymaster?.transports[chain.id]
     if (!transport) throw new Error("transport not found")
-    if (!transport.paymaster) {
-        return null
-    }
 
     const key = [id, chainId].filter(Boolean).join(":")
     if (clientCache.has(key)) {
@@ -39,7 +36,7 @@ export const getPaymasterClient = ({
         return client
     }
     const client = createPaymasterClient({
-        transport: transport.paymaster,
+        transport: transport,
         pollingInterval: 1_000
     })
     clientCache.set(key, client)

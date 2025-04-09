@@ -44,7 +44,7 @@ export const getSmartAccountClient = ({
     const chain = chains.find((chain) => chain.id === chainId || state.chain.id)
     if (!chain) throw new Error("chain not found")
 
-    const transport = config.transports[chain.id]
+    const transport = config.bundler.transports[chain.id]
     if (!transport) throw new Error("transport not found")
 
     const key = [id, chainId].filter(Boolean).join(":")
@@ -61,7 +61,7 @@ export const getSmartAccountClient = ({
 
     const pimlicoClient = createPimlicoClient({
         chain,
-        transport: transport.bundler
+        transport: transport
     })
 
     let paymaster: PaymasterClient | undefined
@@ -82,9 +82,10 @@ export const getSmartAccountClient = ({
 
     const client = createSmartAccountClient({
         chain,
-        bundlerTransport: transport.bundler,
+        bundlerTransport: transport,
         account,
         paymaster,
+        paymasterContext: config.paymaster?.context,
         userOperation: {
             estimateFeesPerGas: async () =>
                 (await pimlicoClient.getUserOperationGasPrice()).fast
