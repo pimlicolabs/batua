@@ -3,12 +3,12 @@ import type {
     Implementation,
     Internal,
     Store
-} from "@/registry/batua/batua/type"
+} from "@/registry/batua/lib/batua/type"
 
 import ReactDOM from "react-dom/client"
 import React from "react"
-import { Main } from "@/registry/batua/batua/components/Main"
-import { getBundlerClient } from "@/registry/batua/batua/helpers/getBundlerClient"
+import { Main } from "@/registry/batua/components/batua/Main"
+import { getBundlerClient } from "@/registry/batua/lib/batua/helpers/getBundlerClient"
 
 export const local = (): Implementation => {
     const requestStore = RpcRequest.createStore()

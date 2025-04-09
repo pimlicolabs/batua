@@ -1,19 +1,19 @@
-import type { Transport } from "viem"
-import type { Internal } from "@/registry/batua/batua/type"
+import type { Chain, Transport } from "viem"
+import type { Internal } from "@/registry/batua/lib/batua/type"
 import {
-    createPaymasterClient,
-    type PaymasterClient
+    type BundlerClient,
+    createBundlerClient
 } from "viem/account-abstraction"
 
-const clientCache = new Map<string, PaymasterClient<Transport>>()
+const clientCache = new Map<string, BundlerClient<Transport, Chain>>()
 
-export const getPaymasterClient = ({
+export const getBundlerClient = ({
     internal,
     chainId
-}: {
-    internal: Internal
-    chainId: number | undefined
-}): PaymasterClient<Transport> | null => {
+}: { internal: Internal; chainId?: number | undefined }): BundlerClient<
+    Transport,
+    Chain
+> => {
     const { config, id, store } = internal
     const { chains } = config
 
@@ -23,9 +23,6 @@ export const getPaymasterClient = ({
 
     const transport = config.transports[chain.id]
     if (!transport) throw new Error("transport not found")
-    if (!transport.paymaster) {
-        return null
-    }
 
     const key = [id, chainId].filter(Boolean).join(":")
     if (clientCache.has(key)) {
@@ -38,8 +35,9 @@ export const getPaymasterClient = ({
 
         return client
     }
-    const client = createPaymasterClient({
-        transport: transport.paymaster,
+    const client = createBundlerClient({
+        chain,
+        transport: transport.bundler,
         pollingInterval: 1_000
     })
     clientCache.set(key, client)

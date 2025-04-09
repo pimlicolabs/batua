@@ -1,6 +1,6 @@
 "use client"
 import { WebAuthnP256 } from "ox"
-import type { QueuedRequest, Internal } from "@/registry/batua/batua/type"
+import type { QueuedRequest, Internal } from "@/registry/batua/lib/batua/type"
 import { Button } from "@/components/ui/button"
 import {
     Dialog,
@@ -12,14 +12,14 @@ import {
 import { AlertCircle, LogIn } from "lucide-react"
 import { Provider } from "ox"
 import { toKernelSmartAccount } from "permissionless/accounts"
-import { getClient } from "@/registry/batua/batua/helpers/getClient"
+import { getClient } from "@/registry/batua/lib/batua/helpers/getClient"
 import {
     createWebAuthnCredential,
     entryPoint07Address,
     toWebAuthnAccount
 } from "viem/account-abstraction"
 import { createPasskeyServerClient } from "permissionless/clients/passkeyServer"
-import * as Key from "@/registry/batua/batua/key"
+import * as Key from "@/registry/batua/lib/batua/key"
 import { useCallback, useState } from "react"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Errors } from "ox"

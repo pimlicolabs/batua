@@ -5,12 +5,12 @@ import type {
     Internal,
     State,
     Storage
-} from "@/registry/batua/batua/type"
-import { Provider } from "@/registry/batua/batua/provider"
-import { local } from "@/registry/batua/batua/implementations/local"
+} from "@/registry/batua/lib/batua/type"
+import { Provider } from "@/registry/batua/lib/batua/provider"
+import { local } from "@/registry/batua/lib/batua/implementations/local"
 import { createStore } from "zustand/vanilla"
 import { persist, subscribeWithSelector } from "zustand/middleware"
-import { idb } from "@/registry/batua/batua/storage"
+import { idb } from "@/registry/batua/lib/batua/storage"
 
 const defaultConfig = {
     chains: [sepolia, baseSepolia, base],
@@ -85,7 +85,7 @@ export const Batua = {
         const store = createStore(
             subscribeWithSelector(
                 persist<State>(
-                    (_) => ({
+                    () => ({
                         accounts: [],
                         chain: config.chains[0],
                         requestQueue: []

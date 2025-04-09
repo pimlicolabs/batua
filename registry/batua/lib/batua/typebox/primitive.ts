@@ -1,6 +1,6 @@
 import * as Hex_ox from "ox/Hex"
 
-import { Type } from "@/registry/batua/batua/typebox/schema"
+import { Type } from "@/registry/batua/lib/batua/typebox/schema"
 
 export const Address = Type.TemplateLiteral("0x${string}")
 export const Hex = Type.TemplateLiteral("0x${string}")

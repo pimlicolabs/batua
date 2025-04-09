@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-namespace */
-import * as C from "@/registry/batua/batua/typebox/capabilities"
-import * as Permissions from "@/registry/batua/batua/typebox/permissions"
-import * as Primitive from "@/registry/batua/batua/typebox/primitive"
-import * as Schema from "@/registry/batua/batua/typebox/schema"
-import { Type } from "@/registry/batua/batua/typebox/schema"
+import * as C from "@/registry/batua/lib/batua/typebox/capabilities"
+import * as Permissions from "@/registry/batua/lib/batua/typebox/permissions"
+import * as Primitive from "@/registry/batua/lib/batua/typebox/primitive"
+import * as Schema from "@/registry/batua/lib/batua/typebox/schema"
+import { Type } from "@/registry/batua/lib/batua/typebox/schema"
 
 export namespace eth_accounts {
     export const Request = Type.Object({

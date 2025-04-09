@@ -1,8 +1,8 @@
 import type { Chain } from "viem/chains"
-import type { Config } from "@/registry/batua/batua/index"
+import type { Config } from "@/registry/batua/batua"
 import type { Mutate, StoreApi } from "zustand/vanilla"
 import type { Address, RpcRequest, RpcResponse } from "ox"
-import type * as Rpc from "@/registry/batua/batua/typebox/rpc"
+import type * as Rpc from "@/registry/batua/lib/batua/typebox/rpc"
 import type { Hex } from "ox"
 import type { Client, MaybePromise, OneOf, WalletCapabilities } from "viem"
 import type { GetCallsStatusReturnType } from "viem/experimental"
@@ -55,7 +55,6 @@ export type Undefined<type> = {
     [key in keyof type]?: undefined
 }
 
-// biome-ignore lint/complexity/noBannedTypes: optional properties
 export type BaseKey<type extends string, properties = {}> = Compute<
     {
         type: type

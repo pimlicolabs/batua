@@ -1,5 +1,5 @@
 import { createClient, type Chain, type Client, type Transport } from "viem"
-import type { Internal } from "@/registry/batua/batua/type"
+import type { Internal } from "@/registry/batua/lib/batua/type"
 
 const clientCache = new Map<string, Client<Transport, Chain>>()
 

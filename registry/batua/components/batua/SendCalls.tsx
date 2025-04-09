@@ -6,12 +6,12 @@ import {
     DialogHeader,
     DialogTitle
 } from "@/components/ui/dialog"
-import type { Internal, QueuedRequest } from "@/registry/batua/batua/type"
+import type { Internal, QueuedRequest } from "@/registry/batua/lib/batua/type"
 import { Provider, RpcRequest } from "ox"
 import { Button } from "@/components/ui/button"
 import { toKernelSmartAccount } from "permissionless/accounts"
-import { getClient } from "@/registry/batua/batua/helpers/getClient"
-import { getSmartAccountClient } from "@/registry/batua/batua/helpers/getSmartAccountClient"
+import { getClient } from "@/registry/batua/lib/batua/helpers/getClient"
+import { getSmartAccountClient } from "@/registry/batua/lib/batua/helpers/getSmartAccountClient"
 import {
     entryPoint07Address,
     toWebAuthnAccount

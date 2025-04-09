@@ -26,89 +26,109 @@
             "categories": ["wallet", "ethereum", "account-abstraction"],
             "files": [
                 {
-                    "path": "registry/batua/batua/components/Login.tsx",
+                    "path": "registry/batua/components/batua/Login.tsx",
                     "type": "registry:component",
                     "target": "components/batua/Login.tsx"
                 },
                 {
-                    "path": "registry/batua/batua/components/Main.tsx",
-                    "type": "registry:component"
+                    "path": "registry/batua/components/batua/Main.tsx",
+                    "type": "registry:component",
+                    "target": "components/batua/Main.tsx"
                 },
                 {
-                    "path": "registry/batua/batua/components/SendCalls.tsx",
-                    "type": "registry:component"
+                    "path": "registry/batua/components/batua/SendCalls.tsx",
+                    "type": "registry:component",
+                    "target": "components/batua/SendCalls.tsx"
                 },
                 {
-                    "path": "registry/batua/batua/index.ts",
-                    "type": "registry:lib"
+                    "path": "registry/batua/batua.ts",
+                    "type": "registry:lib",
+                    "target": "lib/batua.ts"
                 },
                 {
-                    "path": "registry/batua/batua/key.ts",
-                    "type": "registry:lib"
+                    "path": "registry/batua/lib/batua/key.ts",
+                    "type": "registry:lib",
+                    "target": "lib/batua/key.ts"
                 },
                 {
-                    "path": "registry/batua/batua/provider.ts",
-                    "type": "registry:lib"
+                    "path": "registry/batua/lib/batua/provider.ts",
+                    "type": "registry:lib",
+                    "target": "lib/batua/provider.ts"
                 },
                 {
-                    "path": "registry/batua/batua/storage.ts",
-                    "type": "registry:lib"
+                    "path": "registry/batua/lib/batua/storage.ts",
+                    "type": "registry:lib",
+                    "target": "lib/batua/storage.ts"
                 },
                 {
-                    "path": "registry/batua/batua/type.ts",
-                    "type": "registry:lib"
+                    "path": "registry/batua/lib/batua/type.ts",
+                    "type": "registry:lib",
+                    "target": "lib/batua/type.ts"
                 },
                 {
-                    "path": "registry/batua/batua/implementations/local.ts",
-                    "type": "registry:lib"
+                    "path": "registry/batua/lib/batua/implementations/local.ts",
+                    "type": "registry:lib",
+                    "target": "lib/batua/implementations/local.ts"
                 },
                 {
-                    "path": "registry/batua/batua/helpers/getBundlerClient.ts",
-                    "type": "registry:lib"
+                    "path": "registry/batua/lib/batua/helpers/getBundlerClient.ts",
+                    "type": "registry:lib",
+                    "target": "lib/batua/helpers/getBundlerClient.ts"
                 },
                 {
-                    "path": "registry/batua/batua/helpers/getClient.ts",
-                    "type": "registry:lib"
+                    "path": "registry/batua/lib/batua/helpers/getClient.ts",
+                    "type": "registry:lib",
+                    "target": "lib/batua/helpers/getClient.ts"
                 },
                 {
-                    "path": "registry/batua/batua/helpers/getPaymasterClient.ts",
-                    "type": "registry:lib"
+                    "path": "registry/batua/lib/batua/helpers/getPaymasterClient.ts",
+                    "type": "registry:lib",
+                    "target": "lib/batua/helpers/getPaymasterClient.ts"
                 },
                 {
-                    "path": "registry/batua/batua/helpers/getSmartAccountClient.ts",
-                    "type": "registry:lib"
+                    "path": "registry/batua/lib/batua/helpers/getSmartAccountClient.ts",
+                    "type": "registry:lib",
+                    "target": "lib/batua/helpers/getSmartAccountClient.ts"
                 },
                 {
-                    "path": "registry/batua/batua/typebox/capabilities.ts",
-                    "type": "registry:lib"
+                    "path": "registry/batua/lib/batua/typebox/capabilities.ts",
+                    "type": "registry:lib",
+                    "target": "lib/batua/typebox/capabilities.ts"
                 },
                 {
-                    "path": "registry/batua/batua/typebox/key.ts",
-                    "type": "registry:lib"
+                    "path": "registry/batua/lib/batua/typebox/key.ts",
+                    "type": "registry:lib",
+                    "target": "lib/batua/typebox/key.ts"
                 },
                 {
-                    "path": "registry/batua/batua/typebox/permissions.ts",
-                    "type": "registry:lib"
+                    "path": "registry/batua/lib/batua/typebox/permissions.ts",
+                    "type": "registry:lib",
+                    "target": "lib/batua/typebox/permissions.ts"
                 },
                 {
-                    "path": "registry/batua/batua/typebox/primitive.ts",
-                    "type": "registry:lib"
+                    "path": "registry/batua/lib/batua/typebox/primitive.ts",
+                    "type": "registry:lib",
+                    "target": "lib/batua/typebox/primitive.ts"
                 },
                 {
-                    "path": "registry/batua/batua/typebox/request.ts",
-                    "type": "registry:lib"
+                    "path": "registry/batua/lib/batua/typebox/request.ts",
+                    "type": "registry:lib",
+                    "target": "lib/batua/typebox/request.ts"
                 },
                 {
-                    "path": "registry/batua/batua/typebox/rpc.ts",
-                    "type": "registry:lib"
+                    "path": "registry/batua/lib/batua/typebox/rpc.ts",
+                    "type": "registry:lib",
+                    "target": "lib/batua/typebox/rpc.ts"
                 },
                 {
-                    "path": "registry/batua/batua/typebox/schema.ts",
-                    "type": "registry:lib"
+                    "path": "registry/batua/lib/batua/typebox/schema.ts",
+                    "type": "registry:lib",
+                    "target": "lib/batua/typebox/schema.ts"
                 },
                 {
-                    "path": "registry/batua/batua/typebox/types.ts",
-                    "type": "registry:lib"
+                    "path": "registry/batua/lib/batua/typebox/types.ts",
+                    "type": "registry:lib",
+                    "target": "lib/batua/typebox/types.ts"
                 }
             ]
         }

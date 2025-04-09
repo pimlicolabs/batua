@@ -1,7 +1,7 @@
 import React from "react"
-import type { QueuedRequest, Internal } from "@/registry/batua/batua/type"
-import { Login } from "@/registry/batua/batua/components/Login"
-import { SendCalls } from "@/registry/batua/batua/components/SendCalls"
+import type { QueuedRequest, Internal } from "@/registry/batua/lib/batua/type"
+import { Login } from "@/registry/batua/components/batua/Login"
+import { SendCalls } from "@/registry/batua/components/batua/SendCalls"
 
 export const Main = ({ internal }: { internal: Internal }) => {
     const [queueRequest, setQueueRequest] =

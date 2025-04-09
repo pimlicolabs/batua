@@ -1,7 +1,7 @@
-import * as Key from "@/registry/batua/batua/typebox/key"
-import * as Primitive from "@/registry/batua/batua/typebox/primitive"
-import * as Schema from "@/registry/batua/batua/typebox/schema"
-import { Type } from "@/registry/batua/batua/typebox/schema"
+import * as Key from "@/registry/batua/lib/batua/typebox/key"
+import * as Primitive from "@/registry/batua/lib/batua/typebox/primitive"
+import * as Schema from "@/registry/batua/lib/batua/typebox/schema"
+import { Type } from "@/registry/batua/lib/batua/typebox/schema"
 
 export const Permissions = Type.Object({
     address: Primitive.Address,
