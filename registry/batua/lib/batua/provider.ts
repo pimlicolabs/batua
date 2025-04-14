@@ -204,6 +204,17 @@ export const Provider = {
 
                         return receipts
                     }
+                    case "wallet_revokePermissions": {
+                        if (state.accounts.length === 0)
+                            throw new ProviderOx.DisconnectedError()
+
+                        internal.store.setState((x) => ({
+                            ...x,
+                            accounts: []
+                        }))
+
+                        return undefined
+                    }
                 }
             }
         })

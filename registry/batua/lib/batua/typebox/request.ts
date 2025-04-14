@@ -412,3 +412,18 @@ export namespace wallet_sendPreparedCalls {
     )
     export type Response = Schema.StaticDecode<typeof Response>
 }
+
+export namespace wallet_revokePermissions {
+    export const Parameters = Type.Object({
+        eth_accounts: Type.Array(Type.Any())
+    })
+    export type Parameters = Schema.StaticDecode<typeof Parameters>
+
+    export const Request = Type.Object({
+        method: Type.Literal("wallet_revokePermissions"),
+        params: Type.Tuple([Parameters])
+    })
+    export type Request = Schema.StaticDecode<typeof Request>
+
+    export const Response = undefined
+}

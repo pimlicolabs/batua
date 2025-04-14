@@ -78,7 +78,6 @@ export const Login = ({
                         // Start the registration process
                         await passkeyServerClient.startRegistration({
                             context: {
-                                // userName that will be shown to the user when creating the passkey
                                 userName
                             }
                         })
@@ -89,7 +88,6 @@ export const Login = ({
                         await passkeyServerClient.verifyRegistration({
                             credential,
                             context: {
-                                // userName that will be shown to the user when creating the passkey
                                 userName
                             }
                         })
@@ -304,11 +302,11 @@ export const Login = ({
     return (
         <Dialog open={!!queueRequest} onOpenChange={onOpenChange}>
             <DialogContent
-                className={"sm:max-w-[425px] p-0"}
+                className={"sm:max-w-[325px] p-0"}
                 style={{ zIndex: 4294967294 }}
             >
                 <div className="bg-primary/5 p-6 rounded-t-lg">
-                    <DialogHeader className="pb-0 space-y-2">
+                    <DialogHeader className="pb-0">
                         <div className="flex items-center gap-2">
                             <KeyRound className="h-5 w-5 text-primary" />
                             <DialogTitle>Sign in</DialogTitle>
@@ -334,15 +332,15 @@ export const Login = ({
                                 Already have a wallet?
                             </h3>
                             <Button
-                                className="w-full justify-start h-11"
+                                className="w-full h-11"
                                 variant="outline"
                                 onClick={signIn}
                                 disabled={isLoading !== null}
                             >
                                 {isLoading === "signin" ? (
-                                    <Loader2 className="mr-2.5 h-4 w-4 animate-spin" />
+                                    <Loader2 className="h-4 w-4 animate-spin" />
                                 ) : (
-                                    <Fingerprint className="mr-2.5 h-4 w-4 text-primary" />
+                                    <Fingerprint className="h-4 w-4 text-primary" />
                                 )}
                                 Sign in with passkey
                             </Button>
@@ -362,7 +360,7 @@ export const Login = ({
                         <div className="space-y-2.5">
                             <h3 className="text-sm font-medium">New here?</h3>
                             <Button
-                                className="w-full justify-start h-11"
+                                className="w-full h-11"
                                 onClick={() => {
                                     setError(null)
                                     createCredential()
@@ -370,9 +368,9 @@ export const Login = ({
                                 disabled={isLoading !== null}
                             >
                                 {isLoading === "signup" ? (
-                                    <Loader2 className="mr-2.5 h-4 w-4 animate-spin" />
+                                    <Loader2 className="h-4 w-4 animate-spin" />
                                 ) : (
-                                    <LogIn className="mr-2.5 h-4 w-4" />
+                                    <LogIn className="h-4 w-4" />
                                 )}
                                 Create new wallet
                             </Button>

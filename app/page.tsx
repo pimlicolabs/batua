@@ -62,29 +62,34 @@ export default function Home() {
 
     return (
         <div className="max-w-3xl mx-auto px-4 py-12">
-            <h1 className="text-6xl font-bold mb-6 font-mono">batua.sh</h1>
+            <h1 className="text-4xl font-bold mb-4 font-mono">batua.sh</h1>
 
-            <div className="text-xl mb-10 font-mono">
-                <p className="mb-6">
-                    Batua is an embedded smart account compatible with ERC 4337
-                    which will work with any ethereum library with only a single
-                    line of code. It works everywhere, no developer lock-ins,
-                    built by Pimlico. Modern EIP support like 1193, 6963, 4337,
-                    5792, and more.
-                </p>
-
-                <p className="mb-6">
-                    Seamlessly integrate smart accounts into your dApps without
-                    forcing users to change their workflow. Batua provides a
-                    non-custodial solution that enhances user experience while
-                    maintaining security and compatibility across the Ethereum
-                    ecosystem.
-                </p>
+            <div className="text-base mb-8 font-mono">
+                <div className="mb-6">
+                    <ul className="list-disc pl-6 space-y-2">
+                        <li>
+                            Easy to integrate embedded smart account secured by
+                            passkeys
+                        </li>
+                        <li>Support for sponsoring transactions</li>
+                        <li>Support for batching multiple transactions</li>
+                        <li>You have the ownership of the complete code</li>
+                        <li>
+                            Embeds into your application&apos;s theme due to
+                            shadcn
+                        </li>
+                        <li>
+                            Works with wagmi, viem, ethers or any other
+                            blockchain library
+                        </li>
+                    </ul>
+                    <p className="mt-10 text-sm">Made with ❤️ from Pimlico</p>
+                </div>
             </div>
 
             <div className="mt-14 space-y-6">
                 <div className="space-y-4">
-                    <h2 className="text-2xl font-bold">Try Batua</h2>
+                    <h2 className="text-xl font-bold">Try Batua</h2>
                     <p className="text-muted-foreground">
                         Batua will work along side all the other injected and
                         external wallets.
@@ -155,17 +160,6 @@ export default function Home() {
                                     Send Transaction
                                 </Button>
                             </div>
-                            <Button
-                                onClick={() => {
-                                    indexedDB.deleteDatabase("batua")
-                                    window.location.reload()
-                                }}
-                                type="button"
-                                variant="destructive"
-                                className="w-full"
-                            >
-                                Clear Storage
-                            </Button>
                         </div>
                     </div>
                 )}

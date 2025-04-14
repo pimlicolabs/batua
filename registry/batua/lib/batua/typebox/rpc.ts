@@ -30,6 +30,7 @@ import { wallet_getCapabilities } from "@/registry/batua/lib/batua/typebox/reque
 import { wallet_prepareCalls } from "@/registry/batua/lib/batua/typebox/request"
 import { wallet_sendCalls } from "@/registry/batua/lib/batua/typebox/request"
 import { wallet_sendPreparedCalls } from "@/registry/batua/lib/batua/typebox/request"
+import { wallet_revokePermissions } from "@/registry/batua/lib/batua/typebox/request"
 
 export {
     eth_accounts,
@@ -51,7 +52,8 @@ export {
     wallet_getCapabilities,
     wallet_prepareCalls,
     wallet_sendCalls,
-    wallet_sendPreparedCalls
+    wallet_sendPreparedCalls,
+    wallet_revokePermissions
 }
 
 export const Request = Type.Union([
@@ -74,7 +76,8 @@ export const Request = Type.Union([
     RpcRequest.wallet_getCapabilities.Request,
     RpcRequest.wallet_prepareCalls.Request,
     RpcRequest.wallet_sendCalls.Request,
-    RpcRequest.wallet_sendPreparedCalls.Request
+    RpcRequest.wallet_sendPreparedCalls.Request,
+    RpcRequest.wallet_revokePermissions.Request
 ])
 
 export function parseRequest(request: unknown): parseRequest.ReturnType {
