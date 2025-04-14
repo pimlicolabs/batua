@@ -32,6 +32,10 @@ import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Errors } from "ox"
 import { BaseError } from "viem"
 import { Separator } from "@/components/ui/separator"
+import {
+    randomAdjective,
+    randomNoun
+} from "@/registry/batua/lib/batua/helpers/randomWords"
 
 export const Login = ({
     onComplete,
@@ -68,7 +72,7 @@ export const Login = ({
                             internal.config.bundler.transports[client.chain.id]
                     })
 
-                    const userName = crypto.randomUUID()
+                    const userName = `${randomAdjective()}_${randomNoun()}`
 
                     const credential = await createWebAuthnCredential(
                         // Start the registration process

@@ -129,6 +129,11 @@
                     "path": "registry/batua/lib/batua/typebox/types.ts",
                     "type": "registry:lib",
                     "target": "lib/batua/typebox/types.ts"
+                },
+                {
+                    "path": "registry/batua/lib/batua/helpers/randomWords.ts",
+                    "type": "registry:lib",
+                    "target": "lib/batua/helpers/randomWords.ts"
                 }
             ]
         }
