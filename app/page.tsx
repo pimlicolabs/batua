@@ -5,6 +5,7 @@ import { useCallback } from "react"
 import { useSendTransaction, useWaitForTransactionReceipt } from "wagmi"
 import { useAccount, useConnect, useDisconnect } from "wagmi"
 import { Highlight, themes } from "prism-react-renderer"
+import { encodeFunctionData, erc20Abi, zeroAddress } from "viem"
 
 export default function Home() {
     const account = useAccount()
@@ -50,8 +51,12 @@ export default function Home() {
 
     const sendTransactionCallback = useCallback(async () => {
         sendTransaction({
-            to: "0x433704c40F80cBff02e86FD36Bc8baC5e31eB0c1",
-            data: "0x"
+            to: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+            data: encodeFunctionData({
+                abi: erc20Abi,
+                functionName: "transfer",
+                args: [zeroAddress, BigInt(1)]
+            })
         })
     }, [sendTransaction])
 
