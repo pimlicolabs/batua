@@ -6,6 +6,7 @@ import { Batua } from "@/registry/batua/batua"
 const pimlicoApiKey = process.env.NEXT_PUBLIC_PIMLICO_API_KEY || ""
 
 Batua.create({
+    dappName: "Pimlico",
     rpc: {
         transports: {
             [sepolia.id]: http("https://ethereum-sepolia-rpc.publicnode.com")

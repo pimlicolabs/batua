@@ -182,7 +182,7 @@ export const Login = ({
 
             const signature = await WebAuthnP256.sign(challenge)
 
-            const userHandle = signature.raw.response.userHandle
+            const userHandle = (signature.raw.response as any).userHandle
             const decoder = new TextDecoder()
             const userHandleStr = decoder.decode(userHandle)
 

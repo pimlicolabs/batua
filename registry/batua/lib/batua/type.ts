@@ -26,7 +26,7 @@ export type Implementation = {
             config: Config
             request: Rpc.parseRequest.ReturnType
             store: Store
-        }) => Promise<{ accounts: readonly Account[] }>
+        }) => Promise<{ accounts: readonly Omit<Account, "name">[] }>
 
         sendCalls: (parameters: {
             calls: readonly Call[]
