@@ -12,7 +12,7 @@
             "description": "A wallet provider for wagmi with support for account abstraction.",
             "dependencies": [
                 "ox@^0.6.12",
-                "permissionless@^0.2.40",
+                "permissionless@^0.2.42",
                 "zustand@^5.0.3",
                 "viem@^2.25.0",
                 "mipd@^0.0.7",
@@ -20,9 +20,16 @@
                 "idb-keyval@^6.2.1",
                 "react@^19.0.0",
                 "react-dom@^19.0.0",
-                "lucide-react@^0.471.1"
+                "lucide-react@^0.471.1",
+                "@openchainxyz/abi-guesser@^1.0.2"
             ],
-            "registryDependencies": ["dialog", "button", "alert", "separator"],
+            "registryDependencies": [
+                "dialog",
+                "button",
+                "alert",
+                "separator",
+                "tooltip"
+            ],
             "categories": ["wallet", "ethereum", "account-abstraction"],
             "files": [
                 {

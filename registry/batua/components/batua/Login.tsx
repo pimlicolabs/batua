@@ -15,7 +15,8 @@ import {
     LogIn,
     KeyRound,
     Fingerprint,
-    Loader2
+    Loader2,
+    HelpCircle
 } from "lucide-react"
 import { Provider } from "ox"
 import { toKernelSmartAccount } from "permissionless/accounts"
@@ -27,8 +28,14 @@ import {
 } from "viem/account-abstraction"
 import { createPasskeyServerClient } from "permissionless/clients/passkeyServer"
 import * as Key from "@/registry/batua/lib/batua/key"
-import { useCallback, useState } from "react"
+import { useCallback, useMemo, useState } from "react"
 import { Alert, AlertDescription } from "@/components/ui/alert"
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger
+} from "@/components/ui/tooltip"
 import { Errors } from "ox"
 import { BaseError } from "viem"
 import { Separator } from "@/components/ui/separator"
@@ -56,6 +63,11 @@ export const Login = ({
     //     setIsShaking(true)
     //     setTimeout(() => setIsShaking(false), 500) // Reset shake after animation completes
     // }, [])
+
+    const walletName = useMemo(
+        () => internal.config.walletName,
+        [internal.config]
+    )
 
     const createCredential = useCallback(async () => {
         try {
@@ -98,7 +110,8 @@ export const Login = ({
 
                     return {
                         id: verifiedCredential.id,
-                        publicKey: verifiedCredential.publicKey
+                        publicKey: verifiedCredential.publicKey,
+                        userName
                     }
                 } catch {
                     onComplete({
@@ -132,7 +145,8 @@ export const Login = ({
                             //todo: use rpId
                             rpId: undefined
                         }),
-                        type: "smartAccount"
+                        type: "smartAccount",
+                        name: credential.userName
                     }
                 ]
             }))
@@ -167,6 +181,14 @@ export const Login = ({
             const challenge = await passkeyServerClient.startAuthentication()
 
             const signature = await WebAuthnP256.sign(challenge)
+
+            const userHandle = signature.raw.response.userHandle
+            const decoder = new TextDecoder()
+            const userHandleStr = decoder.decode(userHandle)
+
+            console.log({
+                userHandle: userHandleStr
+            })
 
             const verifiedCredential =
                 await passkeyServerClient.verifyAuthentication({
@@ -203,6 +225,7 @@ export const Login = ({
                             //todo: use rpId
                             rpId: undefined
                         }),
+                        name: verifiedCredential.userName,
                         type: "smartAccount"
                     }
                 ]
@@ -328,8 +351,22 @@ export const Login = ({
 
                     <div className="space-y-5">
                         <div className="space-y-2.5">
-                            <h3 className="text-sm font-medium">
-                                Already have a wallet?
+                            <h3 className="text-sm font-medium flex items-center gap-1">
+                                Already have a {walletName}?
+                                <TooltipProvider>
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            <HelpCircle className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
+                                        </TooltipTrigger>
+                                        <TooltipContent className="max-w-[220px]">
+                                            <p>
+                                                {walletName} is an embedded
+                                                smart account that secures your
+                                                account with passkeys.
+                                            </p>
+                                        </TooltipContent>
+                                    </Tooltip>
+                                </TooltipProvider>
                             </h3>
                             <Button
                                 className="w-full h-11"
@@ -358,7 +395,23 @@ export const Login = ({
                         </div>
 
                         <div className="space-y-2.5">
-                            <h3 className="text-sm font-medium">New here?</h3>
+                            <h3 className="text-sm font-medium flex items-center gap-1">
+                                New to {walletName}?
+                                <TooltipProvider>
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            <HelpCircle className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
+                                        </TooltipTrigger>
+                                        <TooltipContent className="max-w-[220px]">
+                                            <p>
+                                                {walletName} is an embedded
+                                                smart account that secures your
+                                                account with passkeys.
+                                            </p>
+                                        </TooltipContent>
+                                    </Tooltip>
+                                </TooltipProvider>
+                            </h3>
                             <Button
                                 className="w-full h-11"
                                 onClick={() => {

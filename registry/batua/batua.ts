@@ -13,6 +13,8 @@ import { persist, subscribeWithSelector } from "zustand/middleware"
 import { idb } from "@/registry/batua/lib/batua/storage"
 
 const defaultConfig = {
+    dappName: "Dapp",
+    walletName: "Batua",
     chains: [sepolia, baseSepolia, base],
     announceProvider: true,
     storage: idb(),
@@ -38,6 +40,8 @@ const defaultConfig = {
 export type Config<
     chains extends readonly [Chain, ...Chain[]] = readonly [Chain, ...Chain[]]
 > = {
+    dappName: string
+    walletName: string
     announceProvider: boolean
     chains: chains | readonly [Chain, ...Chain[]]
     implementation: Implementation
@@ -75,6 +79,8 @@ export const Batua = {
         bundler?: {
             transports: Record<chains[number]["id"], Transport>
         }
+        dappName?: string
+        walletName?: string
     }) => {
         const config: Config = {
             storage: parameters?.storage ?? defaultConfig.storage,
@@ -84,7 +90,9 @@ export const Batua = {
             paymaster: parameters?.paymaster ?? defaultConfig.paymaster,
             bundler: parameters?.bundler ?? defaultConfig.bundler,
             implementation:
-                parameters?.implementation ?? defaultConfig.implementation
+                parameters?.implementation ?? defaultConfig.implementation,
+            dappName: parameters?.dappName ?? defaultConfig.dappName,
+            walletName: parameters?.walletName ?? defaultConfig.walletName
         }
 
         let implementation = config.implementation

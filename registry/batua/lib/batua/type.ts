@@ -85,6 +85,7 @@ export type Account = {
     address: Address.Address
     key?: Key
     type: "smartAccount"
+    name: string
 }
 
 export type QueuedRequest<result = unknown> = {
