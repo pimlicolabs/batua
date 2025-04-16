@@ -267,10 +267,6 @@ const RawCallData = ({ data }: { data: Hex }) => {
 
     return (
         <div className="flex flex-col mt-3">
-            <div className="flex items-center gap-2 mb-2">
-                <Code className="h-4 w-4" />
-                <div className="text-xs font-medium">Raw Transaction Data</div>
-            </div>
             <Accordion
                 type="single"
                 collapsible
@@ -279,16 +275,16 @@ const RawCallData = ({ data }: { data: Hex }) => {
             >
                 <AccordionItem value="data" className="border-none">
                     <AccordionTrigger className="font-mono text-xs truncate bg-muted/10 px-3 py-2 rounded-md border border-muted/20 hover:bg-muted/20 transition-colors hover:no-underline">
-                        <span
-                            className={`${open ? "text-pretty" : "truncate"} break-all`}
-                        >
-                            {open
-                                ? displayData
-                                : `${displayData.slice(0, 30)}...`}
-                        </span>
+                        <div className="flex items-center gap-2">
+                            <Code className="h-4 w-4" />
+                            <div className="text-xs font-medium">
+                                Raw Transaction Data
+                            </div>
+                        </div>
                     </AccordionTrigger>
-                    <AccordionContent className="hidden" />{" "}
-                    {/* Hiding default content */}
+                    <AccordionContent className="font-mono text-xs bg-muted/10 px-3 py-2 rounded-md border border-muted/20 hover:bg-muted/20 transition-colors hover:no-underline break-all">
+                        {displayData}
+                    </AccordionContent>
                 </AccordionItem>
             </Accordion>
         </div>

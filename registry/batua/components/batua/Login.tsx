@@ -317,7 +317,7 @@ export const Login = ({
         <Dialog open={!!queueRequest} onOpenChange={onOpenChange}>
             <DialogContent
                 className={"sm:max-w-[325px] p-0"}
-                style={{ zIndex: 4294967294 }}
+                style={{ zIndex: 4294967290 }}
             >
                 <div className="bg-primary/5 p-6 rounded-t-lg">
                     <DialogHeader className="pb-0">
@@ -349,7 +349,10 @@ export const Login = ({
                                         <TooltipTrigger asChild>
                                             <HelpCircle className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
                                         </TooltipTrigger>
-                                        <TooltipContent className="max-w-[220px]">
+                                        <TooltipContent
+                                            className="max-w-[220px]"
+                                            style={{ zIndex: 4294967294 }}
+                                        >
                                             <p>
                                                 {walletName} is an embedded
                                                 smart account that secures your
