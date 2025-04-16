@@ -11,7 +11,7 @@ import {
 import { useAccount, useConnect, useDisconnect } from "wagmi"
 import { Highlight, themes } from "prism-react-renderer"
 import { encodeFunctionData, erc20Abi, parseUnits } from "viem"
-import { Loader2 } from "lucide-react"
+import { File, Loader2 } from "lucide-react"
 import {
     Tooltip,
     TooltipContent,
@@ -23,6 +23,151 @@ import { generatePrivateKey, privateKeyToAccount } from "viem/accounts"
 
 const TEST_ERC20_TOKEN_ADDRESS =
     "0xFC3e86566895Fb007c6A0d3809eb2827DF94F751" as const
+
+const BatchCode = `import { useSendCalls } from "wagmi/experimental"
+
+const account = useAccount()
+const { sendCalls, data: callStatus } = useSendCalls()
+
+const { data: callReceipts } = useWaitForCallsStatus({
+    id: callStatus?.id
+})
+
+const callSucceeded = callReceipts.status === "success"
+const callPending = callReceipts.status === "pending"
+
+if (callSucceeded) {
+    const transactionHash = callReceipts.receipts[0].transactionHash
+}
+
+const sendBatchTransactionCallback = useCallback(async () => {
+    if (!account.address) return
+
+    sendCalls({
+        calls: [
+            {
+                to: TEST_ERC20_TOKEN_ADDRESS,
+                data: encodeFunctionData({
+                    abi: erc20Abi,
+                    functionName: "transfer",
+                    args: [randomAddressOne, parseUnits("1", 6)]
+                })
+            },
+            {
+                to: TEST_ERC20_TOKEN_ADDRESS,
+                data: encodeFunctionData({
+                    abi: erc20Abi,
+                    functionName: "transfer",
+                    args: [randomAddressTwo, parseUnits("1", 6)]
+                })
+            }
+        ]
+    })
+}, [account.address, sendCalls])`
+
+const UsageCode = `import { Batua } from "@/lib/batua"
+import { sepolia } from "viem/chains"
+import { http } from "viem/transport"
+
+const pimlicoApiKey = "your-pimlico-api-key"
+
+Batua.create({
+    rpc: {
+        transports: {
+            [sepolia.id]: http("https://ethereum-sepolia-rpc.publicnode.com")
+        }
+    },
+    // optional
+    paymaster: {
+        transports: {
+            [sepolia.id]: http(
+                \`https://api.pimlico.io/v2/\${sepolia.id}/rpc?apikey=\${pimlicoApiKey}\`
+            )
+        },
+        // optional
+        context: {
+            sponsorshipPolicyId: process.env.NEXT_PUBLIC_SPONSORSHIP_POLICY_ID
+        }
+    },
+    bundler: {
+        transports: {
+            [sepolia.id]: http(
+                \`https://api.pimlico.io/v2/\${sepolia.id}/rpc?apikey=\${pimlicoApiKey}\`
+            )
+        }
+    }
+})`
+
+import { useState, useEffect } from "react"
+
+const RenderCode = ({ code }: { code: string }) => {
+    const [copied, setCopied] = useState(false)
+
+    useEffect(() => {
+        if (!copied) return
+        const timeout = setTimeout(() => setCopied(false), 1500)
+        return () => clearTimeout(timeout)
+    }, [copied])
+
+    return (
+        <Highlight theme={themes.vsLight} code={code} language="tsx">
+            {({ className, style, tokens, getLineProps, getTokenProps }) => (
+                <div className="relative">
+                    <pre
+                        className={`${className} border-1`}
+                        style={{
+                            ...style,
+                            margin: 0,
+                            padding: "1rem",
+                            borderRadius: "0.5rem",
+                            fontSize: "0.875rem"
+                        }}
+                    >
+                        {tokens.map((line, lineIdx) => (
+                            <div
+                                key={`line-${lineIdx}`}
+                                {...getLineProps({
+                                    line,
+                                    key: `line-${lineIdx}`
+                                })}
+                                className="flex"
+                            >
+                                <span>
+                                    {line.map((token, tokenIdx) => (
+                                        <span
+                                            key={`token-${lineIdx}-${tokenIdx}`}
+                                            {...getTokenProps({
+                                                token,
+                                                key: `token-${lineIdx}-${tokenIdx}`
+                                            })}
+                                        />
+                                    ))}
+                                </span>
+                            </div>
+                        ))}
+                    </pre>
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        className="absolute top-2 right-2"
+                        onClick={() => {
+                            navigator.clipboard.writeText(code)
+                            setCopied(true)
+                        }}
+                        aria-label="Copy code"
+                    >
+                        <File className="h-4 w-4" />
+                    </Button>
+                    {copied && (
+                        <span className="absolute top-2 right-12 bg-zinc-800 text-white text-xs px-2 py-1 rounded shadow">
+                            Copied!
+                        </span>
+                    )}
+                </div>
+            )}
+        </Highlight>
+    )
+}
 
 export default function Home() {
     const account = useAccount()
@@ -476,87 +621,7 @@ export default function Home() {
                     <h3 className="text-2xl font-bold mb-4">Usage</h3>
                     <p className="mb-4">Use batua like:</p>
                     <div className="rounded-lg overflow-x-auto">
-                        <Highlight
-                            theme={themes.vsLight}
-                            code={`import { Batua } from "@/lib/batua"
-import { sepolia } from "viem/chains"
-import { http } from "viem/transport"
-
-const pimlicoApiKey = "your-pimlico-api-key"
-
-Batua.create({
-    rpc: {
-        transports: {
-            [sepolia.id]: http("https://ethereum-sepolia-rpc.publicnode.com")
-        }
-    },
-    // optional
-    paymaster: {
-        transports: {
-            [sepolia.id]: http(
-                \`https://api.pimlico.io/v2/\${sepolia.id}/rpc?apikey=\${pimlicoApiKey}\`
-            )
-        },
-        // optional
-        context: {
-            sponsorshipPolicyId: process.env.NEXT_PUBLIC_SPONSORSHIP_POLICY_ID
-        }
-    },
-    bundler: {
-        transports: {
-            [sepolia.id]: http(
-                \`https://api.pimlico.io/v2/\${sepolia.id}/rpc?apikey=\${pimlicoApiKey}\`
-            )
-        }
-    }
-})`}
-                            language="tsx"
-                        >
-                            {({
-                                className,
-                                style,
-                                tokens,
-                                getLineProps,
-                                getTokenProps
-                            }) => (
-                                <pre
-                                    className={className}
-                                    style={{
-                                        ...style,
-                                        margin: 0,
-                                        padding: "1rem",
-                                        borderRadius: "0.5rem",
-                                        fontSize: "0.875rem"
-                                    }}
-                                >
-                                    {tokens.map((line, lineIdx) => (
-                                        <div
-                                            key={`line-${
-                                                // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-                                                lineIdx
-                                            }`}
-                                            {...getLineProps({
-                                                line,
-                                                key: `line-${lineIdx}`
-                                            })}
-                                        >
-                                            {line.map((token, tokenIdx) => (
-                                                <span
-                                                    key={`token-${lineIdx}-${
-                                                        // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-                                                        tokenIdx
-                                                    }`}
-                                                    {...getTokenProps({
-                                                        token,
-                                                        key: `token-${lineIdx}-${tokenIdx}`
-                                                    })}
-                                                />
-                                            ))}
-                                        </div>
-                                    ))}
-                                </pre>
-                            )}
-                        </Highlight>
+                        <RenderCode code={UsageCode} />
                     </div>
                     <div className="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
                         <p className="text-sm text-gray-700">
@@ -571,93 +636,7 @@ Batua.create({
                     <h3 className="text-2xl font-bold mb-4">
                         How to send batch transactions
                     </h3>
-                    <Highlight
-                        theme={themes.vsLight}
-                        code={`
-import { useSendCalls } from "wagmi/experimental"
-
-const account = useAccount()
-const { sendCalls, data: callStatus } = useSendCalls()
-
-const { data: callReceipts } = useWaitForCallsStatus({
-    id: callStatus?.id
-})
-
-// use callReceipts to get the transaction hash
-
-const sendBatchTransactionCallback = useCallback(async () => {
-    if (!account.address) return
-
-    sendCalls({
-        calls: [
-            {
-                to: TEST_ERC20_TOKEN_ADDRESS,
-                data: encodeFunctionData({
-                    abi: erc20Abi,
-                    functionName: "transfer",
-                    args: [randomAddressOne, parseUnits("1", 6)]
-                })
-            },
-            {
-                to: TEST_ERC20_TOKEN_ADDRESS,
-                data: encodeFunctionData({
-                    abi: erc20Abi,
-                    functionName: "transfer",
-                    args: [randomAddressTwo, parseUnits("1", 6)]
-                })
-            }
-        ]
-    })
-}, [account.address, sendCalls])
-
-`}
-                        language="tsx"
-                    >
-                        {({
-                            className,
-                            style,
-                            tokens,
-                            getLineProps,
-                            getTokenProps
-                        }) => (
-                            <pre
-                                className={className}
-                                style={{
-                                    ...style,
-                                    margin: 0,
-                                    padding: "1rem",
-                                    borderRadius: "0.5rem",
-                                    fontSize: "0.875rem"
-                                }}
-                            >
-                                {tokens.map((line, lineIdx) => (
-                                    <div
-                                        key={`line-${
-                                            // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-                                            lineIdx
-                                        }`}
-                                        {...getLineProps({
-                                            line,
-                                            key: `line-${lineIdx}`
-                                        })}
-                                    >
-                                        {line.map((token, tokenIdx) => (
-                                            <span
-                                                key={`token-${lineIdx}-${
-                                                    // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-                                                    tokenIdx
-                                                }`}
-                                                {...getTokenProps({
-                                                    token,
-                                                    key: `token-${lineIdx}-${tokenIdx}`
-                                                })}
-                                            />
-                                        ))}
-                                    </div>
-                                ))}
-                            </pre>
-                        )}
-                    </Highlight>
+                    <RenderCode code={BatchCode} />
                 </div>
             </div>
         </div>
