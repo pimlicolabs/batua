@@ -36,7 +36,7 @@
         "shadcn": "2.4.0-canary.12",
         "tailwind-merge": "^2.6.0",
         "tailwindcss-animate": "^1.0.7",
-        "viem": "^2.25.0",
+        "viem": "^2.27.0",
         "wagmi": "^2.14.16",
         "zod": "^3.24.1",
         "zustand": "^5.0.3"

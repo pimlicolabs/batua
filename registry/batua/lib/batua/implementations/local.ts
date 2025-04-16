@@ -122,9 +122,8 @@ export const local = (): Implementation => {
                     return {
                         id: userOperationHash,
                         version: "1.0",
-                        status: "success",
                         chainId,
-                        statusCode: userOpStatus ? 200 : 500,
+                        status: userOpStatus ? 200 : 500,
                         atomic: true,
                         receipts: [
                             {
@@ -143,8 +142,7 @@ export const local = (): Implementation => {
                         version: "1.0",
                         chainId,
                         atomic: true,
-                        statusCode: 100,
-                        status: "pending"
+                        status: 100
                     }
                 }
             },

@@ -45,7 +45,11 @@ export type Implementation = {
             store: Store
             userOperationHash: Hex.Hex
             timeout?: number
-        }) => Promise<GetCallsStatusReturnType>
+        }) => Promise<
+            Omit<GetCallsStatusReturnType, "status" | "statusCode"> & {
+                status: number
+            }
+        >
     }
     setup: (_: { internal: Internal }) => () => void
 }

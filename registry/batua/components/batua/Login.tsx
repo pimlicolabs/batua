@@ -230,7 +230,6 @@ export const Login = ({
                 }
             })
         } catch (error) {
-            console.log(error)
             const { code, errorMessage } = (() => {
                 if (
                     error instanceof Error &&

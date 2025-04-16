@@ -646,7 +646,8 @@ export const SendCalls = ({
                             <div className="space-y-6 pb-20">
                                 {calls.map((call, index: number) => (
                                     <TransactionDetail
-                                        key={call.to}
+                                        // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+                                        key={index}
                                         call={call}
                                         decodedCallData={decodedCallData}
                                         account={account}

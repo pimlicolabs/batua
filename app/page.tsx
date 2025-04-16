@@ -2,16 +2,37 @@
 import { Button } from "@/components/ui/button"
 import * as React from "react"
 import { useCallback } from "react"
-import { useSendTransaction, useWaitForTransactionReceipt } from "wagmi"
+import {
+    useConfig,
+    usePublicClient,
+    useSendTransaction,
+    useWaitForTransactionReceipt
+} from "wagmi"
 import { useAccount, useConnect, useDisconnect } from "wagmi"
 import { Highlight, themes } from "prism-react-renderer"
-import { encodeFunctionData, parseUnits } from "viem"
+import { encodeFunctionData, erc20Abi, parseUnits } from "viem"
 import { Loader2 } from "lucide-react"
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger
+} from "@/components/ui/tooltip"
+import { useSendCalls, useWaitForCallsStatus } from "wagmi/experimental"
+import { generatePrivateKey, privateKeyToAccount } from "viem/accounts"
+
+const TEST_ERC20_TOKEN_ADDRESS =
+    "0xFC3e86566895Fb007c6A0d3809eb2827DF94F751" as const
 
 export default function Home() {
     const account = useAccount()
     const { disconnect } = useDisconnect()
     const { connectors, connect, error } = useConnect()
+    const config = useConfig()
+
+    const client = usePublicClient({
+        chainId: config.state.chainId
+    })
 
     const {
         sendTransaction,
@@ -19,8 +40,14 @@ export default function Home() {
         isPending
     } = useSendTransaction()
 
+    const { sendCalls, data: callStatus } = useSendCalls()
+
     const { data: receipt } = useWaitForTransactionReceipt({
         hash: transactionReference
+    })
+
+    const { data: callReceipts } = useWaitForCallsStatus({
+        id: callStatus?.id
     })
 
     // Installation tab state
@@ -50,10 +77,36 @@ export default function Home() {
             .catch((err) => console.error("Failed to copy: ", err))
     }
 
+    const [erc20Balance, setErc20Balance] = React.useState<bigint | undefined>(
+        undefined
+    )
+
+    React.useEffect(() => {
+        const fetchErc20Balance = async () => {
+            if (!account.address) return
+
+            const balance = await client.readContract({
+                address: TEST_ERC20_TOKEN_ADDRESS,
+                abi: erc20Abi,
+                functionName: "balanceOf",
+                args: [account.address]
+            })
+            setErc20Balance(balance)
+        }
+
+        fetchErc20Balance()
+
+        const interval = setInterval(() => {
+            fetchErc20Balance()
+        }, 5_000)
+
+        return () => clearInterval(interval)
+    }, [account.address, client])
+
     const sendTransactionCallback = useCallback(async () => {
         if (!account.address) return
         sendTransaction({
-            to: "0xFC3e86566895Fb007c6A0d3809eb2827DF94F751",
+            to: TEST_ERC20_TOKEN_ADDRESS,
             data: encodeFunctionData({
                 abi: [
                     {
@@ -80,6 +133,39 @@ export default function Home() {
             })
         })
     }, [account.address, sendTransaction])
+
+    const sendBatchTransactionCallback = useCallback(async () => {
+        if (!account.address) return
+
+        const randomAddressOne = privateKeyToAccount(
+            generatePrivateKey()
+        ).address
+
+        const randomAddressTwo = privateKeyToAccount(
+            generatePrivateKey()
+        ).address
+
+        sendCalls({
+            calls: [
+                {
+                    to: TEST_ERC20_TOKEN_ADDRESS,
+                    data: encodeFunctionData({
+                        abi: erc20Abi,
+                        functionName: "transfer",
+                        args: [randomAddressOne, parseUnits("1", 6)] // erc20 has 6 decimals
+                    })
+                },
+                {
+                    to: TEST_ERC20_TOKEN_ADDRESS,
+                    data: encodeFunctionData({
+                        abi: erc20Abi,
+                        functionName: "transfer",
+                        args: [randomAddressTwo, parseUnits("1", 6)] // erc20 has 6 decimals
+                    })
+                }
+            ]
+        })
+    }, [account.address, sendCalls])
 
     return (
         <div className="max-w-3xl mx-auto px-4 py-12">
@@ -132,14 +218,7 @@ export default function Home() {
                                 Sending transaction...
                             </div>
                         )}
-                        {transactionReference && !receipt?.transactionHash && (
-                            <div className="mb-2 text-sm">
-                                <span className="font-semibold">
-                                    Awaiting confirmation:
-                                </span>{" "}
-                                {transactionReference}
-                            </div>
-                        )}
+
                         {receipt && (
                             <div className="mb-2 text-sm">
                                 <span className="font-semibold">Status:</span>{" "}
@@ -162,25 +241,85 @@ export default function Home() {
                                 {receipt.transactionHash}
                             </div>
                         )}
+
+                        {callStatus?.id && !callReceipts?.receipts && (
+                            <div className="flex items-center gap-2 text-amber-500 mb-2">
+                                <Loader2 className="h-4 w-4 animate-spin text-amber-500" />
+                                Sending batch transaction...
+                            </div>
+                        )}
+                        {callReceipts && (
+                            <div className="mb-2 text-sm">
+                                <span className="font-semibold">Status:</span>{" "}
+                                <span
+                                    className={
+                                        callReceipts.status === "success"
+                                            ? "text-green-500"
+                                            : callReceipts.status === "pending"
+                                              ? "text-yellow-500"
+                                              : "text-red-500"
+                                    }
+                                >
+                                    {callReceipts.status === "success"
+                                        ? "Success"
+                                        : callReceipts.status === "pending"
+                                          ? "Pending"
+                                          : "Failed"}
+                                </span>
+                            </div>
+                        )}
+                        {callReceipts?.receipts && (
+                            <div className="mb-3 text-sm overflow-hidden text-ellipsis">
+                                <span className="font-semibold">
+                                    Transaction hash:
+                                </span>{" "}
+                                {callReceipts.receipts[0].transactionHash}
+                            </div>
+                        )}
+
                         <div className="flex flex-col gap-3 mt-4">
                             <div className="flex gap-3">
-                                <Button
-                                    onClick={() => disconnect()}
-                                    type="button"
-                                    variant="outline"
-                                    className="w-full"
-                                >
-                                    Disconnect
-                                </Button>{" "}
+                                <TooltipProvider>
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            <Button
+                                                onClick={
+                                                    sendBatchTransactionCallback
+                                                }
+                                                type="button"
+                                                disabled={
+                                                    isPending || !erc20Balance
+                                                }
+                                                className="w-full"
+                                                variant="outline"
+                                            >
+                                                Test batch transaction
+                                            </Button>
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                            {erc20Balance === BigInt(0)
+                                                ? "Your ERC20 balance is 0. Mint test ERC20 before sending it."
+                                                : "This will send a batch transaction to send ERC20 tokens to two random addresses"}
+                                        </TooltipContent>
+                                    </Tooltip>
+                                </TooltipProvider>
                                 <Button
                                     onClick={sendTransactionCallback}
                                     type="button"
                                     disabled={isPending}
                                     className="w-full"
                                 >
-                                    Mint Test ERC20 Tokens
+                                    Mint test erc20 tokens
                                 </Button>
                             </div>
+                            <Button
+                                onClick={() => disconnect()}
+                                type="button"
+                                variant="outline"
+                                className="w-full"
+                            >
+                                Disconnect
+                            </Button>
                         </div>
                     </div>
                 )}
@@ -424,6 +563,98 @@ Batua.create({
                             EIP-6963.
                         </p>
                     </div>
+                </div>
+                <div className="mt-8">
+                    <h3 className="text-2xl font-bold mb-4">
+                        How to send batch transactions
+                    </h3>
+                    <Highlight
+                        theme={themes.vsLight}
+                        code={`
+import { useSendCalls } from "wagmi/experimental"
+
+const account = useAccount()
+const { sendCalls, data: callStatus } = useSendCalls()
+
+const { data: callReceipts } = useWaitForCallsStatus({
+    id: callStatus?.id
+})
+
+// use callReceipts to get the transaction hash
+
+const sendBatchTransactionCallback = useCallback(async () => {
+    if (!account.address) return
+
+    sendCalls({
+        calls: [
+            {
+                to: TEST_ERC20_TOKEN_ADDRESS,
+                data: encodeFunctionData({
+                    abi: erc20Abi,
+                    functionName: "transfer",
+                    args: [randomAddressOne, parseUnits("1", 6)]
+                })
+            },
+            {
+                to: TEST_ERC20_TOKEN_ADDRESS,
+                data: encodeFunctionData({
+                    abi: erc20Abi,
+                    functionName: "transfer",
+                    args: [randomAddressTwo, parseUnits("1", 6)]
+                })
+            }
+        ]
+    })
+}, [account.address, sendCalls])
+
+`}
+                        language="tsx"
+                    >
+                        {({
+                            className,
+                            style,
+                            tokens,
+                            getLineProps,
+                            getTokenProps
+                        }) => (
+                            <pre
+                                className={className}
+                                style={{
+                                    ...style,
+                                    margin: 0,
+                                    padding: "1rem",
+                                    borderRadius: "0.5rem",
+                                    fontSize: "0.875rem"
+                                }}
+                            >
+                                {tokens.map((line, lineIdx) => (
+                                    <div
+                                        key={`line-${
+                                            // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+                                            lineIdx
+                                        }`}
+                                        {...getLineProps({
+                                            line,
+                                            key: `line-${lineIdx}`
+                                        })}
+                                    >
+                                        {line.map((token, tokenIdx) => (
+                                            <span
+                                                key={`token-${lineIdx}-${
+                                                    // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+                                                    tokenIdx
+                                                }`}
+                                                {...getTokenProps({
+                                                    token,
+                                                    key: `token-${lineIdx}-${tokenIdx}`
+                                                })}
+                                            />
+                                        ))}
+                                    </div>
+                                ))}
+                            </pre>
+                        )}
+                    </Highlight>
                 </div>
             </div>
         </div>

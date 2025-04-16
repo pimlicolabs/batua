@@ -143,7 +143,7 @@ export const Provider = {
                                     }
                                 )
 
-                            if (receipts.status === "success") {
+                            if (receipts.status >= 200) {
                                 txHash = receipts.receipts?.[0]?.transactionHash
                             }
                         }
