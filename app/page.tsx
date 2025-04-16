@@ -473,21 +473,24 @@ export default function Home() {
                 )}
                 {account.status === "disconnected" && (
                     <div className="flex flex-wrap gap-3">
-                        {connectors.map((connector) => (
-                            <Button
-                                key={connector.uid}
-                                onClick={() => connect({ connector })}
-                                type="button"
-                                className="flex items-center gap-2"
-                                variant={
-                                    connector.name === "Batua"
-                                        ? "default"
-                                        : "outline"
-                                }
-                            >
-                                {connector.name}
-                            </Button>
-                        ))}
+                        {connectors.map(
+                            (connector) =>
+                                connector.name === "Batua" && (
+                                    <Button
+                                        key={connector.uid}
+                                        onClick={() => connect({ connector })}
+                                        type="button"
+                                        className="flex items-center gap-2 w-60"
+                                        variant={
+                                            connector.name === "Batua"
+                                                ? "default"
+                                                : "outline"
+                                        }
+                                    >
+                                        {connector.name}
+                                    </Button>
+                                )
+                        )}
                     </div>
                 )}
                 {error && (
