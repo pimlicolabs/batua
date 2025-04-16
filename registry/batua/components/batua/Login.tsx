@@ -396,7 +396,10 @@ export const Login = ({
                                         <TooltipTrigger asChild>
                                             <HelpCircle className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
                                         </TooltipTrigger>
-                                        <TooltipContent className="max-w-[220px]">
+                                        <TooltipContent
+                                            className="max-w-[220px]"
+                                            style={{ zIndex: 4294967294 }}
+                                        >
                                             <p>
                                                 {walletName} is an embedded
                                                 smart account that secures your
