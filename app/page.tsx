@@ -619,7 +619,6 @@ export default function Home() {
 
                 <div className="mt-8">
                     <h3 className="text-2xl font-bold mb-4">Usage</h3>
-                    <p className="mb-4">Use batua like:</p>
                     <div className="rounded-lg overflow-x-auto">
                         <RenderCode code={UsageCode} />
                     </div>
