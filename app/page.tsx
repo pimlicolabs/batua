@@ -282,19 +282,22 @@ export default function Home() {
                                 <TooltipProvider>
                                     <Tooltip>
                                         <TooltipTrigger asChild>
-                                            <Button
-                                                onClick={
-                                                    sendBatchTransactionCallback
-                                                }
-                                                type="button"
-                                                disabled={
-                                                    isPending || !erc20Balance
-                                                }
-                                                className="w-full"
-                                                variant="outline"
-                                            >
-                                                Test batch transaction
-                                            </Button>
+                                            <span className="w-full">
+                                                <Button
+                                                    onClick={
+                                                        sendBatchTransactionCallback
+                                                    }
+                                                    type="button"
+                                                    disabled={
+                                                        isPending ||
+                                                        !erc20Balance
+                                                    }
+                                                    className="w-full"
+                                                    variant="outline"
+                                                >
+                                                    Test batch transaction
+                                                </Button>
+                                            </span>
                                         </TooltipTrigger>
                                         <TooltipContent>
                                             {erc20Balance === BigInt(0)
