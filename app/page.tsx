@@ -325,14 +325,14 @@ export default function Home() {
                         </li>
                         <li>Support for sponsoring transactions</li>
                         <li>Support for batching multiple transactions</li>
-                        <li>You have the ownership of the complete code</li>
+                        <li>You have the complete ownership of the code</li>
                         <li>
                             Embeds into your application&apos;s theme due to
                             shadcn
                         </li>
                         <li>
-                            Works with wagmi, viem, ethers or any other
-                            blockchain library
+                            Works with wagmi, viem, ethers, privy, dynamic, and
+                            more
                         </li>
                     </ul>
                     <p className="mt-10 text-sm">Made with ❤️ from Pimlico</p>
@@ -541,13 +541,6 @@ export default function Home() {
             </div>
 
             <div className="mt-10">
-                <h2 className="text-4xl font-bold mb-6">Documentation</h2>
-
-                <p className="text-xl mb-6">
-                    Experience the future of Web3 development with seamless
-                    account abstraction.
-                </p>
-
                 <div className="mt-8">
                     <h3 className="text-2xl font-bold mb-4">Installation</h3>
                     <div className="border rounded-lg mb-6">
@@ -636,7 +629,7 @@ export default function Home() {
                 </div>
                 <div className="mt-8">
                     <h3 className="text-2xl font-bold mb-4">
-                        How to send batch transactions
+                        Send batch transactions
                     </h3>
                     <RenderCode code={BatchCode} />
                 </div>
