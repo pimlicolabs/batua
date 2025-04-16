@@ -5,7 +5,7 @@ import { useCallback } from "react"
 import { useSendTransaction, useWaitForTransactionReceipt } from "wagmi"
 import { useAccount, useConnect, useDisconnect } from "wagmi"
 import { Highlight, themes } from "prism-react-renderer"
-import { encodeFunctionData, erc20Abi, parseUnits, zeroAddress } from "viem"
+import { encodeFunctionData, parseUnits } from "viem"
 import { Loader2 } from "lucide-react"
 
 export default function Home() {
