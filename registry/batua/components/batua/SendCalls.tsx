@@ -32,6 +32,7 @@ import {
     Check,
     Code,
     File,
+    Fingerprint,
     Loader2,
     Parentheses,
     SendIcon
@@ -48,7 +49,8 @@ import {
     zeroAddress,
     type Hex,
     type Transport,
-    type Chain
+    type Chain,
+    parseEther
 } from "viem"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { decodeCallData } from "@/registry/batua/lib/batua/helpers/decoder"
@@ -89,36 +91,20 @@ const CommonCallsSection = ({
     chainName,
     dappName,
     hasPaymaster,
-    userOperation,
-    refreshingGasCost
+    refreshingGasCost,
+    gasCost: costInEther,
+    ethPrice
 }: {
     chainName: string
     dappName: string
     hasPaymaster: boolean
-    userOperation: UserOperation<"0.7"> | null
     refreshingGasCost: boolean
+    gasCost: bigint | null
+    ethPrice: number
 }) => {
-    const gasCost = useMemo(() => {
-        if (!userOperation) {
-            return null
-        }
-
-        const gasLimit =
-            userOperation.callGasLimit +
-            userOperation.verificationGasLimit +
-            userOperation.preVerificationGas +
-            (userOperation.paymasterPostOpGasLimit ?? BigInt(0)) +
-            (userOperation.preVerificationGas ?? BigInt(0))
-
-        const costInEther = gasLimit * userOperation.maxFeePerGas
-
-        const gasCost = (
-            Number(costInEther * BigInt(159071)) /
-            (100 * 10 ** 18)
-        ).toFixed(3)
-
-        return gasCost
-    }, [userOperation])
+    const gasCost = costInEther
+        ? Number(costInEther * BigInt(ethPrice)) / (100 * 10 ** 18)
+        : null
 
     return (
         <div className="border rounded-lg p-4 bg-muted/5 mb-5">
@@ -133,24 +119,55 @@ const CommonCallsSection = ({
             </div>
 
             <div className="flex flex-col w-full">
-                <div className="flex items-center justify-between w-full">
+                <div className="flex items-start justify-between w-full">
                     <div className="text-sm font-medium flex items-center gap-2">
                         Network fee (est.)
                     </div>
 
                     <div
-                        className={`text-sm text-muted-foreground flex items-center gap-1 ${hasPaymaster ? "line-through" : ""}`}
+                        className={`text-sm flex items-center gap-1 ${hasPaymaster ? "line-through" : ""}`}
                     >
-                        {(refreshingGasCost || !gasCost) && (
+                        {!gasCost && (
                             <Loader2 className="h-3 w-3 animate-spin" />
                         )}
-                        <span>
-                            {!gasCost
-                                ? "Calculating..."
-                                : refreshingGasCost
-                                  ? "Refreshing..."
-                                  : `US$${gasCost}`}
-                        </span>
+                        <div className="flex gap-2 justify-center items-center">
+                            {hasPaymaster && (
+                                <span>
+                                    {!gasCost
+                                        ? "Calculating..."
+                                        : refreshingGasCost
+                                          ? "Refreshing..."
+                                          : gasCost.toLocaleString("en-US", {
+                                                style: "currency",
+                                                currency: "USD",
+                                                maximumFractionDigits: 2
+                                            })}
+                                </span>
+                            )}
+
+                            {!hasPaymaster && costInEther && (
+                                <div
+                                    className={`flex flex-col justify-end ${refreshingGasCost ? "text-muted-foreground" : ""}`}
+                                >
+                                    <div className="flex justify-end">
+                                        {!gasCost
+                                            ? "Calculating..."
+                                            : gasCost.toLocaleString("en-US", {
+                                                  style: "currency",
+                                                  currency: "USD",
+                                                  maximumFractionDigits: 2
+                                              })}
+                                    </div>
+                                    <div className="flex justify-end text-xs text-muted-foreground">
+                                        (
+                                        {Number(
+                                            formatEther(costInEther)
+                                        ).toFixed(5)}{" "}
+                                        ETH)
+                                    </div>
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
                 {hasPaymaster && (
@@ -176,7 +193,7 @@ const CopyAddress = ({ name, value }: { name: string; value: Hex }) => {
                         onClick={() => {
                             navigator.clipboard.writeText(value)
                             setCopied(true)
-                            setTimeout(() => setCopied(false), 2000)
+                            setTimeout(() => setCopied(false), 1000)
                         }}
                         className="relative flex items-center justify-center font-mono text-xs truncate bg-muted/10 hover:bg-muted px-3 py-1.5 rounded-md border-dashed border cursor-pointer transition-colors"
                         title="Click to copy address"
@@ -208,10 +225,10 @@ const RenderArg = ({
 }) => {
     return (
         <div className="flex items-center justify-between gap-2 bg-black/5 dark:bg-white/5 px-2 py-1.5 rounded-md">
-            <span className="text-xs font-medium px-1.5 py-0.5 bg-muted/20 rounded-full min-w-[40px] text-center">
+            <span className="text-xs font-medium px-1.5 py-0.5 bg-muted/20 rounded-full min-w-[40px] text-center whitespace-nowrap">
                 Arg {argIdx + 1}
             </span>
-            <span className="font-mono text-xs px-2 py-1 rounded truncate">
+            <span className="font-mono text-xs px-2 py-1 rounded truncate flex-shrink">
                 {(() => {
                     const argStr =
                         typeof arg === "bigint" ? arg.toString() : String(arg)
@@ -378,15 +395,12 @@ export const SendCalls = ({
     const [userOperation, setUserOperation] =
         useState<UserOperation<"0.7"> | null>(null)
     const [refreshingGasCost, setRefreshingGasCost] = useState(false)
-
-    useEffect(() => {
-        if (decodedCallData) {
-            const timer = setTimeout(() => setIsLoading(false), 500)
-            return () => clearTimeout(timer)
-        }
-    }, [decodedCallData])
+    const [ethPrice, setEthPrice] = useState(1500 * 100)
+    const [gasCost, setGasCost] = useState<bigint | null>(null)
+    const [hasEnoughBalance, setHasEnoughBalance] = useState<boolean>(true)
 
     const { request, account, chain, hasPaymaster, calls } = useMemo(() => {
+        setIsLoading(true)
         const requestStore = RpcRequest.createStore()
         const request = requestStore.prepare(queueRequest.request)
         if (request.method !== "wallet_sendCalls") {
@@ -413,9 +427,10 @@ export const SendCalls = ({
             calls.map((call) => decodeCallData(call.data as Hex))
         )
 
-        decodedCallDataPromises.then((results) =>
+        decodedCallDataPromises.then((results) => {
             setDecodedCallData(results as DecodedCallData[])
-        )
+            setTimeout(() => setIsLoading(false), 500)
+        })
 
         const capabilities = request.params[0].capabilities
 
@@ -462,6 +477,19 @@ export const SendCalls = ({
         return { request, account, chain, hasPaymaster, calls }
     }, [queueRequest.request, internal])
 
+    useEffect(() => {
+        const unsubscribe = internal.store.subscribe(
+            (x) => x.price,
+            (price) => {
+                setEthPrice(Number(BigInt((price ?? 1500) * 100)))
+            }
+        )
+
+        return () => {
+            unsubscribe()
+        }
+    }, [internal.store])
+
     const onOpenChange = (open: boolean) => {
         if (!open) {
             onComplete({
@@ -479,17 +507,51 @@ export const SendCalls = ({
             if (!smartAccountClient) {
                 return
             }
-            const userOperation = await smartAccountClient.prepareUserOperation(
-                {
-                    calls: request.params[0].calls.map((call) => ({
-                        to: call.to ?? "0x",
-                        data: call.data ?? "0x",
-                        value: call.value ? BigInt(call.value) : undefined
-                    }))
+            try {
+                const client = getClient({ internal, chainId: chain.id })
+                const [userOperation, balance] = await Promise.all([
+                    await smartAccountClient.prepareUserOperation({
+                        calls: request.params[0].calls.map((call) => ({
+                            to: call.to ?? "0x",
+                            data: call.data ?? "0x",
+                            value: call.value ? BigInt(call.value) : undefined
+                        })),
+                        stateOverride: [
+                            {
+                                address: smartAccountClient.account.address,
+                                balance: parseEther("100")
+                            }
+                        ]
+                    }),
+                    await client.getBalance({
+                        address: smartAccountClient.account.address
+                    })
+                ])
+
+                const gasLimit =
+                    userOperation.callGasLimit +
+                    userOperation.verificationGasLimit +
+                    userOperation.preVerificationGas +
+                    (userOperation.paymasterPostOpGasLimit ?? BigInt(0)) +
+                    (userOperation.preVerificationGas ?? BigInt(0))
+
+                const costInEther = gasLimit * userOperation.maxFeePerGas
+
+                if (balance < costInEther && !hasPaymaster) {
+                    setHasEnoughBalance(false)
+                } else {
+                    setHasEnoughBalance(true)
                 }
-            )
-            setUserOperation(userOperation)
-            setRefreshingGasCost(false)
+
+                setUserOperation(userOperation)
+                setGasCost(costInEther)
+                setRefreshingGasCost(false)
+            } catch (e) {
+                setError(
+                    e instanceof Error ? e.message : "Failed to estimate gas"
+                )
+                setRefreshingGasCost(false)
+            }
         }
 
         const interval = setInterval(() => {
@@ -501,7 +563,7 @@ export const SendCalls = ({
 
         // cleanup on unmount
         return () => clearInterval(interval)
-    }, [request.params, smartAccountClient])
+    }, [request.params, smartAccountClient, internal, chain.id, hasPaymaster])
 
     // Scroll to top when error occurs
     useEffect(() => {
@@ -554,7 +616,9 @@ export const SendCalls = ({
         <Dialog open={!!queueRequest} onOpenChange={onOpenChange}>
             <DialogContent className="sm:max-w-[400px] p-6 h-[75vh] flex justify-start flex-col">
                 <SendCallsHeader />
-                <div className="overflow-y-auto pr-2">
+                <div
+                    className={`overflow-y-auto pr-2${!hasEnoughBalance ? " pb-36" : ""}`}
+                >
                     {error && (
                         <Alert variant="destructive" className="mb-5">
                             <AlertCircle className="h-4 w-4" />
@@ -566,8 +630,9 @@ export const SendCalls = ({
                         chainName={chain.name}
                         dappName={internal.config.dappName}
                         hasPaymaster={hasPaymaster}
-                        userOperation={userOperation}
                         refreshingGasCost={refreshingGasCost}
+                        gasCost={gasCost}
+                        ethPrice={ethPrice}
                     />
 
                     <div className="space-y-3">
@@ -581,8 +646,7 @@ export const SendCalls = ({
                             <div className="space-y-6 pb-20">
                                 {calls.map((call, index: number) => (
                                     <TransactionDetail
-                                        // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-                                        key={index}
+                                        key={call.to}
                                         call={call}
                                         decodedCallData={decodedCallData}
                                         account={account}
@@ -599,11 +663,20 @@ export const SendCalls = ({
                 </div>
 
                 <div className="fixed bottom-0 left-0 right-0 p-4 bg-background border-t">
+                    {!hasEnoughBalance && (
+                        <Alert variant="destructive" className="mb-3">
+                            <AlertCircle className="h-4 w-4" />
+                            <AlertDescription>
+                                Insufficient balance to cover gas fees for this
+                                transaction
+                            </AlertDescription>
+                        </Alert>
+                    )}
                     <Button
                         variant="default"
                         className="w-full justify-center h-12 text-base font-medium shadow-sm hover:shadow transition-all"
                         onClick={sendTransaction}
-                        disabled={sendingTransaction}
+                        disabled={sendingTransaction || !hasEnoughBalance}
                     >
                         {sendingTransaction ? (
                             <>
@@ -612,7 +685,7 @@ export const SendCalls = ({
                             </>
                         ) : (
                             <>
-                                <SendIcon className="h-5 w-5 mr-2" />
+                                <Fingerprint className="h-4 w-4" />
                                 <span>Confirm and Send</span>
                             </>
                         )}

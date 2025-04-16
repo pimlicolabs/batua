@@ -50,6 +50,10 @@ export type Implementation = {
     setup: (_: { internal: Internal }) => () => void
 }
 
+export type PriceManager = {
+    setup: (_: { internal: Internal }) => () => void
+}
+
 export type Compute<type> = { [key in keyof type]: type[key] } & unknown
 export type Undefined<type> = {
     [key in keyof type]?: undefined
@@ -110,6 +114,7 @@ export type State<
     accounts: readonly Account[]
     chain: chains[number]
     requestQueue: readonly QueuedRequest[]
+    price: number | undefined
 }
 
 export type Store<
@@ -136,4 +141,6 @@ export type Internal<
     getImplementation: () => Implementation
     setImplementation: (i: Implementation) => void
     store: Store<chains>
+    getPriceManager: () => PriceManager
+    setPriceManager: (p: PriceManager) => void
 }

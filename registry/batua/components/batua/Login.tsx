@@ -182,14 +182,6 @@ export const Login = ({
 
             const signature = await WebAuthnP256.sign(challenge)
 
-            const userHandle = (signature.raw.response as any).userHandle
-            const decoder = new TextDecoder()
-            const userHandleStr = decoder.decode(userHandle)
-
-            console.log({
-                userHandle: userHandleStr
-            })
-
             const verifiedCredential =
                 await passkeyServerClient.verifyAuthentication({
                     ...signature,

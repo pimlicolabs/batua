@@ -2,6 +2,7 @@ import { type Chain, base, baseSepolia, sepolia } from "viem/chains"
 import { http, type Transport } from "viem"
 import type {
     Implementation,
+    PriceManager,
     Internal,
     State,
     Storage
@@ -11,6 +12,7 @@ import { local } from "@/registry/batua/lib/batua/implementations/local"
 import { createStore } from "zustand/vanilla"
 import { persist, subscribeWithSelector } from "zustand/middleware"
 import { idb } from "@/registry/batua/lib/batua/storage"
+import { coingeckoPriceManager } from "@/registry/batua/lib/batua/coingeckoPriceManager"
 
 const defaultConfig = {
     dappName: "Dapp",
@@ -23,18 +25,13 @@ const defaultConfig = {
             [sepolia.id]: http(`https://public.pimlico.io/v2/${sepolia.id}/rpc`)
         }
     },
-    paymaster: {
-        transports: {
-            [sepolia.id]: http(`https://public.pimlico.io/v2/${sepolia.id}/rpc`)
-        },
-        context: {}
-    },
     bundler: {
         transports: {
             [sepolia.id]: http(`https://public.pimlico.io/v2/${sepolia.id}/rpc`)
         }
     },
-    implementation: local()
+    implementation: local(),
+    priceManager: coingeckoPriceManager()
 } as const satisfies Config
 
 export type Config<
@@ -56,6 +53,7 @@ export type Config<
     bundler: {
         transports: Record<chains[number]["id"], Transport>
     }
+    priceManager: PriceManager
 }
 
 export const Batua = {
@@ -81,21 +79,24 @@ export const Batua = {
         }
         dappName?: string
         walletName?: string
+        priceManager?: PriceManager
     }) => {
         const config: Config = {
             storage: parameters?.storage ?? defaultConfig.storage,
             chains: parameters?.chains ?? defaultConfig.chains,
             announceProvider: parameters?.announceProvider ?? true,
             rpc: parameters?.rpc ?? defaultConfig.rpc,
-            paymaster: parameters?.paymaster ?? defaultConfig.paymaster,
+            paymaster: parameters?.paymaster,
             bundler: parameters?.bundler ?? defaultConfig.bundler,
             implementation:
                 parameters?.implementation ?? defaultConfig.implementation,
             dappName: parameters?.dappName ?? defaultConfig.dappName,
-            walletName: parameters?.walletName ?? defaultConfig.walletName
+            walletName: parameters?.walletName ?? defaultConfig.walletName,
+            priceManager: parameters?.priceManager ?? defaultConfig.priceManager
         }
 
         let implementation = config.implementation
+        let priceManager = config.priceManager
 
         const store = createStore(
             subscribeWithSelector(
@@ -103,7 +104,8 @@ export const Batua = {
                     () => ({
                         accounts: [],
                         chain: config.chains[0],
-                        requestQueue: []
+                        requestQueue: [],
+                        price: undefined
                     }),
                     {
                         name: "batua.store",
@@ -112,15 +114,9 @@ export const Batua = {
                                 accounts: state.accounts.map((account) => ({
                                     ...account,
                                     sign: undefined
-                                    // keys: account.keys?.map((key) => ({
-                                    //     ...key,
-                                    //     privateKey:
-                                    //         typeof key.privateKey === "function"
-                                    //             ? undefined
-                                    //             : key.privateKey
-                                    // }))
                                 })),
-                                chain: state.chain
+                                chain: state.chain,
+                                price: state.price
                             } as unknown as State
                         },
                         storage: config.storage
@@ -136,26 +132,41 @@ export const Batua = {
                 return implementation
             },
             setImplementation(i) {
-                destroy?.()
+                destroyImplementation()
                 implementation = i
-                destroy = i.setup({
+                destroyImplementation = i.setup({
                     internal
                 })
-                return destroy
+                return destroyImplementation
+            },
+            getPriceManager() {
+                return priceManager
+            },
+            setPriceManager(p) {
+                destroyPriceManager()
+                priceManager = p
+                destroyPriceManager = p.setup({
+                    internal
+                })
+                return destroyPriceManager
             },
             store
         }
 
         const provider = Provider.from({ internal })
 
-        let destroy = implementation.setup({
+        let destroyImplementation = implementation.setup({
+            internal
+        })
+        let destroyPriceManager = priceManager.setup({
             internal
         })
 
         return {
             destroy: () => {
                 provider.destroy()
-                destroy()
+                destroyImplementation()
+                destroyPriceManager()
             }
         }
     }

@@ -1,12 +1,17 @@
-import { createClient, type Chain, type Client, type Transport } from "viem"
+import {
+    type PublicClient,
+    type Chain,
+    type Transport,
+    createPublicClient
+} from "viem"
 import type { Internal } from "@/registry/batua/lib/batua/type"
 
-const clientCache = new Map<string, Client<Transport, Chain>>()
+const clientCache = new Map<string, PublicClient<Transport, Chain>>()
 
 export const getClient = ({
     internal,
     chainId
-}: { internal: Internal; chainId: number | undefined }): Client<
+}: { internal: Internal; chainId: number | undefined }): PublicClient<
     Transport,
     Chain
 > => {
@@ -31,7 +36,7 @@ export const getClient = ({
 
         return client
     }
-    const client = createClient({
+    const client = createPublicClient({
         chain,
         transport: transport,
         pollingInterval: 1_000

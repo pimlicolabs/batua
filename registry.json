@@ -24,9 +24,10 @@
                 "@openchainxyz/abi-guesser@^1.0.2"
             ],
             "registryDependencies": [
-                "dialog",
-                "button",
+                "accordion",
                 "alert",
+                "button",
+                "dialog",
                 "separator",
                 "tooltip"
             ],
