@@ -124,50 +124,49 @@ const CommonCallsSection = ({
                         Network fee (est.)
                     </div>
 
-                    <div
-                        className={`text-sm flex items-center gap-1 ${hasPaymaster ? "line-through" : ""}`}
-                    >
+                    <div className="text-sm flex items-center gap-1">
                         {!gasCost && (
-                            <Loader2 className="h-3 w-3 animate-spin" />
+                            <>
+                                <Loader2 className="h-3 w-3 animate-spin" />
+                                Calculating...
+                            </>
                         )}
-                        <div className="flex gap-2 justify-center items-center">
-                            {hasPaymaster && (
-                                <span>
-                                    {!gasCost
-                                        ? "Calculating..."
-                                        : refreshingGasCost
-                                          ? "Refreshing..."
-                                          : gasCost.toLocaleString("en-US", {
+                        {gasCost && (
+                            <div
+                                className={`flex gap-2 justify-center items-center  ${hasPaymaster ? "line-through" : ""} ${refreshingGasCost ? "text-muted-foreground" : ""}`}
+                            >
+                                {hasPaymaster && (
+                                    <span>
+                                        {gasCost.toLocaleString("en-US", {
+                                            style: "currency",
+                                            currency: "USD",
+                                            maximumFractionDigits: 2
+                                        })}
+                                    </span>
+                                )}
+
+                                {!hasPaymaster && costInEther && (
+                                    <div
+                                        className={`flex flex-col justify-end ${refreshingGasCost ? "text-muted-foreground" : ""}`}
+                                    >
+                                        <div className="flex justify-end">
+                                            {gasCost.toLocaleString("en-US", {
                                                 style: "currency",
                                                 currency: "USD",
                                                 maximumFractionDigits: 2
                                             })}
-                                </span>
-                            )}
-
-                            {!hasPaymaster && costInEther && (
-                                <div
-                                    className={`flex flex-col justify-end ${refreshingGasCost ? "text-muted-foreground" : ""}`}
-                                >
-                                    <div className="flex justify-end">
-                                        {!gasCost
-                                            ? "Calculating..."
-                                            : gasCost.toLocaleString("en-US", {
-                                                  style: "currency",
-                                                  currency: "USD",
-                                                  maximumFractionDigits: 2
-                                              })}
+                                        </div>
+                                        <div className="flex justify-end text-xs text-muted-foreground">
+                                            (
+                                            {Number(
+                                                formatEther(costInEther)
+                                            ).toFixed(5)}{" "}
+                                            ETH)
+                                        </div>
                                     </div>
-                                    <div className="flex justify-end text-xs text-muted-foreground">
-                                        (
-                                        {Number(
-                                            formatEther(costInEther)
-                                        ).toFixed(5)}{" "}
-                                        ETH)
-                                    </div>
-                                </div>
-                            )}
-                        </div>
+                                )}
+                            </div>
+                        )}
                     </div>
                 </div>
                 {hasPaymaster && (
@@ -262,17 +261,11 @@ const RenderArgs = ({ args }: { args: unknown[] }) => {
 }
 
 const RawCallData = ({ data }: { data: Hex }) => {
-    const [open, setOpen] = useState(false)
     const displayData = data || "0x"
 
     return (
         <div className="flex flex-col mt-3">
-            <Accordion
-                type="single"
-                collapsible
-                className="text-xs w-full"
-                onValueChange={(value) => setOpen(value === "data")}
-            >
+            <Accordion type="single" collapsible className="text-xs w-full">
                 <AccordionItem value="data" className="border-none">
                     <AccordionTrigger className="font-mono text-xs truncate bg-muted/10 px-3 py-2 rounded-md border border-muted/20 hover:bg-muted/20 transition-colors hover:no-underline">
                         <div className="flex items-center gap-2">
@@ -394,6 +387,7 @@ export const SendCalls = ({
     const [ethPrice, setEthPrice] = useState(1500 * 100)
     const [gasCost, setGasCost] = useState<bigint | null>(null)
     const [hasEnoughBalance, setHasEnoughBalance] = useState<boolean>(true)
+    const [paused, setPaused] = useState(false)
 
     const { request, account, chain, hasPaymaster, calls } = useMemo(() => {
         setIsLoading(true)
@@ -500,7 +494,7 @@ export const SendCalls = ({
 
     useEffect(() => {
         const estimateUserOperation = async () => {
-            if (!smartAccountClient) {
+            if (!smartAccountClient || paused) {
                 return
             }
             try {
@@ -559,7 +553,14 @@ export const SendCalls = ({
 
         // cleanup on unmount
         return () => clearInterval(interval)
-    }, [request.params, smartAccountClient, internal, chain.id, hasPaymaster])
+    }, [
+        request.params,
+        smartAccountClient,
+        internal,
+        chain.id,
+        hasPaymaster,
+        paused
+    ])
 
     // Scroll to top when error occurs
     useEffect(() => {
@@ -576,6 +577,7 @@ export const SendCalls = ({
             if (!smartAccountClient || !userOperation) {
                 return
             }
+            setPaused(true)
             setError(null)
 
             setSendingTransaction(true)
@@ -605,6 +607,7 @@ export const SendCalls = ({
             )
         } finally {
             setSendingTransaction(false)
+            setPaused(false)
         }
     }, [onComplete, queueRequest.request, smartAccountClient, userOperation])
 
