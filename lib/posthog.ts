@@ -9,7 +9,7 @@ const POSTHOG_HOST =
 if (typeof window !== "undefined" && POSTHOG_KEY) {
     posthog.init(POSTHOG_KEY, {
         api_host: POSTHOG_HOST,
-        loaded: (ph) => {
+        loaded: () => {
             // Optionally identify user or set properties here
             // ph.identify('user_id');
         }
