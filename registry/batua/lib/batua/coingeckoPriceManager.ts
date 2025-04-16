@@ -10,6 +10,7 @@ export const coingeckoPriceManager = (
     }
 ): PriceManager => {
     const fetchPrice = async (internal: Internal) => {
+        if (typeof window === "undefined") return
         const result = await fetch(url)
         if (!result.ok) {
             return
