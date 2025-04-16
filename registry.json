@@ -11,17 +11,17 @@
             "title": "Batua",
             "description": "A wallet provider for wagmi with support for account abstraction.",
             "dependencies": [
-                "ox@^0.6.12",
-                "permissionless@^0.2.42",
+                "viem@^2.27.0",
                 "zustand@^5.0.3",
-                "viem@^2.25.0",
-                "mipd@^0.0.7",
-                "@sinclair/typebox@^0.34.33",
-                "idb-keyval@^6.2.1",
-                "react@^19.0.0",
-                "react-dom@^19.0.0",
+                "ox@^0.6.12",
                 "lucide-react@^0.471.1",
-                "@openchainxyz/abi-guesser@^1.0.2"
+                "permissionless@^0.2.42",
+                "react@^19.0.0",
+                "mipd@^0.0.7",
+                "zod@^3.24.1",
+                "idb-keyval@^6.2.1",
+                "@sinclair/typebox@^0.34.33",
+                "react-dom@^19.0.0"
             ],
             "registryDependencies": [
                 "accordion",
@@ -54,6 +54,11 @@
                     "target": "lib/batua.ts"
                 },
                 {
+                    "path": "registry/batua/lib/batua/coingeckoPriceManager.ts",
+                    "type": "registry:lib",
+                    "target": "lib/batua/coingeckoPriceManager.ts"
+                },
+                {
                     "path": "registry/batua/lib/batua/key.ts",
                     "type": "registry:lib",
                     "target": "lib/batua/key.ts"
@@ -79,6 +84,11 @@
                     "target": "lib/batua/implementations/local.ts"
                 },
                 {
+                    "path": "registry/batua/lib/batua/helpers/decoder.ts",
+                    "type": "registry:lib",
+                    "target": "lib/batua/helpers/decoder.ts"
+                },
+                {
                     "path": "registry/batua/lib/batua/helpers/getBundlerClient.ts",
                     "type": "registry:lib",
                     "target": "lib/batua/helpers/getBundlerClient.ts"
@@ -97,6 +107,11 @@
                     "path": "registry/batua/lib/batua/helpers/getSmartAccountClient.ts",
                     "type": "registry:lib",
                     "target": "lib/batua/helpers/getSmartAccountClient.ts"
+                },
+                {
+                    "path": "registry/batua/lib/batua/helpers/randomWords.ts",
+                    "type": "registry:lib",
+                    "target": "lib/batua/helpers/randomWords.ts"
                 },
                 {
                     "path": "registry/batua/lib/batua/typebox/capabilities.ts",
@@ -137,11 +152,6 @@
                     "path": "registry/batua/lib/batua/typebox/types.ts",
                     "type": "registry:lib",
                     "target": "lib/batua/typebox/types.ts"
-                },
-                {
-                    "path": "registry/batua/lib/batua/helpers/randomWords.ts",
-                    "type": "registry:lib",
-                    "target": "lib/batua/helpers/randomWords.ts"
                 }
             ]
         }
