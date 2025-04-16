@@ -1,14 +1,17 @@
 "use client"
+
+import posthog from "@/lib/posthog"
 import { Button } from "@/components/ui/button"
 import * as React from "react"
 import { useCallback } from "react"
 import {
     useConfig,
+    useConnect,
     usePublicClient,
     useSendTransaction,
     useWaitForTransactionReceipt
 } from "wagmi"
-import { useAccount, useConnect, useDisconnect } from "wagmi"
+import { useAccount, useDisconnect } from "wagmi"
 import { Highlight, themes } from "prism-react-renderer"
 import { encodeFunctionData, erc20Abi, parseUnits } from "viem"
 import { File, Loader2 } from "lucide-react"
@@ -99,6 +102,7 @@ Batua.create({
 })`
 
 import { useState, useEffect } from "react"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 
 const RenderCode = ({ code }: { code: string }) => {
     const [copied, setCopied] = useState(false)
@@ -173,6 +177,9 @@ export default function Home() {
     const account = useAccount()
     const { disconnect } = useDisconnect()
     const { connectors, connect, error } = useConnect()
+    React.useEffect(() => {
+        posthog.capture("pageview", { page: "home" })
+    }, [])
     const config = useConfig()
 
     const client = usePublicClient({
@@ -527,17 +534,13 @@ export default function Home() {
                 </a>
             </div> */}
 
-            <div className="mt-12 text-sm text-gray-600">
-                <p>
-                    Published April 9th 2025
-                    {/* <a href="#" className="underline">
-                        PDF
-                    </a>{" "}
-                    |{" "}
-                    <a href="#" className="underline">
-                        Listen
-                    </a> */}
-                </p>
+            <div className="mt-12">
+                <Alert variant="destructive" className="text-sm">
+                    <AlertTitle>Warning</AlertTitle>
+                    <AlertDescription>
+                        Do not use in production environments as of now.
+                    </AlertDescription>
+                </Alert>
             </div>
 
             <div className="mt-10">
