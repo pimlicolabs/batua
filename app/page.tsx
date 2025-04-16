@@ -6,6 +6,7 @@ import { useSendTransaction, useWaitForTransactionReceipt } from "wagmi"
 import { useAccount, useConnect, useDisconnect } from "wagmi"
 import { Highlight, themes } from "prism-react-renderer"
 import { encodeFunctionData, erc20Abi, zeroAddress } from "viem"
+import { Loader2 } from "lucide-react"
 
 export default function Home() {
     const account = useAccount()
@@ -107,8 +108,8 @@ export default function Home() {
                         </div>
                         {isPending && (
                             <div className="flex items-center gap-2 text-amber-500 mb-2">
-                                <span className="animate-spin">⟳</span> Sending
-                                transaction...
+                                <Loader2 className="h-4 w-4 animate-spin text-amber-500" />
+                                Sending transaction...
                             </div>
                         )}
                         {transactionReference && !receipt?.transactionHash && (
