@@ -608,7 +608,7 @@ export default function Home() {
                                     </svg>
                                 </button>
                                 <div
-                                    className={`absolute -top-10 right-0 bg-green-100 text-green-800 px-3 py-1 rounded shadow-md text-sm transition-opacity duration-300 ${showToast ? "opacity-100" : "opacity-0 pointer-events-none"}`}
+                                    className={`absolute -top-10 right-0 bg-zinc-800 text-white text-xs px-2 py-1 rounded shadow transition-opacity duration-300 ${showToast ? "opacity-100" : "opacity-0 pointer-events-none"}`}
                                 >
                                     Copied to clipboard!
                                 </div>
