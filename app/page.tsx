@@ -5,7 +5,7 @@ import { useCallback } from "react"
 import { useSendTransaction, useWaitForTransactionReceipt } from "wagmi"
 import { useAccount, useConnect, useDisconnect } from "wagmi"
 import { Highlight, themes } from "prism-react-renderer"
-import { encodeFunctionData, erc20Abi, zeroAddress } from "viem"
+import { encodeFunctionData, erc20Abi, parseUnits, zeroAddress } from "viem"
 import { Loader2 } from "lucide-react"
 
 export default function Home() {
@@ -51,15 +51,35 @@ export default function Home() {
     }
 
     const sendTransactionCallback = useCallback(async () => {
+        if (!account.address) return
         sendTransaction({
-            to: "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+            to: "0xFC3e86566895Fb007c6A0d3809eb2827DF94F751",
             data: encodeFunctionData({
-                abi: erc20Abi,
-                functionName: "transfer",
-                args: [zeroAddress, BigInt(1)]
+                abi: [
+                    {
+                        inputs: [
+                            {
+                                internalType: "address",
+                                name: "to",
+                                type: "address"
+                            },
+                            {
+                                internalType: "uint256",
+                                name: "amount",
+                                type: "uint256"
+                            }
+                        ],
+                        name: "mint",
+                        outputs: [],
+                        stateMutability: "nonpayable",
+                        type: "function"
+                    }
+                ],
+                functionName: "mint",
+                args: [account.address, parseUnits("100", 6)] // erc20 has 6 decimals
             })
         })
-    }, [sendTransaction])
+    }, [account.address, sendTransaction])
 
     return (
         <div className="max-w-3xl mx-auto px-4 py-12">
@@ -158,7 +178,7 @@ export default function Home() {
                                     disabled={isPending}
                                     className="w-full"
                                 >
-                                    Send Transaction
+                                    Mint Test ERC20 Tokens
                                 </Button>
                             </div>
                         </div>
