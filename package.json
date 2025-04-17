@@ -31,6 +31,7 @@
         "ox": "^0.6.12",
         "permissionless": "^0.2.42",
         "posthog-js": "^1.236.1",
+        "posthog-node": "^4.11.7",
         "prism-react-renderer": "^2.4.1",
         "react": "^19.0.0",
         "react-dom": "^19.0.0",
