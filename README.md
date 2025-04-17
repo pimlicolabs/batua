@@ -20,16 +20,16 @@ manager:
 
 ```sh
 # pnpm
-pnpm dlx shadcn@latest add https://www.batua.sh/r/batua.json
+pnpm dlx shadcn@latest add https://batua.sh/install
 
 # npm
-npx shadcn@latest add https://www.batua.sh/r/batua.json
+npx shadcn@latest add https://batua.sh/install
 
 # yarn
-yarn dlx shadcn@latest add https://www.batua.sh/r/batua.json
+yarn dlx shadcn@latest add https://batua.sh/install
 
 # bun
-bunx --bun shadcn@latest add https://www.batua.sh/r/batua.json
+bunx --bun shadcn@latest add https://batua.sh/install
 ```
 
 ## Usage Example
