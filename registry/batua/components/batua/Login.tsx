@@ -47,22 +47,18 @@ import {
 export const Login = ({
     onComplete,
     queueRequest,
-    internal
+    internal,
+    dummy
 }: {
     onComplete: (args: {
         queueRequest: QueuedRequest
     }) => void | Promise<void>
     queueRequest: QueuedRequest
     internal: Internal
+    dummy?: boolean
 }) => {
     const [error, setError] = useState<string | null>(null)
-    // const [isShaking, setIsShaking] = useState(false)
     const [isLoading, setIsLoading] = useState<"signin" | "signup" | null>(null)
-
-    // const triggerShake = useCallback(() => {
-    //     setIsShaking(true)
-    //     setTimeout(() => setIsShaking(false), 500) // Reset shake after animation completes
-    // }, [])
 
     const walletName = useMemo(
         () => internal.config.walletName,
@@ -70,6 +66,9 @@ export const Login = ({
     )
 
     const createCredential = useCallback(async () => {
+        if (dummy) {
+            return
+        }
         try {
             setIsLoading("signup")
             const client = getClient({
@@ -164,9 +163,12 @@ export const Login = ({
         } finally {
             setIsLoading(null)
         }
-    }, [internal, onComplete, queueRequest])
+    }, [dummy, internal, onComplete, queueRequest.request])
 
     const signIn = useCallback(async () => {
+        if (dummy) {
+            return
+        }
         try {
             setIsLoading("signin")
             const client = getClient({
@@ -296,10 +298,13 @@ export const Login = ({
         } finally {
             setIsLoading(null)
         }
-    }, [internal, onComplete, queueRequest])
+    }, [dummy, internal, onComplete, queueRequest])
 
     const onOpenChange = useCallback(
         (open: boolean) => {
+            if (dummy) {
+                return
+            }
             if (!open) {
                 onComplete({
                     queueRequest: {
@@ -310,7 +315,7 @@ export const Login = ({
                 })
             }
         },
-        [onComplete, queueRequest]
+        [dummy, onComplete, queueRequest.request]
     )
 
     return (

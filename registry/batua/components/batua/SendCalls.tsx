@@ -61,6 +61,8 @@ import {
     TooltipTrigger
 } from "@/components/ui/tooltip"
 import type { SmartAccountClient } from "permissionless"
+import { sepolia } from "viem/chains"
+import { generatePrivateKey, privateKeyToAccount } from "viem/accounts"
 
 type DecodedCallData = {
     functionName?: string
@@ -171,7 +173,7 @@ const CommonCallsSection = ({
                 </div>
                 {hasPaymaster && (
                     <div className="flex justify-end">
-                        <div className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full mt-2 font-medium">
+                        <div className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full mt-2 font-medium">
                             Sponsored by {dappName}
                         </div>
                     </div>
@@ -361,13 +363,15 @@ const TransactionDetail = ({
 export const SendCalls = ({
     onComplete,
     queueRequest,
-    internal
+    internal,
+    dummy
 }: {
     onComplete: (args: {
         queueRequest: QueuedRequest
     }) => void | Promise<void>
     queueRequest: QueuedRequest
     internal: Internal
+    dummy?: boolean
 }) => {
     const [sendingTransaction, setSendingTransaction] = useState(false)
     const [error, setError] = useState<string | null>(null)
@@ -397,20 +401,6 @@ export const SendCalls = ({
             throw new Provider.UnsupportedMethodError()
         }
 
-        const store = internal.store.getState()
-
-        const account = store.accounts.find(
-            (account) => account.address === request.params[0].from
-        )
-
-        if (!account) {
-            throw new Provider.UnauthorizedError()
-        }
-        const chain = store.chain
-
-        const hasPaymaster =
-            internal.config.paymaster?.transports[chain.id] !== undefined
-
         const calls = request.params[0].calls
 
         const decodedCallDataPromises = Promise.all(
@@ -421,6 +411,40 @@ export const SendCalls = ({
             setDecodedCallData(results as DecodedCallData[])
             setTimeout(() => setIsLoading(false), 500)
         })
+        const chain = (() => {
+            if (dummy) {
+                return sepolia
+            }
+            const store = internal.store.getState()
+            return store.chain
+        })()
+
+        const hasPaymaster =
+            internal.config.paymaster?.transports[chain.id] !== undefined
+        if (dummy) {
+            setIsLoading(false)
+            return {
+                request,
+                account: {
+                    address: privateKeyToAccount(generatePrivateKey()).address,
+                    type: "smartAccount",
+                    name: "ambitious_deadpool"
+                } as const,
+                chain: sepolia,
+                hasPaymaster: true,
+                calls: calls
+            }
+        }
+
+        const store = internal.store.getState()
+
+        const account = store.accounts.find(
+            (account) => account.address === request.params[0].from
+        )
+
+        if (!account) {
+            throw new Provider.UnauthorizedError()
+        }
 
         const capabilities = request.params[0].capabilities
 
@@ -465,9 +489,12 @@ export const SendCalls = ({
         })
 
         return { request, account, chain, hasPaymaster, calls }
-    }, [queueRequest.request, internal])
+    }, [dummy, queueRequest.request, internal])
 
     useEffect(() => {
+        if (dummy) {
+            return
+        }
         const unsubscribe = internal.store.subscribe(
             (x) => x.price,
             (price) => {
@@ -478,7 +505,7 @@ export const SendCalls = ({
         return () => {
             unsubscribe()
         }
-    }, [internal.store])
+    }, [dummy, internal.store])
 
     const onOpenChange = (open: boolean) => {
         if (!open) {
@@ -493,6 +520,39 @@ export const SendCalls = ({
     }
 
     useEffect(() => {
+        if (
+            dummy ||
+            !smartAccountClient ||
+            !request.params ||
+            !chain.id ||
+            !hasPaymaster
+        ) {
+            const costInEther = parseEther("0.000075")
+
+            let timer: NodeJS.Timeout | undefined = undefined
+
+            const setCostInEther = () => {
+                setRefreshingGasCost(true)
+                timer = setTimeout(() => {
+                    setGasCost(costInEther)
+                    setRefreshingGasCost(false)
+                }, 1000)
+            }
+
+            const interval = setInterval(() => {
+                setCostInEther()
+            }, 10_000) // updates every 10 seconds
+
+            setCostInEther()
+
+            // cleanup on unmount
+            return () => {
+                clearInterval(interval)
+                if (timer) {
+                    clearTimeout(timer)
+                }
+            }
+        }
         const estimateUserOperation = async () => {
             if (!smartAccountClient || paused) {
                 return
@@ -554,6 +614,7 @@ export const SendCalls = ({
         // cleanup on unmount
         return () => clearInterval(interval)
     }, [
+        dummy,
         request.params,
         smartAccountClient,
         internal,
@@ -573,6 +634,9 @@ export const SendCalls = ({
     }, [error])
 
     const sendTransaction = useCallback(async () => {
+        if (dummy) {
+            return
+        }
         try {
             if (!smartAccountClient || !userOperation) {
                 return
@@ -609,7 +673,13 @@ export const SendCalls = ({
             setSendingTransaction(false)
             setPaused(false)
         }
-    }, [onComplete, queueRequest.request, smartAccountClient, userOperation])
+    }, [
+        dummy,
+        onComplete,
+        queueRequest.request,
+        smartAccountClient,
+        userOperation
+    ])
 
     return (
         <Dialog open={!!queueRequest} onOpenChange={onOpenChange}>
@@ -662,7 +732,7 @@ export const SendCalls = ({
                     </div>
                 </div>
 
-                <div className="fixed bottom-0 left-0 right-0 p-4 bg-background border-t">
+                <div className="absolute bottom-0 left-0 right-0 p-4 bg-background border-t">
                     {!hasEnoughBalance && (
                         <Alert variant="destructive" className="mb-3">
                             <AlertCircle className="h-4 w-4" />
