@@ -14,7 +14,7 @@ import {
 import { useAccount, useDisconnect } from "wagmi"
 import { Highlight, themes } from "prism-react-renderer"
 import { encodeFunctionData, erc20Abi, parseUnits } from "viem"
-import { File, Loader2 } from "lucide-react"
+import { ExternalLink, File, Loader2 } from "lucide-react"
 import Image from "next/image"
 import {
     Tooltip,
@@ -70,6 +70,10 @@ const sendBatchTransactionCallback = useCallback(async () => {
 }, [account.address, sendCalls])`
 
 const UsageCode = `import { Batua } from "@/lib/batua"
+
+Batua.create()`
+
+const CustomConfigurationCode = `import { Batua } from "@/lib/batua"
 import { sepolia } from "viem/chains"
 import { http } from "viem/transport"
 
@@ -323,7 +327,7 @@ export default function Home() {
 
     return (
         <div className="max-w-3xl mx-auto px-4 py-12">
-            <h1 className="text-4xl font-bold mb-4 font-mono">batua.sh</h1>
+            <h1 className="text-4xl font-bold mb-10 font-mono">batua.sh</h1>
 
             <div className="text-base mb-8 font-mono">
                 <div className="mb-6">
@@ -633,10 +637,35 @@ export default function Home() {
                     </div>
                 </div>
                 <div className="mt-8">
+                    <h3 className="text-2xl font-bold mb-4">Customise Batua</h3>
+                    <Button
+                        variant={"outline"}
+                        asChild
+                        className="gap-1 bg-pink-50 hover:bg-pink-100 text-pink-500 border-pink-200 shadow-sm transition-all duration-300"
+                    >
+                        <a
+                            href="https://tweak.batua.sh/"
+                            target="_blank"
+                            rel="noreferrer"
+                            className="flex items-center gap-2 justify-center"
+                        >
+                            <span>Customise Batua</span>
+                            <ExternalLink className="h-4 w-4" />
+                        </a>
+                    </Button>
+                </div>
+
+                <div className="mt-8">
                     <h3 className="text-2xl font-bold mb-4">
                         Send batch transactions
                     </h3>
                     <RenderCode code={BatchCode} />
+                </div>
+                <div className="mt-8">
+                    <h3 className="text-2xl font-bold mb-4">
+                        Custom configuration
+                    </h3>
+                    <RenderCode code={CustomConfigurationCode} />
                 </div>
             </div>
             <div className="mt-12 flex justify-center">
