@@ -214,10 +214,10 @@ export default function Home() {
 
     // Command mapping for different package managers
     const installCommands = {
-        pnpm: "pnpm dlx shadcn@latest add https://www.batua.sh/r/batua.json",
-        npm: "npx shadcn@latest add https://www.batua.sh/r/batua.json",
-        yarn: "yarn dlx shadcn@latest add https://www.batua.sh/r/batua.json",
-        bun: "bunx --bun shadcn@latest add https://www.batua.sh/r/batua.json"
+        pnpm: "pnpm dlx shadcn@latest add https://batua.sh/install",
+        npm: "npx shadcn@latest add https://batua.sh/install",
+        yarn: "yarn dlx shadcn@latest add https://batua.sh/install",
+        bun: "bunx --bun shadcn@latest add https://batua.sh/install"
     } as const
 
     // Copy to clipboard function
