@@ -119,13 +119,14 @@ const RenderCode = ({ code }: { code: string }) => {
             {({ className, style, tokens, getLineProps, getTokenProps }) => (
                 <div className="relative">
                     <pre
-                        className={`${className} border-1`}
+                        className={`${className} border-1 overflow-auto`}
                         style={{
                             ...style,
                             margin: 0,
                             padding: "1rem",
                             borderRadius: "0.5rem",
-                            fontSize: "0.875rem"
+                            fontSize: "0.875rem",
+                            maxWidth: "100%"
                         }}
                     >
                         {tokens.map((line, lineIdx) => (
