@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server"
-import { readFileSync } from "node:fs"
-import path from "node:path"
 import { PostHog } from "posthog-node"
+import { batuaData } from "./batua-data"
 
 // Initialize server-side PostHog client
 const serverPosthog = process.env.NEXT_PUBLIC_POSTHOG_KEY
@@ -34,10 +33,9 @@ export async function GET(request: Request) {
             serverPosthog.flush()
         }
 
-        // Read the JSON file
-        const filePath = path.join(process.cwd(), "public", "r", "batua.json")
-        const fileContent = readFileSync(filePath, "utf8")
-        const jsonData = JSON.parse(fileContent)
+        // Use the data from the TypeScript file that was generated during build
+        // This approach works reliably with Vercel Edge functions
+        const jsonData = batuaData;
 
         // Return the JSON data
         return NextResponse.json(jsonData, {

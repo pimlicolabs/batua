@@ -7,7 +7,7 @@
         "build": "next build && pnpm run batua:build",
         "start": "next start",
         "lint": "next lint",
-        "batua:build": "shadcn build"
+        "batua:build": "shadcn build && bun scripts/update-batua-data.ts"
     },
     "dependencies": {
         "@biomejs/biome": "^1.9.4",
