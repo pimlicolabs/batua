@@ -70,10 +70,6 @@ const sendBatchTransactionCallback = useCallback(async () => {
 }, [account.address, sendCalls])`
 
 const UsageCode = `import { Batua } from "@/lib/batua"
-
-Batua.create()`
-
-const CustomConfigurationCode = `import { Batua } from "@/lib/batua"
 import { sepolia } from "viem/chains"
 import { http } from "viem/transport"
 
@@ -624,9 +620,36 @@ export default function Home() {
 
                 <div className="mt-8">
                     <h3 className="text-2xl font-bold mb-4">Usage</h3>
-                    <div className="rounded-lg overflow-x-auto">
-                        <RenderCode code={UsageCode} />
+
+                    <div className="space-y-6">
+                        <div>
+                            <h4 className="text-xl font-semibold mb-2">
+                                Step 1: Set up Passkey Server
+                            </h4>
+                            <p className="text-sm text-gray-700 mb-3">
+                                Go to{" "}
+                                <a
+                                    href="https://dashboard.pimlico.io/passkey-server"
+                                    className="text-blue-600 hover:underline"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                >
+                                    https://dashboard.pimlico.io/passkey-server
+                                </a>{" "}
+                                and configure your passkey server.
+                            </p>
+                        </div>
+
+                        <div>
+                            <h4 className="text-xl font-semibold mb-2">
+                                Step 2: Implement Batua
+                            </h4>
+                            <div className="rounded-lg overflow-x-auto">
+                                <RenderCode code={UsageCode} />
+                            </div>
+                        </div>
                     </div>
+
                     <div className="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
                         <p className="text-sm text-gray-700">
                             <strong>Note:</strong> After creating Batua, you can
@@ -660,12 +683,6 @@ export default function Home() {
                         Send batch transactions
                     </h3>
                     <RenderCode code={BatchCode} />
-                </div>
-                <div className="mt-8">
-                    <h3 className="text-2xl font-bold mb-4">
-                        Custom configuration
-                    </h3>
-                    <RenderCode code={CustomConfigurationCode} />
                 </div>
             </div>
             <div className="mt-12 flex justify-center">
