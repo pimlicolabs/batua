@@ -1,11 +1,13 @@
 import { sepolia } from "viem/chains"
 import { http, createConfig } from "wagmi"
 import { Batua } from "@/registry/batua/batua"
+import { iframe } from "@/registry/batua/lib/batua/implementations/iframe"
 
 const pimlicoApiKey = process.env.NEXT_PUBLIC_PIMLICO_API_KEY || ""
 
 Batua.create({
     dappName: "Pimlico",
+    implementation: iframe(),
     rpc: {
         transports: {
             [sepolia.id]: http("https://ethereum-sepolia-rpc.publicnode.com")

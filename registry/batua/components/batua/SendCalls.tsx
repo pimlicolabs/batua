@@ -1,11 +1,4 @@
 "use client"
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle
-} from "@/components/ui/dialog"
 import type {
     Account,
     Internal,
@@ -72,19 +65,19 @@ type DecodedCallData = {
 const SendCallsHeader = () => {
     return (
         <div className="bg-muted/10 rounded-t-lg">
-            <DialogHeader className="pb-0 gap-0">
+            <div className="flex flex-col gap-2 text-center sm:text-left pb-0">
                 <div className="flex items-center gap-3">
                     <div className="bg-muted/20 p-2 rounded-full">
                         <SendIcon className="h-5 w-5" />
                     </div>
-                    <DialogTitle className="text-xl font-semibold">
+                    <h2 className="text-lg leading-none font-semibold">
                         Send Transaction
-                    </DialogTitle>
+                    </h2>
                 </div>
-                <DialogDescription className="text-sm">
+                <p className="text-muted-foreground text-sm">
                     Review and confirm this transaction from your wallet
-                </DialogDescription>
-            </DialogHeader>
+                </p>
+            </div>
         </div>
     )
 }
@@ -507,18 +500,6 @@ export const SendCalls = ({
         }
     }, [dummy, internal.store])
 
-    const onOpenChange = (open: boolean) => {
-        if (!open) {
-            onComplete({
-                queueRequest: {
-                    request: queueRequest.request,
-                    status: "error",
-                    error: new Provider.UserRejectedRequestError()
-                }
-            })
-        }
-    }
-
     useEffect(() => {
         if (
             dummy ||
@@ -553,6 +534,7 @@ export const SendCalls = ({
                 }
             }
         }
+
         const estimateUserOperation = async () => {
             if (!smartAccountClient || paused) {
                 return
@@ -682,86 +664,84 @@ export const SendCalls = ({
     ])
 
     return (
-        <Dialog open={!!queueRequest} onOpenChange={onOpenChange}>
-            <DialogContent className="sm:max-w-[400px] p-6 h-[75vh] flex justify-start flex-col">
-                <SendCallsHeader />
-                <div
-                    className={`overflow-y-auto pr-2${!hasEnoughBalance ? " pb-36" : ""}`}
+        <>
+            <SendCallsHeader />
+            <div
+                className={`overflow-y-auto pr-2${!hasEnoughBalance ? " pb-36" : ""}`}
+            >
+                {error && (
+                    <Alert variant="destructive" className="mb-5">
+                        <AlertCircle className="h-4 w-4" />
+                        <AlertDescription>{error}</AlertDescription>
+                    </Alert>
+                )}
+
+                <CommonCallsSection
+                    chainName={chain.name}
+                    dappName={internal.config.dappName}
+                    hasPaymaster={hasPaymaster}
+                    refreshingGasCost={refreshingGasCost}
+                    gasCost={gasCost}
+                    ethPrice={ethPrice}
+                />
+
+                <div className="space-y-3">
+                    <h3 className="text-sm font-medium flex items-center gap-2">
+                        <div className="bg-muted/20 p-1 rounded-sm">
+                            <File className="h-4 w-4" />
+                        </div>
+                        Transaction Details
+                    </h3>
+                    {!isLoading && decodedCallData ? (
+                        <div className="space-y-6 pb-20">
+                            {calls.map((call, index: number) => (
+                                <TransactionDetail
+                                    // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+                                    key={index}
+                                    call={call}
+                                    decodedCallData={decodedCallData}
+                                    account={account}
+                                    index={index}
+                                />
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="flex justify-center py-4">
+                            <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+                        </div>
+                    )}
+                </div>
+            </div>
+
+            <div className="absolute bottom-0 left-0 right-0 p-4 bg-background border-t">
+                {!hasEnoughBalance && (
+                    <Alert variant="destructive" className="mb-3">
+                        <AlertCircle className="h-4 w-4" />
+                        <AlertDescription>
+                            Insufficient balance to cover gas fees for this
+                            transaction
+                        </AlertDescription>
+                    </Alert>
+                )}
+                <Button
+                    variant="default"
+                    className="w-full justify-center h-12 text-base font-medium shadow-sm hover:shadow transition-all cursor-pointer"
+                    onClick={sendTransaction}
+                    disabled={sendingTransaction || !hasEnoughBalance}
                 >
-                    {error && (
-                        <Alert variant="destructive" className="mb-5">
-                            <AlertCircle className="h-4 w-4" />
-                            <AlertDescription>{error}</AlertDescription>
-                        </Alert>
+                    {sendingTransaction ? (
+                        <>
+                            <Loader2 className="h-5 w-5 mr-2 animate-spin" />
+                            <span>Processing Transaction...</span>
+                        </>
+                    ) : (
+                        <>
+                            <Fingerprint className="h-4 w-4" />
+                            <span>Confirm and Send</span>
+                        </>
                     )}
-
-                    <CommonCallsSection
-                        chainName={chain.name}
-                        dappName={internal.config.dappName}
-                        hasPaymaster={hasPaymaster}
-                        refreshingGasCost={refreshingGasCost}
-                        gasCost={gasCost}
-                        ethPrice={ethPrice}
-                    />
-
-                    <div className="space-y-3">
-                        <h3 className="text-sm font-medium flex items-center gap-2">
-                            <div className="bg-muted/20 p-1 rounded-sm">
-                                <File className="h-4 w-4" />
-                            </div>
-                            Transaction Details
-                        </h3>
-                        {!isLoading && decodedCallData ? (
-                            <div className="space-y-6 pb-20">
-                                {calls.map((call, index: number) => (
-                                    <TransactionDetail
-                                        // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-                                        key={index}
-                                        call={call}
-                                        decodedCallData={decodedCallData}
-                                        account={account}
-                                        index={index}
-                                    />
-                                ))}
-                            </div>
-                        ) : (
-                            <div className="flex justify-center py-4">
-                                <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-                            </div>
-                        )}
-                    </div>
-                </div>
-
-                <div className="absolute bottom-0 left-0 right-0 p-4 bg-background border-t">
-                    {!hasEnoughBalance && (
-                        <Alert variant="destructive" className="mb-3">
-                            <AlertCircle className="h-4 w-4" />
-                            <AlertDescription>
-                                Insufficient balance to cover gas fees for this
-                                transaction
-                            </AlertDescription>
-                        </Alert>
-                    )}
-                    <Button
-                        variant="default"
-                        className="w-full justify-center h-12 text-base font-medium shadow-sm hover:shadow transition-all"
-                        onClick={sendTransaction}
-                        disabled={sendingTransaction || !hasEnoughBalance}
-                    >
-                        {sendingTransaction ? (
-                            <>
-                                <Loader2 className="h-5 w-5 mr-2 animate-spin" />
-                                <span>Processing Transaction...</span>
-                            </>
-                        ) : (
-                            <>
-                                <Fingerprint className="h-4 w-4" />
-                                <span>Confirm and Send</span>
-                            </>
-                        )}
-                    </Button>
-                </div>
-            </DialogContent>
-        </Dialog>
+                </Button>
+            </div>
+        </>
     )
 }

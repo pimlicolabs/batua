@@ -29,3 +29,16 @@ export namespace permissions {
     export const Response = Type.Array(Permissions.Permissions)
     export type Response = Schema.StaticDecode<typeof Response>
 }
+
+export namespace preCalls {
+    export const Request = Type.Array(
+        Type.Object({
+            context: Type.Unknown(),
+            signature: Primitive.Hex
+        })
+    )
+    export type Request = Schema.StaticDecode<typeof Request>
+
+    export const Response = Request
+    export type Response = Schema.StaticDecode<typeof Response>
+}

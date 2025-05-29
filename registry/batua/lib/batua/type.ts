@@ -4,7 +4,14 @@ import type { Mutate, StoreApi } from "zustand/vanilla"
 import type { Address, RpcRequest, RpcResponse } from "ox"
 import type * as Rpc from "@/registry/batua/lib/batua/typebox/rpc"
 import type { Hex } from "ox"
-import type { Client, MaybePromise, OneOf, WalletCapabilities } from "viem"
+import type {
+    Client,
+    MaybePromise,
+    OneOf,
+    WalletCapabilities,
+    WalletGrantPermissionsParameters,
+    WalletGrantPermissionsReturnType
+} from "viem"
 import type { GetCallsStatusReturnType } from "viem/experimental"
 
 export type Storage = {
@@ -50,6 +57,14 @@ export type Implementation = {
                 status: number
             }
         >
+
+        grantPermissions: (parameters: {
+            client: Client
+            config: Config
+            request: Rpc.parseRequest.ReturnType
+            store: Store
+            permission: WalletGrantPermissionsParameters
+        }) => Promise<WalletGrantPermissionsReturnType>
     }
     setup: (_: { internal: Internal }) => () => void
 }

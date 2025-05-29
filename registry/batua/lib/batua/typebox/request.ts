@@ -427,3 +427,29 @@ export namespace wallet_revokePermissions {
 
     export const Response = undefined
 }
+
+export namespace wallet_grantPermissions {
+    export const Parameters = Permissions.GrantPermissions
+    export type Parameters = Schema.StaticDecode<typeof Parameters>
+
+    export const Request = Type.Object({
+        method: Type.Literal("wallet_grantPermissions"),
+        params: Type.Tuple([Parameters])
+    })
+    export type Request = Schema.StaticDecode<typeof Request>
+
+    export const ResponseCapabilities = Type.Object({
+        preCalls: Schema.Optional(C.preCalls.Response)
+    })
+    export type ResponseCapabilities = Schema.StaticDecode<
+        typeof ResponseCapabilities
+    >
+
+    export const Response = Type.Intersect([
+        Permissions.Permissions,
+        Type.Object({
+            capabilities: Schema.Optional(Type.Any())
+        })
+    ])
+    export type Response = Schema.StaticDecode<typeof Response>
+}

@@ -27,3 +27,40 @@ export const Request = Type.Object({
     permissions: Permissions.properties.permissions
 })
 export type Request = Schema.StaticDecode<typeof Request>
+
+export const GrantPermissions = Type.Object({
+    expiry: Type.Number({ minimum: 1 }),
+    permissions: Type.Array(
+        Type.Object({
+            type: Type.Literal("erc20-token-transfer"),
+            data: Type.Object({
+                address: Primitive.Address,
+                ticker: Type.String()
+            }),
+            policies: Type.Array(
+                Type.Object({
+                    type: Type.Literal("token-allowance"),
+                    data: Type.Object({
+                        allowance: Primitive.TypeboxBigInt
+                    })
+                })
+            )
+        })
+    ),
+    signer: Type.Object({
+        data: Type.Object({
+            id: Primitive.Address
+        }),
+        type: Type.Literal("account")
+    })
+})
+export type GrantPermissions = Schema.StaticDecode<typeof GrantPermissions>
+
+export const RequestGrantPermissions = Type.Object({
+    expiry: Type.Number({ minimum: 1 }),
+    signer: GrantPermissions.properties.signer,
+    permissions: GrantPermissions.properties.permissions
+})
+export type RequestGrantPermissions = Schema.StaticDecode<
+    typeof RequestGrantPermissions
+>

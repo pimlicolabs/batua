@@ -2,14 +2,7 @@
 import { WebAuthnP256 } from "ox"
 import type { QueuedRequest, Internal } from "@/registry/batua/lib/batua/type"
 import { Button } from "@/components/ui/button"
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-    DialogFooter
-} from "@/components/ui/dialog"
+import { DialogFooter } from "@/components/ui/dialog"
 import {
     AlertCircle,
     LogIn,
@@ -24,6 +17,7 @@ import { getClient } from "@/registry/batua/lib/batua/helpers/getClient"
 import {
     createWebAuthnCredential,
     entryPoint07Address,
+    type SmartAccount,
     toWebAuthnAccount
 } from "viem/account-abstraction"
 import { createPasskeyServerClient } from "permissionless/clients/passkeyServer"
@@ -63,6 +57,65 @@ export const Login = ({
     const walletName = useMemo(
         () => internal.config.walletName,
         [internal.config]
+    )
+
+    const setAccountInStore = useCallback(
+        ({
+            smartAccount,
+            credential
+        }: {
+            smartAccount: SmartAccount
+            credential: {
+                id: string
+                publicKey: `0x${string}`
+                userName: string
+            }
+        }) => {
+            internal.store.setState((x) => {
+                const existingAccountIndex = x.accounts.findIndex(
+                    (account) => account.address === smartAccount.address
+                )
+
+                if (existingAccountIndex !== -1) {
+                    // Update existing account
+                    const updatedAccounts = [...x.accounts]
+                    updatedAccounts[existingAccountIndex] = {
+                        address: smartAccount.address,
+                        key: Key.fromWebAuthnP256({
+                            credential: credential,
+                            //todo: use rpId
+                            rpId: undefined
+                        }),
+                        type: "smartAccount",
+                        name: credential.userName
+                    }
+
+                    return {
+                        ...x,
+                        accounts: updatedAccounts
+                    }
+                }
+
+                // Add new account
+                return {
+                    ...x,
+                    accounts: [
+                        ...x.accounts,
+                        {
+                            address: smartAccount.address,
+                            key: Key.fromWebAuthnP256({
+                                credential: credential,
+                                //todo: use rpId
+                                rpId: undefined
+                            }),
+                            type: "smartAccount",
+                            name: credential.userName
+                        }
+                    ]
+                }
+            })
+        },
+        [internal.store]
     )
 
     const createCredential = useCallback(async () => {
@@ -133,22 +186,12 @@ export const Login = ({
                     version: "0.7"
                 }
             })
-            internal.store.setState((x) => ({
-                ...x,
-                accounts: [
-                    ...x.accounts,
-                    {
-                        address: smartAccount.address,
-                        key: Key.fromWebAuthnP256({
-                            credential: credential,
-                            //todo: use rpId
-                            rpId: undefined
-                        }),
-                        type: "smartAccount",
-                        name: credential.userName
-                    }
-                ]
-            }))
+
+            setAccountInStore({
+                smartAccount,
+                credential
+            })
+
             onComplete({
                 queueRequest: {
                     request: queueRequest.request,
@@ -163,7 +206,7 @@ export const Login = ({
         } finally {
             setIsLoading(null)
         }
-    }, [dummy, internal, onComplete, queueRequest.request])
+    }, [dummy, internal, onComplete, queueRequest.request, setAccountInStore])
 
     const signIn = useCallback(async () => {
         if (dummy) {
@@ -196,7 +239,8 @@ export const Login = ({
 
             const credential = {
                 id: verifiedCredential.id,
-                publicKey: verifiedCredential.publicKey
+                publicKey: verifiedCredential.publicKey,
+                userName: verifiedCredential.userName
             }
 
             const smartAccount = await toKernelSmartAccount({
@@ -208,22 +252,11 @@ export const Login = ({
                     version: "0.7"
                 }
             })
-            internal.store.setState((x) => ({
-                ...x,
-                accounts: [
-                    ...x.accounts,
-                    {
-                        address: smartAccount.address,
-                        key: Key.fromWebAuthnP256({
-                            credential: credential,
-                            //todo: use rpId
-                            rpId: undefined
-                        }),
-                        name: verifiedCredential.userName,
-                        type: "smartAccount"
-                    }
-                ]
-            }))
+            setAccountInStore({
+                smartAccount,
+                credential
+            })
+
             onComplete({
                 queueRequest: {
                     request: queueRequest.request,
@@ -298,148 +331,126 @@ export const Login = ({
         } finally {
             setIsLoading(null)
         }
-    }, [dummy, internal, onComplete, queueRequest])
-
-    const onOpenChange = useCallback(
-        (open: boolean) => {
-            if (dummy) {
-                return
-            }
-            if (!open) {
-                onComplete({
-                    queueRequest: {
-                        request: queueRequest.request,
-                        status: "error",
-                        error: new Provider.UserRejectedRequestError()
-                    }
-                })
-            }
-        },
-        [dummy, onComplete, queueRequest.request]
-    )
+    }, [dummy, internal, onComplete, queueRequest, setAccountInStore])
 
     return (
-        <Dialog open={!!queueRequest} onOpenChange={onOpenChange}>
-            <DialogContent
-                className={"sm:max-w-[325px] p-0"}
-                style={{ zIndex: 4294967290 }}
-            >
-                <div className="bg-primary/5 p-6 rounded-t-lg">
-                    <DialogHeader className="pb-0">
-                        <div className="flex items-center gap-2">
-                            <KeyRound className="h-5 w-5 text-primary" />
-                            <DialogTitle>Sign in</DialogTitle>
-                        </div>
-                        <DialogDescription>
-                            Create or access your wallet securely with your
-                            passkey
-                        </DialogDescription>
-                    </DialogHeader>
+        <>
+            <div className="bg-primary/5 p-6 rounded-t-lg">
+                <div className="flex flex-col gap-2 text-center sm:text-left pb-0">
+                    <div className="flex items-center gap-2">
+                        <KeyRound className="h-5 w-5 text-primary" />
+                        <h2 className="text-lg leading-none font-semibold">
+                            Sign in
+                        </h2>
+                    </div>
+                    <p className="text-muted-foreground text-sm">
+                        Create or access your wallet securely with your passkey
+                    </p>
                 </div>
+            </div>
 
-                <div className="p-6 pt-5">
-                    {error && (
-                        <Alert variant="destructive" className="mb-5">
-                            <AlertCircle className="h-4 w-4" />
-                            <AlertDescription>{error}</AlertDescription>
-                        </Alert>
-                    )}
+            <div className="p-6 pt-5">
+                {error && (
+                    <Alert variant="destructive" className="mb-5">
+                        <AlertCircle className="h-4 w-4" />
+                        <AlertDescription>{error}</AlertDescription>
+                    </Alert>
+                )}
 
-                    <div className="space-y-5">
-                        <div className="space-y-2.5">
-                            <h3 className="text-sm font-medium flex items-center gap-1">
-                                Already have a {walletName}?
-                                <TooltipProvider>
-                                    <Tooltip>
-                                        <TooltipTrigger asChild>
-                                            <HelpCircle className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
-                                        </TooltipTrigger>
-                                        <TooltipContent
-                                            className="max-w-[220px]"
-                                            style={{ zIndex: 4294967294 }}
-                                        >
-                                            <p>
-                                                {walletName} is an embedded
-                                                smart account that secures your
-                                                account with passkeys.
-                                            </p>
-                                        </TooltipContent>
-                                    </Tooltip>
-                                </TooltipProvider>
-                            </h3>
-                            <Button
-                                className="w-full h-11"
-                                variant="outline"
-                                onClick={signIn}
-                                disabled={isLoading !== null}
-                            >
-                                {isLoading === "signin" ? (
-                                    <Loader2 className="h-4 w-4 animate-spin" />
-                                ) : (
-                                    <Fingerprint className="h-4 w-4 text-primary" />
-                                )}
-                                Sign in with passkey
-                            </Button>
+                <div className="space-y-5">
+                    <div className="space-y-2.5">
+                        <h3 className="text-sm font-medium flex items-center gap-1">
+                            Already have a {walletName}?
+                            <TooltipProvider>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <HelpCircle className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
+                                    </TooltipTrigger>
+                                    <TooltipContent
+                                        className="max-w-[220px]"
+                                        style={{ zIndex: 4294967294 }}
+                                    >
+                                        <p>
+                                            {walletName} is an embedded smart
+                                            account that secures your account
+                                            with passkeys.
+                                        </p>
+                                    </TooltipContent>
+                                </Tooltip>
+                            </TooltipProvider>
+                        </h3>
+                        <Button
+                            className="w-full h-11"
+                            variant="outline"
+                            onClick={signIn}
+                            disabled={isLoading !== null}
+                        >
+                            {isLoading === "signin" ? (
+                                <Loader2 className="h-4 w-4 animate-spin" />
+                            ) : (
+                                <Fingerprint className="h-4 w-4 text-primary" />
+                            )}
+                            Sign in with passkey
+                        </Button>
+                    </div>
+
+                    <div className="relative py-1">
+                        <div className="absolute inset-0 flex items-center">
+                            <Separator className="w-full" />
                         </div>
-
-                        <div className="relative py-1">
-                            <div className="absolute inset-0 flex items-center">
-                                <Separator className="w-full" />
-                            </div>
-                            <div className="relative flex justify-center text-xs uppercase">
-                                <span className="bg-background px-2 text-muted-foreground">
-                                    Or
-                                </span>
-                            </div>
-                        </div>
-
-                        <div className="space-y-2.5">
-                            <h3 className="text-sm font-medium flex items-center gap-1">
-                                New to {walletName}?
-                                <TooltipProvider>
-                                    <Tooltip>
-                                        <TooltipTrigger asChild>
-                                            <HelpCircle className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
-                                        </TooltipTrigger>
-                                        <TooltipContent
-                                            className="max-w-[220px]"
-                                            style={{ zIndex: 4294967294 }}
-                                        >
-                                            <p>
-                                                {walletName} is an embedded
-                                                smart account that secures your
-                                                account with passkeys.
-                                            </p>
-                                        </TooltipContent>
-                                    </Tooltip>
-                                </TooltipProvider>
-                            </h3>
-                            <Button
-                                className="w-full h-11"
-                                onClick={() => {
-                                    setError(null)
-                                    createCredential()
-                                }}
-                                disabled={isLoading !== null}
-                            >
-                                {isLoading === "signup" ? (
-                                    <Loader2 className="h-4 w-4 animate-spin" />
-                                ) : (
-                                    <LogIn className="h-4 w-4" />
-                                )}
-                                Create new wallet
-                            </Button>
+                        <div className="relative flex justify-center text-xs uppercase">
+                            <span className="bg-background px-2 text-muted-foreground">
+                                Or
+                            </span>
                         </div>
                     </div>
-                </div>
 
-                <DialogFooter className="bg-muted/20 px-6 py-4 border-t">
-                    <div className="w-full text-xs text-center text-muted-foreground">
-                        Your credentials are stored securely and never leave
-                        your device
+                    <div className="space-y-2.5">
+                        <h3 className="text-sm font-medium flex items-center gap-1">
+                            New to {walletName}?
+                            <TooltipProvider>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <HelpCircle className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
+                                    </TooltipTrigger>
+                                    <TooltipContent
+                                        className="max-w-[220px]"
+                                        style={{ zIndex: 4294967294 }}
+                                    >
+                                        <p>
+                                            {walletName} is an embedded smart
+                                            account that secures your account
+                                            with passkeys.
+                                        </p>
+                                    </TooltipContent>
+                                </Tooltip>
+                            </TooltipProvider>
+                        </h3>
+                        <Button
+                            className="w-full h-11"
+                            onClick={() => {
+                                setError(null)
+                                createCredential()
+                            }}
+                            disabled={isLoading !== null}
+                        >
+                            {isLoading === "signup" ? (
+                                <Loader2 className="h-4 w-4 animate-spin" />
+                            ) : (
+                                <LogIn className="h-4 w-4" />
+                            )}
+                            Create new wallet
+                        </Button>
                     </div>
-                </DialogFooter>
-            </DialogContent>
-        </Dialog>
+                </div>
+            </div>
+
+            <DialogFooter className="bg-muted/20 px-6 py-4 border-t">
+                <div className="w-full text-xs text-center text-muted-foreground">
+                    Your credentials are stored securely and never leave your
+                    device
+                </div>
+            </DialogFooter>
+        </>
     )
 }

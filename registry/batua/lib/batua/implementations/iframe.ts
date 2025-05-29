@@ -7,10 +7,9 @@ import type {
 
 import ReactDOM from "react-dom/client"
 import React from "react"
-import { Main } from "@/registry/batua/components/batua/Main"
-import { getBundlerClient } from "@/registry/batua/lib/batua/helpers/getBundlerClient"
+import { Iframe } from "@/registry/batua/components/batua/Iframe"
 
-export const local = (): Implementation => {
+export const iframe = (): Implementation => {
     const requestStore = RpcRequest.createStore()
 
     function getProvider(store: Store) {
@@ -102,49 +101,33 @@ export const local = (): Implementation => {
                         `Cannot load accounts for method: ${request.method}`
                     )
                 })()
+
+                internal.store.setState((x) => ({
+                    ...x,
+                    accounts: accounts.map((account) => ({
+                        ...account,
+                        name: "batua",
+                        type: "smartAccount"
+                    }))
+                }))
+
                 return {
                     accounts
                 }
             },
-            getCallsStatus: async ({ userOperationHash, timeout, store }) => {
-                const bundlerClient = getBundlerClient({
-                    internal
+            getCallsStatus: async ({ userOperationHash, store }) => {
+                const provider = getProvider(store)
+                return provider.request({
+                    method: "wallet_getCallsStatus",
+                    params: [userOperationHash]
+                }) as any
+            },
+            grantPermissions: async ({ store, permission }) => {
+                const provider = getProvider(store)
+                return provider.request({
+                    method: "wallet_grantPermissions",
+                    params: [permission]
                 })
-
-                const chainId = store.getState().chain.id
-                try {
-                    const receipt =
-                        await bundlerClient.waitForUserOperationReceipt({
-                            hash: userOperationHash,
-                            timeout: timeout ?? 1_000 // 1 second
-                        })
-                    const userOpStatus = receipt.success
-                    return {
-                        id: userOperationHash,
-                        version: "1.0",
-                        chainId,
-                        status: userOpStatus ? 200 : 500,
-                        atomic: true,
-                        receipts: [
-                            {
-                                status: receipt.receipt.status,
-                                logs: receipt.receipt.logs,
-                                blockHash: receipt.receipt.blockHash,
-                                blockNumber: receipt.receipt.blockNumber,
-                                gasUsed: receipt.receipt.gasUsed,
-                                transactionHash: receipt.receipt.transactionHash
-                            }
-                        ]
-                    }
-                } catch {
-                    return {
-                        id: userOperationHash,
-                        version: "1.0",
-                        chainId,
-                        atomic: true,
-                        status: 100
-                    }
-                }
             },
             sendCalls: async ({ account, store, calls, capabilities }) => {
                 const provider = getProvider(store)
@@ -166,13 +149,6 @@ export const local = (): Implementation => {
                         }
                     ]
                 }) as Promise<Hex.Hex>
-            },
-            grantPermissions: async ({ store, permission }) => {
-                const provider = getProvider(store)
-                return provider.request({
-                    method: "wallet_grantPermissions",
-                    params: [permission]
-                })
             }
         },
         setup: ({ internal: internal_ }) => {
@@ -182,7 +158,7 @@ export const local = (): Implementation => {
             root.id = internal.id
             document.body.appendChild(root)
             ReactDOM.createRoot(root).render(
-                React.createElement(Main, {
+                React.createElement(Iframe, {
                     internal
                 })
             )

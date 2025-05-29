@@ -215,6 +215,26 @@ export const Provider = {
 
                         return undefined
                     }
+
+                    case "wallet_grantPermissions": {
+                        if (state.accounts.length === 0)
+                            throw new ProviderOx.DisconnectedError()
+
+                        const [permission] = request._decoded.params
+
+                        const client = getClient()
+
+                        const grantedPermission =
+                            await getImplementation().actions.grantPermissions({
+                                client,
+                                config,
+                                request,
+                                store,
+                                permission
+                            })
+
+                        return grantedPermission
+                    }
                 }
             }
         })

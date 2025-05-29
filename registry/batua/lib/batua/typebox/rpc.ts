@@ -77,7 +77,8 @@ export const Request = Type.Union([
     RpcRequest.wallet_prepareCalls.Request,
     RpcRequest.wallet_sendCalls.Request,
     RpcRequest.wallet_sendPreparedCalls.Request,
-    RpcRequest.wallet_revokePermissions.Request
+    RpcRequest.wallet_revokePermissions.Request,
+    RpcRequest.wallet_grantPermissions.Request
 ])
 
 export function parseRequest(request: unknown): parseRequest.ReturnType {
@@ -99,6 +100,7 @@ export function parseRequest(request: unknown): parseRequest.ReturnType {
     }
 
     Value.Assert(Request, raw)
+
     const _decoded = Value.Decode(Request, raw)
 
     return {
