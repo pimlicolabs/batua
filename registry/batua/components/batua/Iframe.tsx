@@ -57,7 +57,7 @@ const InnerIframe = ({
         <iframe
             className="w-[352px] h-[75vh]"
             ref={iframeRef}
-            src={`${url}/iframe`}
+            src={`${url}`}
             title="Batua"
         />
     )

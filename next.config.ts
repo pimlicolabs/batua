@@ -12,14 +12,9 @@ const nextConfig: NextConfig = {
                 source: "/:path*",
                 headers: [
                     {
-                        key: "X-Frame-Options",
-                        value: "ALLOWALL" // allows the page to be framed anywhere
+                        key: "Content-Security-Policy",
+                        value: "frame-ancestors *" // lets any site embed you
                     }
-                    // — OPTIONAL, more modern and flexible —
-                    // {
-                    //   key: 'Content-Security-Policy',
-                    //   value: "frame-ancestors *",  // lets any site embed you
-                    // },
                 ]
             }
         ]

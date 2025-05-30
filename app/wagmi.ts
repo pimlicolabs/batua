@@ -7,29 +7,9 @@ const pimlicoApiKey = process.env.NEXT_PUBLIC_PIMLICO_API_KEY || ""
 
 Batua.create({
     dappName: "Pimlico",
-    implementation: iframe()
-    // rpc: {
-    //     transports: {
-    //         [sepolia.id]: http("https://ethereum-sepolia-rpc.publicnode.com")
-    //     }
-    // },
-    // paymaster: {
-    //     transports: {
-    //         [sepolia.id]: http(
-    //             `https://api.pimlico.io/v2/${sepolia.id}/rpc?apikey=${pimlicoApiKey}`
-    //         )
-    //     },
-    //     context: {
-    //         sponsorshipPolicyId: process.env.NEXT_PUBLIC_SPONSORSHIP_POLICY_ID
-    //     }
-    // },
-    // bundler: {
-    //     transports: {
-    //         [sepolia.id]: http(
-    //             `https://api.pimlico.io/v2/${sepolia.id}/rpc?apikey=${pimlicoApiKey}`
-    //         )
-    //     }
-    // }
+    implementation: iframe(
+        "https://batua-template-git-experiment-pimlico.vercel.app/iframe?_vercel_share=d7uofGFFQ4gkzWGcU47meGpgBnhRUhlh"
+    )
 })
 
 export const config = createConfig({
@@ -52,3 +32,26 @@ declare module "wagmi" {
         config: typeof config
     }
 }
+
+// rpc: {
+//     transports: {
+//         [sepolia.id]: http("https://ethereum-sepolia-rpc.publicnode.com")
+//     }
+// },
+// paymaster: {
+//     transports: {
+//         [sepolia.id]: http(
+//             `https://api.pimlico.io/v2/${sepolia.id}/rpc?apikey=${pimlicoApiKey}`
+//         )
+//     },
+//     context: {
+//         sponsorshipPolicyId: process.env.NEXT_PUBLIC_SPONSORSHIP_POLICY_ID
+//     }
+// },
+// bundler: {
+//     transports: {
+//         [sepolia.id]: http(
+//             `https://api.pimlico.io/v2/${sepolia.id}/rpc?apikey=${pimlicoApiKey}`
+//         )
+//     }
+// }
