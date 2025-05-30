@@ -46,10 +46,13 @@ const InnerIframe = ({
             queueRequest &&
             isIframeLoaded
         ) {
-            iframeRef.current.contentWindow.postMessage({
-                request: queueRequest,
-                type: "batua-iframe-request"
-            })
+            iframeRef.current.contentWindow.postMessage(
+                {
+                    request: queueRequest,
+                    type: "batua-iframe-request"
+                },
+                "*"
+            )
         }
     }, [queueRequest, isIframeLoaded]) // Depends on queueRequest and isIframeLoaded
 
