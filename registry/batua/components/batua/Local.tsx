@@ -5,7 +5,7 @@ import { SendCalls } from "@/registry/batua/components/batua/SendCalls"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { Provider } from "ox"
 
-export const Main = ({ internal }: { internal: Internal }) => {
+export const Local = ({ internal }: { internal: Internal }) => {
     const [queueRequest, setQueueRequest] =
         React.useState<QueuedRequest | null>(null)
 
@@ -71,7 +71,7 @@ export const Main = ({ internal }: { internal: Internal }) => {
     if (queueRequest?.request.method === "wallet_sendCalls") {
         return (
             <Dialog open={!!queueRequest} onOpenChange={onOpenChange}>
-                <DialogContent className="sm:max-w-[400px] p-6 h-[75vh] flex justify-start flex-col">
+                <DialogContent className="sm:max-w-[400px] p-0 h-[75vh] flex justify-start flex-col">
                     <SendCalls
                         internal={internal}
                         queueRequest={queueRequest}

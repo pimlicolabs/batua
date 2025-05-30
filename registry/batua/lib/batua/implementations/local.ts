@@ -7,7 +7,7 @@ import type {
 
 import ReactDOM from "react-dom/client"
 import React from "react"
-import { Main } from "@/registry/batua/components/batua/Main"
+import { Local } from "@/registry/batua/components/batua/Local"
 import { getBundlerClient } from "@/registry/batua/lib/batua/helpers/getBundlerClient"
 
 export const local = (): Implementation => {
@@ -182,7 +182,7 @@ export const local = (): Implementation => {
             root.id = internal.id
             document.body.appendChild(root)
             ReactDOM.createRoot(root).render(
-                React.createElement(Main, {
+                React.createElement(Local, {
                     internal
                 })
             )

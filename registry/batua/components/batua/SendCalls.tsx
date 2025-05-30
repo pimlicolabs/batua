@@ -64,7 +64,7 @@ type DecodedCallData = {
 
 const SendCallsHeader = () => {
     return (
-        <div className="bg-muted/10 rounded-t-lg">
+        <div className="bg-muted/10 rounded-t-lg p-6">
             <div className="flex flex-col gap-2 text-center sm:text-left pb-0">
                 <div className="flex items-center gap-3">
                     <div className="bg-muted/20 p-2 rounded-full">
@@ -667,7 +667,7 @@ export const SendCalls = ({
         <>
             <SendCallsHeader />
             <div
-                className={`overflow-y-auto pr-2${!hasEnoughBalance ? " pb-36" : ""}`}
+                className={`p-6 overflow-y-auto pr-2${!hasEnoughBalance ? " pb-36" : ""}`}
             >
                 {error && (
                     <Alert variant="destructive" className="mb-5">
@@ -713,7 +713,7 @@ export const SendCalls = ({
                 </div>
             </div>
 
-            <div className="absolute bottom-0 left-0 right-0 p-4 bg-background border-t">
+            <div className="bottom-0 left-0 right-0 p-4 bg-background border-t">
                 {!hasEnoughBalance && (
                     <Alert variant="destructive" className="mb-3">
                         <AlertCircle className="h-4 w-4" />

@@ -40,6 +40,15 @@ const InnerIframe = ({
         }
     }, [onComplete]) // Empty dependency array ensures this runs only once on mount and unmount
 
+    const classNames = useMemo(() => {
+        if (queueRequest?.request.method === "eth_requestAccounts")
+            return "w-full p-0 h-full"
+        if (queueRequest?.request.method === "wallet_sendCalls")
+            return "w-full p-0 h-full flex justify-start flex-col"
+
+        return "w-[352px] h-[75vh]"
+    }, [queueRequest])
+
     useEffect(() => {
         if (
             iframeRef.current?.contentWindow &&
@@ -58,7 +67,7 @@ const InnerIframe = ({
 
     return (
         <iframe
-            className="w-[352px] h-[75vh]"
+            className={classNames}
             ref={iframeRef}
             src={`${url}`}
             title="Batua"
@@ -135,6 +144,15 @@ export const Iframe = ({
         return false
     }, [queueRequest])
 
+    const classNames = useMemo(() => {
+        if (queueRequest?.request.method === "eth_requestAccounts")
+            return "w-[325px] p-0 h-[448px]"
+        if (queueRequest?.request.method === "wallet_sendCalls")
+            return "w-[400px] p-0 h-[75vh] flex justify-start flex-col"
+
+        return "w-[352px] h-[75vh]"
+    }, [queueRequest])
+
     return (
         <>
             <Dialog
@@ -142,7 +160,7 @@ export const Iframe = ({
                 onOpenChange={onOpenChange}
             >
                 <DialogContent
-                    className={"w-[400px] p-0"}
+                    className={`${classNames} overflow-x-scroll overflow-y-scroll`}
                     style={{ zIndex: 4294967290 }}
                 >
                     <DialogTitle className="hidden">batua</DialogTitle>
