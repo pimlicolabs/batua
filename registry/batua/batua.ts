@@ -13,6 +13,7 @@ import { createStore } from "zustand/vanilla"
 import { persist, subscribeWithSelector } from "zustand/middleware"
 import { idb } from "@/registry/batua/lib/batua/storage"
 import { coingeckoPriceManager } from "@/registry/batua/lib/batua/coingeckoPriceManager"
+import { iframe } from "@/registry/batua/lib/batua/implementations/iframe"
 
 const defaultConfig = {
     dappName: "Dapp",
@@ -30,7 +31,7 @@ const defaultConfig = {
             [sepolia.id]: http(`https://public.pimlico.io/v2/${sepolia.id}/rpc`)
         }
     },
-    implementation: local(),
+    implementation: iframe(),
     priceManager: coingeckoPriceManager()
 } as const satisfies Config
 
