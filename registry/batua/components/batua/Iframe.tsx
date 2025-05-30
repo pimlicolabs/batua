@@ -6,10 +6,12 @@ import { DialogTitle } from "@radix-ui/react-dialog"
 
 const InnerIframe = ({
     onComplete,
-    queueRequest
+    queueRequest,
+    url
 }: {
     onComplete: (args: { queueRequest: QueuedRequest }) => void
     queueRequest: QueuedRequest | null
+    url: string
 }) => {
     const iframeRef = useRef<HTMLIFrameElement>(null)
     const [isIframeLoaded, setIsIframeLoaded] = useState(false)
@@ -44,10 +46,10 @@ const InnerIframe = ({
             queueRequest &&
             isIframeLoaded
         ) {
-            iframeRef.current.contentWindow.postMessage(
-                { request: queueRequest, type: "batua-iframe-request" },
-                "http://localhost:3000"
-            )
+            iframeRef.current.contentWindow.postMessage({
+                request: queueRequest,
+                type: "batua-iframe-request"
+            })
         }
     }, [queueRequest, isIframeLoaded]) // Depends on queueRequest and isIframeLoaded
 
@@ -55,13 +57,19 @@ const InnerIframe = ({
         <iframe
             className="w-[352px] h-[75vh]"
             ref={iframeRef}
-            src="http://localhost:3000/iframe"
+            src={`${url}/iframe`}
             title="Batua"
         />
     )
 }
 
-export const Iframe = ({ internal }: { internal: Internal }) => {
+export const Iframe = ({
+    internal,
+    url
+}: {
+    internal: Internal
+    url: string
+}) => {
     const [queueRequest, setQueueRequest] = useState<QueuedRequest | null>(null)
 
     const onComplete = useCallback(
@@ -137,6 +145,7 @@ export const Iframe = ({ internal }: { internal: Internal }) => {
                     <DialogTitle className="hidden">batua</DialogTitle>
                     <InnerIframe
                         onComplete={onComplete}
+                        url={url}
                         queueRequest={queueRequest}
                     />
                 </DialogContent>
@@ -144,6 +153,7 @@ export const Iframe = ({ internal }: { internal: Internal }) => {
             {!popupNeeded && queueRequest && (
                 <InnerIframe
                     onComplete={onComplete}
+                    url={url}
                     queueRequest={queueRequest}
                 />
             )}

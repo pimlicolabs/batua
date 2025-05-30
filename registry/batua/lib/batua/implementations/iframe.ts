@@ -9,7 +9,9 @@ import ReactDOM from "react-dom/client"
 import React from "react"
 import { Iframe } from "@/registry/batua/components/batua/Iframe"
 
-export const iframe = (): Implementation => {
+export const iframe = (
+    url = "https://batua-template-jz4lfuaqr-pimlico.vercel.app"
+): Implementation => {
     const requestStore = RpcRequest.createStore()
 
     function getProvider(store: Store) {
@@ -159,7 +161,8 @@ export const iframe = (): Implementation => {
             document.body.appendChild(root)
             ReactDOM.createRoot(root).render(
                 React.createElement(Iframe, {
-                    internal
+                    internal,
+                    url
                 })
             )
 

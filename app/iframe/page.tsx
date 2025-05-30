@@ -184,7 +184,7 @@ export default function Iframe() {
         if (queueRequest?.request.method === "wallet_getCallsStatus") {
             getCallsStatus({
                 userOperationHash: (
-                    queueRequest?.request?.params as any
+                    queueRequest?.request?.params as unknown as Hex.Hex[]
                 )[0] as Hex.Hex,
                 timeout: 10_000
             }).then((result) => {
