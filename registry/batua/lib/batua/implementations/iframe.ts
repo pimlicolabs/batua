@@ -10,7 +10,7 @@ import React from "react"
 import { Iframe } from "@/registry/batua/components/batua/Iframe"
 
 export const iframe = (
-    url = "https://batua-template-jz4lfuaqr-pimlico.vercel.app"
+    url = "https://batua-template-git-experiment-pimlico.vercel.app"
 ): Implementation => {
     const requestStore = RpcRequest.createStore()
 
