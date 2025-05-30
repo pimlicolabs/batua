@@ -106,7 +106,7 @@ export default function Iframe() {
 
     useEffect(() => {
         // Post message to parent window that iframe has loaded
-        window.parent.postMessage({ type: "batua-iframe-loaded" })
+        window.parent.postMessage({ type: "batua-iframe-loaded" }, "*")
 
         const handleMessage = (event: MessageEvent) => {
             if (event.data.type !== "batua-iframe-request") return
@@ -123,10 +123,13 @@ export default function Iframe() {
     const onComplete = useCallback(
         ({ queueRequest }: { queueRequest: QueuedRequest }) => {
             internal.store.persist.rehydrate()
-            window.parent.postMessage({
-                type: "batua-iframe-response",
-                request: queueRequest
-            })
+            window.parent.postMessage(
+                {
+                    type: "batua-iframe-response",
+                    request: queueRequest
+                },
+                "*"
+            )
             setQueueRequest(null)
         },
         []

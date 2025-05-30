@@ -8,7 +8,7 @@ const pimlicoApiKey = process.env.NEXT_PUBLIC_PIMLICO_API_KEY || ""
 Batua.create({
     dappName: "Pimlico",
     implementation: iframe(
-        "https://batua-template-git-experiment-pimlico.vercel.app/iframe?_vercel_share=d7uofGFFQ4gkzWGcU47meGpgBnhRUhlh"
+        "https://batua-template-git-experiment-pimlico.vercel.app/iframe?_vercel_share=wo8IQcpBxkNKUjMm0TjI4WyVRJUT4ohV"
     )
 })
 
