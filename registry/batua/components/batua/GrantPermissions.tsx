@@ -105,8 +105,6 @@ export const GrantPermissions = ({
     const permission = queueRequest.request
         .params[0] as WalletGrantPermissionsParameters
 
-    console.log({ permission })
-
     const ticker =
         (
             permission?.permissions?.[0]?.data as unknown as {
@@ -142,10 +140,6 @@ export const GrantPermissions = ({
         )
         expiresInDays = `${days} days`
     }
-
-    // console.log({
-    //     permission
-    // })
 
     return (
         <div className="flex flex-col gap-4 p-6">

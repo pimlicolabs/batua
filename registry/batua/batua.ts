@@ -48,7 +48,7 @@ export type Config<
     }
     paymaster?: {
         transports: Record<chains[number]["id"], Transport>
-        context: unknown
+        context?: unknown
     }
     bundler: {
         transports: Record<chains[number]["id"], Transport>
