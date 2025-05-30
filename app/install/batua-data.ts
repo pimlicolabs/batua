@@ -1,5 +1,5 @@
 // This file is auto-generated during build - do not edit manually
-// Generated on: 2025-05-30T15:30:56.542Z
+// Generated on: 2025-05-30T15:38:52.665Z
 
 export const batuaData = {
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
