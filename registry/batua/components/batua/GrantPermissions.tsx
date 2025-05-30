@@ -107,11 +107,30 @@ export const GrantPermissions = ({
 
     console.log({ permission })
 
-    const ticker = permission?.permissions?.[0]?.data?.ticker ?? "PIM"
-    const spenderId = permission?.signer?.data?.id ?? "N/A"
-    const tokenAddress = permission?.permissions?.[0]?.data?.address ?? "N/A"
+    const ticker =
+        (
+            permission?.permissions?.[0]?.data as unknown as {
+                ticker: string
+            }
+        )?.ticker ?? "PIM"
+    const spenderId =
+        (
+            permission?.signer?.data as unknown as {
+                id: string
+            }
+        )?.id ?? "N/A"
+    const tokenAddress =
+        (
+            permission?.permissions?.[0]?.data as unknown as {
+                address: string
+            }
+        )?.address ?? "N/A"
     const allowance = formatUnits(
-        permission?.permissions?.[0]?.policies?.[0]?.data?.allowance ?? "0",
+        (
+            permission?.permissions?.[0]?.policies?.[0]?.data as unknown as {
+                allowance: bigint
+            }
+        )?.allowance ?? BigInt(0),
         6
     )
     const expiryTimestamp = permission?.expiry
