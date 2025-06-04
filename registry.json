@@ -20,6 +20,7 @@
                 "mipd@^0.0.7",
                 "zod@^3.24.1",
                 "idb-keyval@^6.2.1",
+                "date-fns@^4.1.0",
                 "@sinclair/typebox@^0.34.33",
                 "react-dom@^19.0.0"
             ],

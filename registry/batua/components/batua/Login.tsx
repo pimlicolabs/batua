@@ -327,7 +327,7 @@ export const Login = ({
                 <div className="bg-primary/5 p-6 rounded-t-lg">
                     <DialogHeader className="pb-0">
                         <div className="flex items-center gap-2">
-                            <KeyRound className="h-5 w-5 text-primary" />
+                            {/* <KeyRound className="h-5 w-5 text-primary" /> */}
                             <DialogTitle>Sign in</DialogTitle>
                         </div>
                         <DialogDescription>
@@ -349,26 +349,9 @@ export const Login = ({
                         <div className="space-y-2.5">
                             <h3 className="text-sm font-medium flex items-center gap-1">
                                 Already have a {walletName}?
-                                <TooltipProvider>
-                                    <Tooltip>
-                                        <TooltipTrigger asChild>
-                                            <HelpCircle className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
-                                        </TooltipTrigger>
-                                        <TooltipContent
-                                            className="max-w-[220px]"
-                                            style={{ zIndex: 4294967294 }}
-                                        >
-                                            <p>
-                                                {walletName} is an embedded
-                                                smart account that secures your
-                                                account with passkeys.
-                                            </p>
-                                        </TooltipContent>
-                                    </Tooltip>
-                                </TooltipProvider>
                             </h3>
                             <Button
-                                className="w-full h-11"
+                                className="w-full h-11 flex justify-center items-center gap-2"
                                 variant="outline"
                                 onClick={signIn}
                                 disabled={isLoading !== null}
@@ -396,26 +379,9 @@ export const Login = ({
                         <div className="space-y-2.5">
                             <h3 className="text-sm font-medium flex items-center gap-1">
                                 New to {walletName}?
-                                <TooltipProvider>
-                                    <Tooltip>
-                                        <TooltipTrigger asChild>
-                                            <HelpCircle className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
-                                        </TooltipTrigger>
-                                        <TooltipContent
-                                            className="max-w-[220px]"
-                                            style={{ zIndex: 4294967294 }}
-                                        >
-                                            <p>
-                                                {walletName} is an embedded
-                                                smart account that secures your
-                                                account with passkeys.
-                                            </p>
-                                        </TooltipContent>
-                                    </Tooltip>
-                                </TooltipProvider>
                             </h3>
                             <Button
-                                className="w-full h-11"
+                                className="w-full h-11 flex justify-center items-center gap-2"
                                 onClick={() => {
                                     setError(null)
                                     createCredential()

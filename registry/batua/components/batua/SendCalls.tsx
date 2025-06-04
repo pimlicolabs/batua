@@ -31,11 +31,9 @@ import {
     Braces,
     Check,
     Code,
-    File,
     Fingerprint,
     Loader2,
-    Parentheses,
-    SendIcon
+    Parentheses
 } from "lucide-react"
 import {
     Accordion,
@@ -63,6 +61,7 @@ import {
 import type { SmartAccountClient } from "permissionless"
 import { sepolia } from "viem/chains"
 import { generatePrivateKey, privateKeyToAccount } from "viem/accounts"
+import { format } from "date-fns"
 
 type DecodedCallData = {
     functionName?: string
@@ -70,94 +69,93 @@ type DecodedCallData = {
 } | null
 
 const SendCallsHeader = () => {
+    const [currentDateTime, setCurrentDateTime] = useState("")
+
+    useEffect(() => {
+        setCurrentDateTime(format(new Date(), "MMM d, yyyy h:mm a"))
+    }, [])
+
     return (
         <div className="bg-muted/10 rounded-t-lg">
-            <DialogHeader className="pb-0 gap-0">
-                <div className="flex items-center gap-3">
-                    <div className="bg-muted/20 p-2 rounded-full">
-                        <SendIcon className="h-5 w-5" />
+            <DialogHeader className="gap-0 border-b pb-2">
+                <div className="flex items-center justify-between gap-3">
+                    <div>
+                        <DialogTitle className="text-xl font-semibold">
+                            Send Transaction
+                        </DialogTitle>
+                        <DialogDescription className="text-sm">
+                            {currentDateTime}
+                        </DialogDescription>
                     </div>
-                    <DialogTitle className="text-xl font-semibold">
-                        Send Transaction
-                    </DialogTitle>
+                    {/* <div className="bg-muted/20 p-2 rounded-full">
+                        <SendIcon className="h-5 w-5" />
+                    </div> */}
                 </div>
-                <DialogDescription className="text-sm">
-                    Review and confirm this transaction from your wallet
-                </DialogDescription>
             </DialogHeader>
         </div>
     )
 }
 
-const CommonCallsSection = ({
-    chainName,
-    dappName,
+const NetworkFee = ({
+    gasCost: costInEther,
+    ethPrice,
     hasPaymaster,
     refreshingGasCost,
-    gasCost: costInEther,
-    ethPrice
+    dappName
 }: {
-    chainName: string
-    dappName: string
     hasPaymaster: boolean
     refreshingGasCost: boolean
     gasCost: bigint | null
     ethPrice: number
+    dappName: string
 }) => {
     const gasCost = costInEther
         ? Number(costInEther * BigInt(ethPrice)) / (100 * 10 ** 18)
         : null
 
     return (
-        <div className="border rounded-lg p-4 bg-muted/5 mb-5">
-            <div className="flex items-center justify-between mb-4 border-b pb-3">
-                <div className="text-sm font-medium flex items-center gap-2">
-                    <div className="w-2 h-2 rounded-full bg-green-500" />
-                    Network
-                </div>
-                <div className="flex items-center bg-muted/10 rounded-full">
-                    <span className="text-sm font-medium">{chainName}</span>
-                </div>
-            </div>
+        <div className="flex flex-col w-full">
+            <div className="flex items-start justify-between w-full">
+                <div className="text-sm">Network fee (est.)</div>
 
-            <div className="flex flex-col w-full">
-                <div className="flex items-start justify-between w-full">
-                    <div className="text-sm font-medium flex items-center gap-2">
-                        Network fee (est.)
-                    </div>
-
-                    <div className="text-sm flex items-center gap-1">
-                        {!gasCost && (
-                            <>
-                                <Loader2 className="h-3 w-3 animate-spin" />
-                                Calculating...
-                            </>
+                <div className="text-sm flex items-center gap-1">
+                    <div className="flex justify-end flex-col">
+                        {hasPaymaster && (
+                            <div className="flex justify-end text-primary">
+                                Sponsored by {dappName}
+                            </div>
                         )}
-                        {gasCost && (
-                            <div
-                                className={`flex gap-2 justify-center items-center  ${hasPaymaster ? "line-through" : ""} ${refreshingGasCost ? "text-muted-foreground" : ""}`}
-                            >
-                                {hasPaymaster && (
-                                    <span>
+                        <div
+                            className={`flex gap-2 justify-end text-destructive ${hasPaymaster && gasCost ? "line-through" : ""} ${refreshingGasCost ? "text-muted-foreground" : ""}`}
+                        >
+                            {!gasCost && (
+                                <div className="flex justify-center items-center gap-2">
+                                    <Loader2 className="h-3 w-3 animate-spin" />
+                                    Calculating
+                                </div>
+                            )}
+                            {hasPaymaster && gasCost && (
+                                <span>
+                                    {gasCost.toLocaleString("en-US", {
+                                        style: "currency",
+                                        currency: "USD",
+                                        maximumFractionDigits: 2
+                                    })}
+                                </span>
+                            )}
+
+                            {!hasPaymaster && gasCost && (
+                                <div
+                                    className={`flex flex-col justify-end ${refreshingGasCost ? "text-muted-foreground" : ""}`}
+                                >
+                                    <div className="flex justify-end">
                                         {gasCost.toLocaleString("en-US", {
                                             style: "currency",
                                             currency: "USD",
                                             maximumFractionDigits: 2
                                         })}
-                                    </span>
-                                )}
-
-                                {!hasPaymaster && costInEther && (
-                                    <div
-                                        className={`flex flex-col justify-end ${refreshingGasCost ? "text-muted-foreground" : ""}`}
-                                    >
-                                        <div className="flex justify-end">
-                                            {gasCost.toLocaleString("en-US", {
-                                                style: "currency",
-                                                currency: "USD",
-                                                maximumFractionDigits: 2
-                                            })}
-                                        </div>
+                                    </div>
+                                    {costInEther && (
                                         <div className="flex justify-end text-xs text-muted-foreground">
                                             (
                                             {Number(
@@ -165,19 +163,39 @@ const CommonCallsSection = ({
                                             ).toFixed(5)}{" "}
                                             ETH)
                                         </div>
-                                    </div>
-                                )}
-                            </div>
-                        )}
-                    </div>
-                </div>
-                {hasPaymaster && (
-                    <div className="flex justify-end">
-                        <div className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full mt-2 font-medium">
-                            Sponsored by {dappName}
+                                    )}
+                                </div>
+                            )}
                         </div>
                     </div>
-                )}
+                </div>
+            </div>
+        </div>
+    )
+}
+
+const CommonCallsSection = ({
+    chainName
+    // dappName
+}: {
+    chainName: string
+    dappName: string
+}) => {
+    const [senderHost, setSenderHost] = useState("")
+
+    useEffect(() => {
+        setSenderHost(window.location.host)
+    }, [])
+
+    return (
+        <div className="bg-muted/5 border-b flex flex-col gap-2 py-6">
+            <div className="flex items-center justify-between">
+                <div className="text-sm flex items-center gap-2">From:</div>
+                <span className="text-sm">{senderHost}</span>
+            </div>
+            <div className="flex items-center justify-between">
+                <div className="text-sm flex items-center gap-2">Network</div>
+                <span className="text-sm">{chainName}</span>
             </div>
         </div>
     )
@@ -289,8 +307,7 @@ const RawCallData = ({ data }: { data: Hex }) => {
 const TransactionDetail = ({
     index,
     call,
-    decodedCallData,
-    account
+    decodedCallData
 }: {
     index: number
     call: {
@@ -306,10 +323,10 @@ const TransactionDetail = ({
             {/* Compact transaction diagram */}
             <div className="flex flex-col space-y-2">
                 {/* From address */}
-                <div className="flex items-center gap-2 justify-between">
+                {/* <div className="flex items-center gap-2 justify-between">
                     <div className="w-16 text-xs font-medium flex-1">From:</div>
                     <CopyAddress name={account.name} value={account.address} />
-                </div>
+                </div> */}
                 {/* To address */}
                 <div className="flex items-center gap-2 justify-between">
                     <div className="w-16 text-xs font-medium">To:</div>
@@ -683,10 +700,10 @@ export const SendCalls = ({
 
     return (
         <Dialog open={!!queueRequest} onOpenChange={onOpenChange}>
-            <DialogContent className="sm:max-w-[400px] p-6 h-[75vh] flex justify-start flex-col">
+            <DialogContent className="sm:max-w-[400px] gap-0 flex justify-start flex-col max-h-[75vh] overflow-hidden">
                 <SendCallsHeader />
                 <div
-                    className={`overflow-y-auto pr-2${!hasEnoughBalance ? " pb-36" : ""}`}
+                    className={`overflow-y-scroll pr-2 ${!hasEnoughBalance ? "pb-36" : ""}`}
                 >
                     {error && (
                         <Alert variant="destructive" className="mb-5">
@@ -698,41 +715,50 @@ export const SendCalls = ({
                     <CommonCallsSection
                         chainName={chain.name}
                         dappName={internal.config.dappName}
+                    />
+
+                    <Accordion
+                        type="single"
+                        collapsible
+                        className="text-xs w-full"
+                    >
+                        <AccordionItem value="data" className="border-none">
+                            <AccordionTrigger className="text-sm font-light hover:no-underline data-[state=closed]:text-muted-foreground">
+                                <div className="flex items-center gap-2">
+                                    {/* <Code className="h-4 w-4" /> */}
+                                    Raw transaction details
+                                </div>
+                            </AccordionTrigger>
+                            <AccordionContent className="text-xs hover:no-underline break-all">
+                                {!isLoading && decodedCallData ? (
+                                    calls.map((call, index: number) => (
+                                        <TransactionDetail
+                                            // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+                                            key={index}
+                                            call={call}
+                                            decodedCallData={decodedCallData}
+                                            account={account}
+                                            index={index}
+                                        />
+                                    ))
+                                ) : (
+                                    <div className="flex justify-center py-4">
+                                        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+                                    </div>
+                                )}
+                            </AccordionContent>
+                        </AccordionItem>
+                    </Accordion>
+                </div>
+
+                <div className="pt-6 bg-background border-t flex flex-col gap-3">
+                    <NetworkFee
                         hasPaymaster={hasPaymaster}
                         refreshingGasCost={refreshingGasCost}
                         gasCost={gasCost}
                         ethPrice={ethPrice}
+                        dappName={internal.config.dappName}
                     />
-
-                    <div className="space-y-3">
-                        <h3 className="text-sm font-medium flex items-center gap-2">
-                            <div className="bg-muted/20 p-1 rounded-sm">
-                                <File className="h-4 w-4" />
-                            </div>
-                            Transaction Details
-                        </h3>
-                        {!isLoading && decodedCallData ? (
-                            <div className="space-y-6 pb-20">
-                                {calls.map((call, index: number) => (
-                                    <TransactionDetail
-                                        // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-                                        key={index}
-                                        call={call}
-                                        decodedCallData={decodedCallData}
-                                        account={account}
-                                        index={index}
-                                    />
-                                ))}
-                            </div>
-                        ) : (
-                            <div className="flex justify-center py-4">
-                                <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-                            </div>
-                        )}
-                    </div>
-                </div>
-
-                <div className="absolute bottom-0 left-0 right-0 p-4 bg-background border-t">
                     {!hasEnoughBalance && (
                         <Alert variant="destructive" className="mb-3">
                             <AlertCircle className="h-4 w-4" />
@@ -746,7 +772,11 @@ export const SendCalls = ({
                         variant="default"
                         className="w-full justify-center h-12 text-base font-medium shadow-sm hover:shadow transition-all"
                         onClick={sendTransaction}
-                        disabled={sendingTransaction || !hasEnoughBalance}
+                        disabled={
+                            sendingTransaction ||
+                            !hasEnoughBalance ||
+                            refreshingGasCost
+                        }
                     >
                         {sendingTransaction ? (
                             <>
@@ -756,7 +786,11 @@ export const SendCalls = ({
                         ) : (
                             <>
                                 <Fingerprint className="h-4 w-4" />
-                                <span>Confirm and Send</span>
+                                <span>
+                                    {refreshingGasCost
+                                        ? "Refreshing Gas Cost..."
+                                        : "Confirm and Send"}
+                                </span>
                             </>
                         )}
                     </Button>
