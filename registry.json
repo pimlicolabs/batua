@@ -30,7 +30,8 @@
                 "button",
                 "dialog",
                 "separator",
-                "tooltip"
+                "tooltip",
+                "badge"
             ],
             "categories": ["wallet", "ethereum", "account-abstraction"],
             "files": [

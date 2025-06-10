@@ -63,18 +63,18 @@ export const Batua = {
             ...Chain[]
         ]
     >(parameters?: {
-        chains?: chains | readonly [Chain, ...Chain[]]
+        chains: chains
         announceProvider?: boolean
         storage?: Storage
         implementation?: Implementation | null
-        rpc?: {
+        rpc: {
             transports: Record<chains[number]["id"], Transport>
         }
         paymaster?: {
             transports: Record<chains[number]["id"], Transport>
             context: unknown
         }
-        bundler?: {
+        bundler: {
             transports: Record<chains[number]["id"], Transport>
         }
         dappName?: string

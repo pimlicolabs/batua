@@ -2,7 +2,6 @@
 import {
     Dialog,
     DialogContent,
-    DialogDescription,
     DialogHeader,
     DialogTitle
 } from "@/components/ui/dialog"
@@ -26,15 +25,7 @@ import {
     type UserOperation
 } from "viem/account-abstraction"
 import { useCallback, useEffect, useMemo, useState } from "react"
-import {
-    AlertCircle,
-    Braces,
-    Check,
-    Code,
-    Fingerprint,
-    Loader2,
-    Parentheses
-} from "lucide-react"
+import { AlertCircle, Check, Fingerprint, Loader2 } from "lucide-react"
 import {
     Accordion,
     AccordionContent,
@@ -61,7 +52,8 @@ import {
 import type { SmartAccountClient } from "permissionless"
 import { sepolia } from "viem/chains"
 import { generatePrivateKey, privateKeyToAccount } from "viem/accounts"
-import { format } from "date-fns"
+// import { format } from "date-fns"
+import { Badge } from "@/components/ui/badge"
 
 type DecodedCallData = {
     functionName?: string
@@ -69,11 +61,11 @@ type DecodedCallData = {
 } | null
 
 const SendCallsHeader = () => {
-    const [currentDateTime, setCurrentDateTime] = useState("")
+    // const [currentDateTime, setCurrentDateTime] = useState("")
 
-    useEffect(() => {
-        setCurrentDateTime(format(new Date(), "MMM d, yyyy h:mm a"))
-    }, [])
+    // useEffect(() => {
+    //     setCurrentDateTime(format(new Date(), "MMM d, yyyy h:mm a"))
+    // }, [])
 
     return (
         <div className="bg-muted/10 rounded-t-lg">
@@ -83,9 +75,9 @@ const SendCallsHeader = () => {
                         <DialogTitle className="text-xl font-semibold">
                             Send Transaction
                         </DialogTitle>
-                        <DialogDescription className="text-sm">
+                        {/* <DialogDescription className="text-sm">
                             {currentDateTime}
-                        </DialogDescription>
+                        </DialogDescription> */}
                     </div>
                     {/* <div className="bg-muted/20 p-2 rounded-full">
                         <SendIcon className="h-5 w-5" />
@@ -120,13 +112,8 @@ const NetworkFee = ({
 
                 <div className="text-sm flex items-center gap-1">
                     <div className="flex justify-end flex-col">
-                        {hasPaymaster && (
-                            <div className="flex justify-end text-primary">
-                                Sponsored by {dappName}
-                            </div>
-                        )}
                         <div
-                            className={`flex gap-2 justify-end text-destructive ${hasPaymaster && gasCost ? "line-through" : ""} ${refreshingGasCost ? "text-muted-foreground" : ""}`}
+                            className={`flex gap-2 justify-end ${hasPaymaster && gasCost ? "line-through" : ""} ${refreshingGasCost ? "text-muted-foreground" : ""}`}
                         >
                             {!gasCost && (
                                 <div className="flex justify-center items-center gap-2">
@@ -167,6 +154,14 @@ const NetworkFee = ({
                                 </div>
                             )}
                         </div>
+                        {hasPaymaster && (
+                            <Badge
+                                variant="outline"
+                                className="flex justify-end"
+                            >
+                                Sponsored by {dappName}
+                            </Badge>
+                        )}
                     </div>
                 </div>
             </div>
@@ -190,7 +185,7 @@ const CommonCallsSection = ({
     return (
         <div className="bg-muted/5 border-b flex flex-col gap-2 py-6">
             <div className="flex items-center justify-between">
-                <div className="text-sm flex items-center gap-2">From:</div>
+                <div className="text-sm flex items-center gap-2">From</div>
                 <span className="text-sm">{senderHost}</span>
             </div>
             <div className="flex items-center justify-between">
@@ -264,7 +259,6 @@ const RenderArgs = ({ args }: { args: unknown[] }) => {
     return (
         <div className="mt-3 space-y-2 bg-muted/5 p-3 rounded-md border">
             <div className="text-xs font-medium flex items-center gap-1.5">
-                <Parentheses className="h-4 w-4" />
                 Arguments
             </div>
             <div className="flex flex-col gap-2 mt-2">
@@ -289,7 +283,6 @@ const RawCallData = ({ data }: { data: Hex }) => {
                 <AccordionItem value="data" className="border-none">
                     <AccordionTrigger className="font-mono text-xs truncate bg-muted/10 px-3 py-2 rounded-md border border-muted/20 hover:bg-muted/20 transition-colors hover:no-underline">
                         <div className="flex items-center gap-2">
-                            <Code className="h-4 w-4" />
                             <div className="text-xs font-medium">
                                 Raw Transaction Data
                             </div>
@@ -348,7 +341,6 @@ const TransactionDetail = ({
                     <div className="mt-3 border-t pt-3">
                         <div className="flex items-start gap-2 mb-2">
                             <div className="flex items-center gap-1.5">
-                                <Braces className="h-4 w-4" />
                                 <div className="text-sm font-medium">
                                     Function
                                 </div>
@@ -537,13 +529,7 @@ export const SendCalls = ({
     }
 
     useEffect(() => {
-        if (
-            dummy ||
-            !smartAccountClient ||
-            !request.params ||
-            !chain.id ||
-            !hasPaymaster
-        ) {
+        if (dummy || !smartAccountClient || !request.params || !chain.id) {
             const costInEther = parseEther("0.000075")
 
             let timer: NodeJS.Timeout | undefined = undefined
@@ -594,6 +580,26 @@ export const SendCalls = ({
                         address: smartAccountClient.account.address
                     })
                 ])
+
+                // try {
+                //     const gasPrice = await client.estimateFeesPerGas()
+
+                //     const result = await client.simulateCalls({
+                //         account: entryPoint07Address,
+                //         traceAssetChanges: true,
+                //         calls: [
+                //             {
+                //                 to: smartAccountClient.account.address,
+                //                 data: userOperation.callData,
+                //                 ...gasPrice
+                //             }
+                //         ]
+                //     })
+
+                //     console.log({ result })
+                // } catch (e) {
+                //     console.log(e)
+                // }
 
                 const gasLimit =
                     userOperation.callGasLimit +
@@ -702,9 +708,7 @@ export const SendCalls = ({
         <Dialog open={!!queueRequest} onOpenChange={onOpenChange}>
             <DialogContent className="sm:max-w-[400px] gap-0 flex justify-start flex-col max-h-[75vh] overflow-hidden">
                 <SendCallsHeader />
-                <div
-                    className={`overflow-y-scroll pr-2 ${!hasEnoughBalance ? "pb-36" : ""}`}
-                >
+                <div className="overflow-y-scroll pr-2">
                     {error && (
                         <Alert variant="destructive" className="mb-5">
                             <AlertCircle className="h-4 w-4" />
@@ -752,13 +756,6 @@ export const SendCalls = ({
                 </div>
 
                 <div className="pt-6 bg-background border-t flex flex-col gap-3">
-                    <NetworkFee
-                        hasPaymaster={hasPaymaster}
-                        refreshingGasCost={refreshingGasCost}
-                        gasCost={gasCost}
-                        ethPrice={ethPrice}
-                        dappName={internal.config.dappName}
-                    />
                     {!hasEnoughBalance && (
                         <Alert variant="destructive" className="mb-3">
                             <AlertCircle className="h-4 w-4" />
@@ -768,6 +765,13 @@ export const SendCalls = ({
                             </AlertDescription>
                         </Alert>
                     )}
+                    <NetworkFee
+                        hasPaymaster={hasPaymaster}
+                        refreshingGasCost={refreshingGasCost}
+                        gasCost={gasCost}
+                        ethPrice={ethPrice}
+                        dappName={internal.config.dappName}
+                    />
                     <Button
                         variant="default"
                         className="w-full justify-center h-12 text-base font-medium shadow-sm hover:shadow transition-all"

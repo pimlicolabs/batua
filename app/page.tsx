@@ -129,28 +129,43 @@ const RenderCode = ({ code }: { code: string }) => {
                             maxWidth: "100%"
                         }}
                     >
-                        {tokens.map((line, lineIdx) => (
-                            <div
-                                key={`line-${lineIdx}`}
-                                {...getLineProps({
-                                    line,
-                                    key: `line-${lineIdx}`
-                                })}
-                                className="flex"
-                            >
-                                <span>
-                                    {line.map((token, tokenIdx) => (
-                                        <span
-                                            key={`token-${lineIdx}-${tokenIdx}`}
-                                            {...getTokenProps({
+                        {tokens.map((line, lineIdx) => {
+                            const lineKey = `line-${lineIdx}`
+                            const { className, style } = getLineProps({
+                                line,
+                                key: lineKey
+                            })
+                            return (
+                                <div
+                                    key={lineKey}
+                                    className={`flex ${className}`}
+                                    style={style}
+                                >
+                                    <span>
+                                        {line.map((token, tokenIdx) => {
+                                            const tokenKey = `token-${lineIdx}-${tokenIdx}`
+                                            const {
+                                                className,
+                                                style,
+                                                children
+                                            } = getTokenProps({
                                                 token,
-                                                key: `token-${lineIdx}-${tokenIdx}`
-                                            })}
-                                        />
-                                    ))}
-                                </span>
-                            </div>
-                        ))}
+                                                key: tokenKey
+                                            })
+                                            return (
+                                                <span
+                                                    key={tokenKey}
+                                                    className={className}
+                                                    style={style}
+                                                >
+                                                    {children}
+                                                </span>
+                                            )
+                                        })}
+                                    </span>
+                                </div>
+                            )
+                        })}
                     </pre>
                     <Button
                         variant="ghost"

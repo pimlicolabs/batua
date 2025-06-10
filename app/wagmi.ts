@@ -6,6 +6,7 @@ const pimlicoApiKey = process.env.NEXT_PUBLIC_PIMLICO_API_KEY || ""
 
 Batua.create({
     dappName: "Pimlico",
+    chains: [sepolia],
     rpc: {
         transports: {
             [sepolia.id]: http("https://ethereum-sepolia-rpc.publicnode.com")
