@@ -154,6 +154,106 @@
                     "path": "registry/batua/lib/batua/typebox/types.ts",
                     "type": "registry:lib",
                     "target": "lib/batua/typebox/types.ts"
+                },
+                {
+                    "path": "registry/batua/components/batua/TransferEvents.tsx",
+                    "type": "registry:component",
+                    "target": "components/batua/TransferEvents.tsx"
+                },
+                {
+                    "path": "registry/batua/components/batua/ApprovalEvents.tsx",
+                    "type": "registry:component",
+                    "target": "components/batua/ApprovalEvents.tsx"
+                },
+                {
+                    "path": "registry/batua/components/batua/SendCallsHeader.tsx",
+                    "type": "registry:component",
+                    "target": "components/batua/SendCallsHeader.tsx"
+                },
+                {
+                    "path": "registry/batua/components/batua/AssetChangeEvents.tsx",
+                    "type": "registry:component",
+                    "target": "components/batua/AssetChangeEvents.tsx"
+                },
+                {
+                    "path": "registry/batua/components/batua/CopyAddress.tsx",
+                    "type": "registry:component",
+                    "target": "components/batua/CopyAddress.tsx"
+                },
+                {
+                    "path": "registry/batua/components/batua/EventRow.tsx",
+                    "type": "registry:component",
+                    "target": "components/batua/EventRow.tsx"
+                },
+                {
+                    "path": "registry/batua/components/batua/NetworkInformation.tsx",
+                    "type": "registry:component",
+                    "target": "components/batua/NetworkInformation.tsx"
+                },
+                {
+                    "path": "registry/batua/components/batua/NetworkFee.tsx",
+                    "type": "registry:component",
+                    "target": "components/batua/NetworkFee.tsx"
+                },
+                {
+                    "path": "registry/batua/hooks/batua/useAssetChangeEvents.ts",
+                    "type": "registry:hook",
+                    "target": "hooks/batua/useAssetChangeEvents.ts"
+                },
+                {
+                    "path": "registry/batua/hooks/batua/useSmartAccount.ts",
+                    "type": "registry:hook",
+                    "target": "hooks/batua/useSmartAccount.ts"
+                },
+                {
+                    "path": "registry/batua/hooks/batua/useClient.ts",
+                    "type": "registry:hook",
+                    "target": "hooks/batua/useClient.ts"
+                },
+                {
+                    "path": "registry/batua/hooks/batua/useBalance.ts",
+                    "type": "registry:hook",
+                    "target": "hooks/batua/useBalance.ts"
+                },
+                {
+                    "path": "registry/batua/hooks/batua/useGasCost.ts",
+                    "type": "registry:hook",
+                    "target": "hooks/batua/useGasCost.ts"
+                },
+                {
+                    "path": "registry/batua/hooks/batua/useUserOperation.ts",
+                    "type": "registry:hook",
+                    "target": "hooks/batua/useUserOperation.ts"
+                },
+                {
+                    "path": "registry/batua/hooks/batua/useSendCallsRequest.ts",
+                    "type": "registry:hook",
+                    "target": "hooks/batua/useSendCallsRequest.ts"
+                },
+                {
+                    "path": "registry/batua/hooks/batua/useChain.ts",
+                    "type": "registry:hook",
+                    "target": "hooks/batua/useChain.ts"
+                },
+                {
+                    "path": "registry/batua/hooks/batua/useDecodedCallData.ts",
+                    "type": "registry:hook",
+                    "target": "hooks/batua/useDecodedCallData.ts"
+                },
+                {
+                    "path": "registry/batua/hooks/batua/useEstimateUserOperation.ts",
+                    "type": "registry:hook",
+                    "target": "hooks/batua/useEstimateUserOperation.ts"
+                },
+                {
+                    "path": "registry/batua/hooks/batua/useEthPrice.ts",
+                    "type": "registry:hook",
+                    "target": "hooks/batua/useEthPrice.ts"
+                },
+                {
+                    "path": "registry/batua/lib/batua/utils.ts",
+                    "type": "registry:lib",
+                    "target": "lib/batua/utils.ts"
                 }
             ]
         }

@@ -1,12 +1,13 @@
 import { CopyAddress } from "@/registry/batua/components/batua/CopyAddress"
 import { EventRow } from "@/registry/batua/components/batua/EventRow"
 import { AssetChangeEvent } from "@/registry/batua/hooks/batua/useAssetChangeEvents"
-import { shortenAddress } from "@/registry/batua/lib/batua/utils"
 import { ArrowDownRight, ArrowUpRight } from "lucide-react"
 import { useMemo } from "react"
 import { Address, formatUnits } from "viem"
 
-const useAggregatedTransfers = (transfers: AssetChangeEvent<"Transfer">[]) => {
+export const useAggregatedTransfers = (
+    transfers: AssetChangeEvent<"Transfer">[]
+) => {
     const aggregatedTransfers = useMemo(() => {
         const aggregatedTransfersMap = new Map<
             string,
@@ -15,13 +16,38 @@ const useAggregatedTransfers = (transfers: AssetChangeEvent<"Transfer">[]) => {
 
         for (const transfer of transfers) {
             const key = `${transfer.address}-${transfer.args.to}`
-            if (aggregatedTransfersMap.has(key) && "value" in transfer.args) {
-                const existingTransfer = aggregatedTransfersMap.get(key)
-                if (existingTransfer && "value" in existingTransfer.args) {
-                    existingTransfer.args.value += transfer.args.value
+
+            // Clone the incoming event to guarantee immutability
+            const clonedTransfer = {
+                ...transfer,
+                args: { ...transfer.args }
+            } as AssetChangeEvent<"Transfer">
+
+            if (
+                aggregatedTransfersMap.has(key) &&
+                "value" in clonedTransfer.args
+            ) {
+                const existingTransfer = aggregatedTransfersMap.get(key)!
+
+                const existingValue = (existingTransfer.args as any).value
+                const newValue = (clonedTransfer.args as any).value
+
+                if (
+                    typeof existingValue === "bigint" &&
+                    typeof newValue === "bigint"
+                ) {
+                    const updatedTransfer = {
+                        ...existingTransfer,
+                        args: {
+                            ...existingTransfer.args,
+                            value: existingValue + newValue
+                        }
+                    } as AssetChangeEvent<"Transfer">
+
+                    aggregatedTransfersMap.set(key, updatedTransfer)
                 }
             } else {
-                aggregatedTransfersMap.set(key, transfer)
+                aggregatedTransfersMap.set(key, clonedTransfer)
             }
         }
 
@@ -44,61 +70,24 @@ export const TransferEvents = ({
 
     const aggregatedTransfers = useAggregatedTransfers(transfers)
 
-    return (
-        // <div className="space-y-2">
-        // <div className="space-y-1">
-        aggregatedTransfers.map((event, idx) => {
-            const isOutgoingTransfer = event.args.from === smartAccountAddress
-            const isIncomingTransfer = event.args.to === smartAccountAddress
+    return aggregatedTransfers.map((event, idx) => {
+        const isOutgoingTransfer = event.args.from === smartAccountAddress
+        const isIncomingTransfer = event.args.to === smartAccountAddress
 
-            // Handle ERC20 transfers
-            if ("value" in event.args && event.tokenInfo) {
-                const amount = event.tokenInfo.decimals
-                    ? formatUnits(event.args.value, event.tokenInfo.decimals)
-                    : undefined
-                const tokenSymbol = event.tokenInfo.symbol || "Unknown"
+        // Handle ERC20 transfers
+        if ("value" in event.args && event.tokenInfo) {
+            const amount = event.tokenInfo.decimals
+                ? formatUnits(event.args.value, event.tokenInfo.decimals)
+                : undefined
+            const tokenSymbol = event.tokenInfo.symbol || "Unknown"
 
-                return (
-                    <EventRow
-                        key={`${event.address}-${event.args.to}`}
-                        icon={
-                            isOutgoingTransfer ? (
-                                <ArrowUpRight className="h-4 w-4" />
-                            ) : (
-                                <ArrowDownRight className="h-4 w-4" />
-                            )
-                        }
-                        name={`${
-                            amount !== undefined
-                                ? Number(amount).toLocaleString("en-US", {
-                                      maximumFractionDigits: 0
-                                  })
-                                : "?"
-                        } ${tokenSymbol}`}
-                        address={event.args.to}
-                    />
-                )
-            }
+            const formattedAmount =
+                amount !== undefined
+                    ? Number(amount).toLocaleString("en-US", {
+                          maximumFractionDigits: 0
+                      })
+                    : "?"
 
-            // Handle ERC721 transfers
-            if ("tokenId" in event.args && event.nftInfo) {
-                return (
-                    <EventRow
-                        key={`${event.address}-${event.args.to}`}
-                        icon={
-                            isOutgoingTransfer ? (
-                                <ArrowUpRight className="h-4 w-4" />
-                            ) : (
-                                <ArrowDownRight className="h-4 w-4" />
-                            )
-                        }
-                        name={event.nftInfo.name ?? "NFT"}
-                        address={event.args.to}
-                    />
-                )
-            }
-
-            // Fallback for unknown transfer types
             return (
                 <EventRow
                     key={`${event.address}-${event.args.to}`}
@@ -109,12 +98,62 @@ export const TransferEvents = ({
                             <ArrowDownRight className="h-4 w-4" />
                         )
                     }
-                    name={event.address}
+                    name={
+                        <span className="inline-flex items-center gap-1">
+                            {event.tokenInfo.logo && (
+                                <img
+                                    src={event.tokenInfo.logo}
+                                    alt={tokenSymbol}
+                                    className="h-4 w-4"
+                                    onError={(e) => {
+                                        // hide image if the logo URL fails to load
+                                        e.currentTarget.style.display = "none"
+                                    }}
+                                />
+                            )}
+                            <div className="flex gap-[5px]">
+                                <span>{formattedAmount}</span>
+                                <span>{tokenSymbol}</span>
+                            </div>
+                        </span>
+                    }
                     address={event.args.to}
                 />
             )
-        })
-        // </div>
-        // </div>
-    )
+        }
+
+        // Handle ERC721 transfers
+        if ("tokenId" in event.args && event.nftInfo) {
+            return (
+                <EventRow
+                    key={`${event.address}-${event.args.to}`}
+                    icon={
+                        isOutgoingTransfer ? (
+                            <ArrowUpRight className="h-4 w-4" />
+                        ) : (
+                            <ArrowDownRight className="h-4 w-4" />
+                        )
+                    }
+                    name={event.nftInfo.name ?? "NFT"}
+                    address={event.args.to}
+                />
+            )
+        }
+
+        // Fallback for unknown transfer types
+        return (
+            <EventRow
+                key={`${event.address}-${event.args.to}`}
+                icon={
+                    isOutgoingTransfer ? (
+                        <ArrowUpRight className="h-4 w-4" />
+                    ) : (
+                        <ArrowDownRight className="h-4 w-4" />
+                    )
+                }
+                name={event.address}
+                address={event.args.to}
+            />
+        )
+    })
 }

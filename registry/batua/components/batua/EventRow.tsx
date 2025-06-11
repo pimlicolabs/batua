@@ -1,5 +1,4 @@
 import { CopyAddress } from "@/registry/batua/components/batua/CopyAddress"
-import { shortenAddress } from "@/registry/batua/lib/batua/utils"
 import { Address } from "viem"
 
 export const EventRow = ({
@@ -8,20 +7,27 @@ export const EventRow = ({
     address
 }: {
     icon: React.ReactNode
-    name: string
+    name: React.ReactNode
     address: Address
 }) => {
     return (
-        <div className="flex items-center gap-2 text-sm">
-            <div className="flex items-center gap-2">
-                {icon}
-                <span className="font-mono w-30">{name}</span>
+        <>
+            {/* Icon cell */}
+            <div className="flex items-center gap-2 min-w-0">
+                <div className="flex items-center justify-center">{icon}</div>
+
+                {/* Amount / token symbol (or NFT name) with optional logo */}
+                <div className="font-mono text-sm whitespace-nowrap max-w-[10rem] truncate overflow-hidden flex items-center">
+                    {name}
+                </div>
             </div>
+
+            {/* Address cell – fills remaining space and truncates if required */}
             <CopyAddress
-                name={shortenAddress(address)}
+                name={address}
                 value={address}
-                className="font-mono w-full"
+                className="font-mono text-xs truncate w-full"
             />
-        </div>
+        </>
     )
 }

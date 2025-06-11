@@ -12,12 +12,14 @@ export const CopyAddress = ({
     name,
     value,
     className,
+    tooltip = value,
     maxLength = 30
 }: {
     name: string | React.ReactNode
     value: Hex
     className?: string
     maxLength?: number
+    tooltip?: string
 }) => {
     const [copied, setCopied] = useState(false)
     return (
@@ -31,24 +33,34 @@ export const CopyAddress = ({
                             setCopied(true)
                             setTimeout(() => setCopied(false), 1000)
                         }}
-                        className={`relative flex items-center justify-center font-mono text-xs truncate bg-muted/10 hover:bg-muted px-3 py-0.5 rounded-md border-dashed border cursor-pointer transition-colors ${className}`}
+                        className={`relative flex items-center justify-center font-mono text-xs bg-muted/10 hover:bg-muted px-3 py-0.5 rounded-md border-dashed border cursor-pointer transition-colors min-w-0 ${className}`}
                         title="Click to copy address"
                     >
-                        <span
-                            style={{
-                                visibility: copied ? "hidden" : "visible"
-                            }}
-                        >
-                            {name}
-                        </span>
+                        {typeof name === "string" ? (
+                            <div
+                                className={`flex max-w-full text-muted-foreground min-w-0 ${
+                                    copied ? "invisible" : "visible"
+                                }`}
+                            >
+                                <span className="truncate pr-0.5 flex-shrink">
+                                    {name}
+                                </span>
+                            </div>
+                        ) : (
+                            <span
+                                className={`truncate ${copied ? "invisible" : "visible"}`}
+                            >
+                                {name}
+                            </span>
+                        )}
                         <Check
-                            className={`h-4 w-4 text-green-500 absolute ${copied ? "visible" : "invisible"}`}
+                            className={`h-5 w-5 text-green-500 absolute ${copied ? "visible" : "invisible"}`}
                         />
                     </button>
                 </TooltipTrigger>
                 <TooltipContent>
-                    {value.slice(0, maxLength)}
-                    {value.length > maxLength && "..."}
+                    {tooltip.slice(0, maxLength)}
+                    {tooltip.length > maxLength && "..."}
                 </TooltipContent>
             </Tooltip>
         </TooltipProvider>

@@ -53,9 +53,9 @@ export const SendCalls = ({
         request
     })
 
-    const decodedCallData = useDecodedCallData({
-        calls: request.params[0].calls
-    })
+    // const decodedCallData = useDecodedCallData({
+    //     calls: request.params[0].calls
+    // })
 
     const ethPrice = useEthPrice(internal)
     const gasCost = useGasCost(userOperation)
@@ -75,8 +75,6 @@ export const SendCalls = ({
     const [sendingTransaction, setSendingTransaction] = useState(false)
     const [error, setError] = useState<string | null>(null)
 
-    const [isLoading, setIsLoading] = useState(true)
-    const [paused, setPaused] = useState(false)
     const assetChangeEvents = useAssetChangeEvents({
         userOperation,
         client
@@ -152,8 +150,8 @@ export const SendCalls = ({
 
     return (
         <Dialog open={!!queueRequest} onOpenChange={onOpenChange}>
-            <DialogContent className="sm:max-w-[400px] flex justify-start gap-0 flex-col max-h-[75vh] overflow-y-scroll">
-                <SendCallsHeader />
+            <DialogContent className="sm:max-w-[400px] flex justify-start gap-0 flex-col max-h-[75vh] overflow-y-scroll transition-[max-height] duration-500">
+                <SendCallsHeader userOperation={userOperation} />
 
                 {error && (
                     <Alert variant="destructive" className="mb-5">
@@ -173,32 +171,18 @@ export const SendCalls = ({
 
                 <hr className="my-4" />
 
-                <AssetChangeEvents
-                    assetChangeEvents={assetChangeEvents}
-                    smartAccountAddress={smartAccountClient?.account.address}
-                />
-
-                <div className="flex items-center justify-between my-6">
-                    <div className="text-sm flex items-center gap-2">
-                        Raw transaction data
+                {assetChangeEvents === null ? (
+                    <div className="flex justify-center items-center py-8">
+                        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
                     </div>
-                    <span className="text-sm">
-                        {userOperation?.callData ? (
-                            <CopyAddress
-                                name={
-                                    <div className="flex items-center gap-1">
-                                        {userOperation?.callData.slice(0, 10)}
-                                        ...
-                                        <Bug className="h-4 w-4 text-muted-foreground" />
-                                    </div>
-                                }
-                                value={userOperation?.callData ?? "0x"}
-                            />
-                        ) : (
-                            "0x"
-                        )}
-                    </span>
-                </div>
+                ) : (
+                    <AssetChangeEvents
+                        assetChangeEvents={assetChangeEvents}
+                        smartAccountAddress={
+                            smartAccountClient?.account.address
+                        }
+                    />
+                )}
 
                 {!hasEnoughBalance && (
                     <Alert variant="destructive" className="mb-3">
@@ -211,7 +195,7 @@ export const SendCalls = ({
                 )}
                 <Button
                     variant="default"
-                    className="w-full justify-center h-12 text-base font-medium shadow-sm hover:shadow transition-all"
+                    className="w-full mt-8 justify-center h-12 text-base font-medium shadow-sm hover:shadow transition-all"
                     onClick={sendTransaction}
                     disabled={
                         sendingTransaction ||

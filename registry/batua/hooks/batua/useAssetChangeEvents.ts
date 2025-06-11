@@ -75,6 +75,10 @@ const getErc20Info = async ({
                         functionName: "decimals"
                     })
                 ])
+
+                // const logo =
+                //     "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+
                 const logo = `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`
 
                 tokenInfoMap.set(address, {
@@ -264,10 +268,14 @@ export const useAssetChangeEvents = ({
         AssetChangeEvent[] | null
     >(null)
 
+    const [isLoading, setIsLoading] = useState(false)
+
     useEffect(() => {
-        if (!userOperation) {
+        if (!userOperation || isLoading) {
             return
         }
+
+        setIsLoading(true)
 
         simulate({ userOperation, client }).then((assetChangeEvents) => {
             setAssetChangeEvents(assetChangeEvents)
