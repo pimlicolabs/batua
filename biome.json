@@ -1,18 +1,17 @@
 {
-    "$schema": "https://biomejs.dev/schemas/1.0.0/schema.json",
+    "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
     "files": {
-        "ignore": [
-            "node_modules",
-            "**/node_modules",
-            "cache",
-            "coverage",
-            "tsconfig.json",
-            "tsconfig.*.json",
-            "_cjs",
-            "_esm",
-            "_types",
-            "bun.lockb",
-            "temp.ts"
+        "include": [
+            "app/**/*.ts",
+            "app/**/*.tsx",
+            "components/**/*.ts",
+            "components/**/*.tsx",
+            "lib/**/*.ts",
+            "lib/**/*.tsx",
+            "registry/**/*.ts",
+            "registry/**/*.tsx",
+            "scripts/**/*.ts",
+            "scripts/**/*.tsx"
         ]
     },
     "organizeImports": {

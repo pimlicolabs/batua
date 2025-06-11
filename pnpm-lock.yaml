@@ -8,9 +8,6 @@ importers:
 
   .:
     dependencies:
-      '@biomejs/biome':
-        specifier: ^1.9.4
-        version: 1.9.4
       '@openchainxyz/abi-guesser':
         specifier: ^1.0.2
         version: 1.0.2(bufferutil@4.0.9)(utf-8-validate@5.0.10)
@@ -108,6 +105,9 @@ importers:
         specifier: ^5.0.3
         version: 5.0.5(@types/react@19.1.7)(react@19.1.0)(use-sync-external-store@1.4.0(react@19.1.0))
     devDependencies:
+      '@biomejs/biome':
+        specifier: ^1.9.4
+        version: 1.9.4
       '@eslint/eslintrc':
         specifier: ^3
         version: 3.3.1

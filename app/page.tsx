@@ -320,6 +320,14 @@ export default function Home() {
                     to: TEST_ERC20_TOKEN_ADDRESS,
                     data: encodeFunctionData({
                         abi: erc20Abi,
+                        functionName: "approve",
+                        args: [randomAddressOne, parseUnits("100", 6)] // erc20 has 6 decimals
+                    })
+                },
+                {
+                    to: TEST_ERC20_TOKEN_ADDRESS,
+                    data: encodeFunctionData({
+                        abi: erc20Abi,
                         functionName: "transfer",
                         args: [randomAddressOne, parseUnits("1", 6)] // erc20 has 6 decimals
                     })
@@ -328,8 +336,43 @@ export default function Home() {
                     to: TEST_ERC20_TOKEN_ADDRESS,
                     data: encodeFunctionData({
                         abi: erc20Abi,
+                        functionName: "approve",
+                        args: [randomAddressOne, parseUnits("100", 6)] // erc20 has 6 decimals
+                    })
+                },
+                {
+                    to: TEST_ERC20_TOKEN_ADDRESS,
+                    data: encodeFunctionData({
+                        abi: erc20Abi,
                         functionName: "transfer",
                         args: [randomAddressTwo, parseUnits("1", 6)] // erc20 has 6 decimals
+                    })
+                },
+                {
+                    to: TEST_ERC20_TOKEN_ADDRESS,
+                    data: encodeFunctionData({
+                        abi: [
+                            {
+                                inputs: [
+                                    {
+                                        internalType: "address",
+                                        name: "to",
+                                        type: "address"
+                                    },
+                                    {
+                                        internalType: "uint256",
+                                        name: "amount",
+                                        type: "uint256"
+                                    }
+                                ],
+                                name: "mint",
+                                outputs: [],
+                                stateMutability: "nonpayable",
+                                type: "function"
+                            }
+                        ],
+                        functionName: "mint",
+                        args: [account.address, parseUnits("100", 6)] // erc20 has 6 decimals
                     })
                 }
             ]

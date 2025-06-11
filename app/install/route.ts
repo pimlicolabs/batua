@@ -35,7 +35,7 @@ export async function GET(request: Request) {
 
         // Use the data from the TypeScript file that was generated during build
         // This approach works reliably with Vercel Edge functions
-        const jsonData = batuaData;
+        const jsonData = batuaData
 
         // Return the JSON data
         return NextResponse.json(jsonData, {

@@ -1,0 +1,12 @@
+ignoredBuiltDependencies:
+  - '@tailwindcss/oxide'
+  - bufferutil
+  - core-js
+  - keccak
+  - msw
+  - sharp
+  - unrs-resolver
+  - utf-8-validate
+
+onlyBuiltDependencies:
+  - '@biomejs/biome'
