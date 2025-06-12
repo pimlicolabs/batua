@@ -1,0 +1,100 @@
+# Try Batua
+
+Experience Batua in action with our interactive demo. Test all the features including passkey authentication, transaction sponsoring, and batch transactions.
+
+## Interactive Demo
+
+Our demo showcases all of Batua's key features:
+
+- **Passkey Authentication**: Connect using your device's biometric authentication
+- **Transaction Sponsoring**: Send transactions without holding ETH for gas
+- **Batch Transactions**: Execute multiple operations in a single transaction
+- **Real-time Balance Updates**: See your test token balance update in real-time
+
+[**Launch Interactive Demo →**](/)
+
+## What You Can Test
+
+### 1. Wallet Connection
+- Connect using passkeys (Face ID, Touch ID, Windows Hello, etc.)
+- No seed phrases or private keys needed
+- Secure authentication using your device's built-in security
+
+### 2. Single Transactions
+- Mint test ERC-20 tokens
+- See transaction status and hash
+- Experience sponsored transactions (no gas fees)
+
+### 3. Batch Transactions
+- Send multiple token transfers in one transaction
+- Approve and transfer tokens atomically
+- Experience the efficiency of batched operations
+
+### 4. Real-time Updates
+- Balance updates every 5 seconds
+- Transaction status monitoring
+- Live feedback on all operations
+
+## Demo Environment
+
+The demo runs on **Sepolia testnet** with:
+- **Test ERC-20 Token**: A custom token for testing transfers
+- **Sponsored Transactions**: All transactions are sponsored (no gas fees)
+- **Safe Environment**: No real funds at risk
+
+## Getting Test Tokens
+
+The demo includes a "Mint test erc20 tokens" button that will:
+1. Create a transaction to mint 100 test tokens
+2. Add them to your smart account balance
+3. Enable you to test batch transfers
+
+## Understanding the Code
+
+The demo is built with the same code you'll use in your application:
+
+```tsx
+// Connect to Batua
+const { connectors, connect } = useConnect()
+const batuaConnector = connectors.find(c => c.name === "Batua")
+
+// Send batch transactions
+const { sendCalls } = useSendCalls()
+sendCalls({
+    calls: [
+        // Multiple operations here
+    ]
+})
+```
+
+## Troubleshooting
+
+### Passkey Issues
+- **Not supported**: Ensure your device supports passkeys
+- **Registration failed**: Try using a different browser or device
+- **Authentication failed**: Make sure biometrics are enabled
+
+### Transaction Issues
+- **Transaction pending**: Wait for confirmation (usually 10-30 seconds on Sepolia)
+- **Transaction failed**: Check the console for error details
+- **Balance not updating**: Wait for the next balance refresh (every 5 seconds)
+
+## Next Steps
+
+After trying the demo:
+
+1. **Install Batua** in your project using the [installation guide](/installation)
+2. **Configure** your setup following the [usage instructions](/usage)
+3. **Customize** the appearance to match your brand using our [customization guide](/customization)
+4. **Implement batch transactions** using our [batch transactions guide](/batch-transactions)
+
+## Feedback
+
+Found an issue or have suggestions? We'd love to hear from you:
+
+- [GitHub Issues](https://github.com/pimlicolabs/batua/issues)
+- [GitHub Discussions](https://github.com/pimlicolabs/batua/discussions)
+
+---
+
+Ready to integrate Batua into your application? Start with our [Getting Started](/getting-started) guide. 

@@ -1,0 +1,140 @@
+# Batch Transactions
+
+One of the key benefits of using smart accounts is the ability to batch multiple transactions into a single operation. This reduces gas costs and improves user experience by requiring only one signature for multiple actions.
+
+## Using useSendCalls
+
+Batua supports the experimental `useSendCalls` hook from wagmi for batch transactions:
+
+```tsx
+import { useSendCalls, useWaitForCallsStatus } from "wagmi/experimental"
+import { useAccount } from "wagmi"
+import { encodeFunctionData, erc20Abi, parseUnits } from "viem"
+
+const account = useAccount()
+const { sendCalls, data: callStatus } = useSendCalls()
+
+const { data: callReceipts } = useWaitForCallsStatus({
+    id: callStatus?.id
+})
+
+const callSucceeded = callReceipts?.status === "success"
+const callPending = callReceipts?.status === "pending"
+
+if (callSucceeded) {
+    const transactionHash = callReceipts.receipts[0].transactionHash
+}
+```
+
+## Example: Batch ERC-20 Operations
+
+Here's a complete example of batching multiple ERC-20 operations:
+
+```tsx
+import { useCallback } from "react"
+import { generatePrivateKey, privateKeyToAccount } from "viem/accounts"
+
+const sendBatchTransactionCallback = useCallback(async () => {
+    if (!account.address) return
+
+    // Generate random addresses for demo
+    const randomAddressOne = privateKeyToAccount(generatePrivateKey()).address
+    const randomAddressTwo = privateKeyToAccount(generatePrivateKey()).address
+
+    sendCalls({
+        calls: [
+            {
+                to: TEST_ERC20_TOKEN_ADDRESS,
+                data: encodeFunctionData({
+                    abi: erc20Abi,
+                    functionName: "transfer",
+                    args: [randomAddressOne, parseUnits("1", 6)]
+                })
+            },
+            {
+                to: TEST_ERC20_TOKEN_ADDRESS,
+                data: encodeFunctionData({
+                    abi: erc20Abi,
+                    functionName: "transfer",
+                    args: [randomAddressTwo, parseUnits("1", 6)]
+                })
+            }
+        ]
+    })
+}, [account.address, sendCalls])
+```
+
+## Monitoring Batch Status
+
+You can monitor the status of your batch transactions:
+
+```tsx
+// Check if batch is pending
+if (callReceipts?.status === "pending") {
+    console.log("Batch transaction is pending...")
+}
+
+// Check if batch succeeded
+if (callReceipts?.status === "success") {
+    console.log("Batch transaction succeeded!")
+    // Access individual transaction receipts
+    callReceipts.receipts.forEach((receipt, index) => {
+        console.log(`Transaction ${index + 1}:`, receipt.transactionHash)
+    })
+}
+
+// Check if batch failed
+if (callReceipts?.status === "reverted") {
+    console.log("Batch transaction failed")
+}
+```
+
+## Benefits of Batch Transactions
+
+### Gas Efficiency
+- **Reduced overhead**: Only one transaction fee instead of multiple
+- **Lower total cost**: Batching operations can significantly reduce gas costs
+- **Atomic execution**: All operations succeed or fail together
+
+### Better UX
+- **Single signature**: Users only need to approve once
+- **Faster execution**: All operations happen in one block
+- **Simplified flow**: Fewer confirmation dialogs
+
+### Use Cases
+
+Common scenarios where batch transactions are beneficial:
+
+1. **Multi-token transfers**: Send multiple tokens in one transaction
+2. **DeFi operations**: Approve and swap tokens atomically  
+3. **NFT operations**: Mint multiple NFTs or transfer multiple tokens
+4. **Contract interactions**: Call multiple contract functions together
+
+## Error Handling
+
+When working with batch transactions, implement proper error handling:
+
+```tsx
+const handleBatchTransaction = useCallback(async () => {
+    try {
+        if (!account.address) {
+            throw new Error("Wallet not connected")
+        }
+
+        await sendCalls({
+            calls: [
+                // Your batch operations here
+            ]
+        })
+    } catch (error) {
+        console.error("Batch transaction failed:", error)
+        // Handle error appropriately
+    }
+}, [account.address, sendCalls])
+```
+
+## Next Steps
+
+- [Try batch transactions](/try-batua) in our interactive demo
+- Learn about [customizing Batua](/customization)
+- Explore more [usage examples](/usage) 

@@ -1,0 +1,53 @@
+# Installation
+
+## Install using the CLI
+
+To install Batua using the `shadcn` CLI, use the `add` command followed by the URL of the registry item.
+
+:::code-group
+
+```bash [pnpm]
+pnpm dlx shadcn@latest add https://batua.sh/install
+```
+
+```bash [npm]
+npx shadcn@latest add https://batua.sh/install
+```
+
+```bash [yarn]
+yarn dlx shadcn@latest add https://batua.sh/install
+```
+
+```bash [bun]
+bunx --bun shadcn@latest add https://batua.sh/install
+```
+
+:::
+
+## What gets installed?
+
+The installation will add the following to your project:
+
+- **Batua component** - The main wallet component
+- **Required dependencies** - All necessary packages for smart account functionality
+- **Type definitions** - TypeScript support out of the box
+- **Styling** - Tailwind CSS classes that match your theme
+
+## Prerequisites
+
+Before installing Batua, make sure you have:
+
+1. **React 18+** - Batua is built for modern React
+2. **shadcn/ui setup** - Your project should have shadcn/ui configured
+3. **Tailwind CSS** - Required for styling
+4. **TypeScript** (recommended) - For the best development experience
+
+## Next Steps
+
+After installation, you'll need to:
+
+1. [Set up your Passkey Server](/usage#step-1-set-up-passkey-server)
+2. [Configure Batua in your app](/usage#step-2-implement-batua)
+3. [Test the integration](/try-batua)
+
+Continue to the [Usage](/usage) guide for detailed setup instructions. 

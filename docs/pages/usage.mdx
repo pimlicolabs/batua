@@ -1,0 +1,103 @@
+# Usage
+
+## Step 1: Set up Passkey Server
+
+Before implementing Batua, you need to configure your passkey server:
+
+1. Go to [https://dashboard.pimlico.io/passkey-server](https://dashboard.pimlico.io/passkey-server)
+2. Create a new passkey server configuration
+3. Configure your domain and settings
+4. Note down your configuration details for the next step
+
+## Step 2: Implement Batua
+
+After installing Batua, you can integrate it into your application:
+
+```tsx
+import { Batua } from "@/lib/batua"
+import { sepolia } from "viem/chains"
+import { http } from "viem/transport"
+
+const pimlicoApiKey = "your-pimlico-api-key"
+
+Batua.create({
+    rpc: {
+        transports: {
+            [sepolia.id]: http("https://ethereum-sepolia-rpc.publicnode.com")
+        }
+    },
+    // optional
+    paymaster: {
+        transports: {
+            [sepolia.id]: http(
+                `https://api.pimlico.io/v2/${sepolia.id}/rpc?apikey=${pimlicoApiKey}`
+            )
+        },
+        // optional
+        context: {
+            sponsorshipPolicyId: process.env.NEXT_PUBLIC_SPONSORSHIP_POLICY_ID
+        }
+    },
+    bundler: {
+        transports: {
+            [sepolia.id]: http(
+                `https://api.pimlico.io/v2/${sepolia.id}/rpc?apikey=${pimlicoApiKey}`
+            )
+        }
+    }
+})
+```
+
+## Configuration Options
+
+### Required Configuration
+
+- **rpc.transports**: RPC endpoints for each chain you want to support
+- **bundler.transports**: Bundler endpoints for UserOperation submission
+
+### Optional Configuration
+
+- **paymaster.transports**: Paymaster endpoints for transaction sponsoring
+- **paymaster.context**: Additional context for paymaster (like sponsorship policy ID)
+
+## Integration with Wagmi
+
+After creating Batua, you can use your regular wagmi/ethers libraries and Batua will behave like an injected wallet compatible with EIP-6963.
+
+```tsx
+import { useConnect } from "wagmi"
+
+function ConnectWallet() {
+    const { connectors, connect } = useConnect()
+    
+    return (
+        <div>
+            {connectors.map((connector) => (
+                <button
+                    key={connector.uid}
+                    onClick={() => connect({ connector })}
+                >
+                    {connector.name}
+                </button>
+            ))}
+        </div>
+    )
+}
+```
+
+Batua will appear as one of the available connectors with the name "Batua".
+
+## Environment Variables
+
+For production use, make sure to set up your environment variables:
+
+```bash
+NEXT_PUBLIC_PIMLICO_API_KEY=your-pimlico-api-key
+NEXT_PUBLIC_SPONSORSHIP_POLICY_ID=your-sponsorship-policy-id
+```
+
+## Next Steps
+
+- Learn about [Batch Transactions](/batch-transactions)
+- [Customize Batua](/customization) to match your brand
+- [Try Batua](/try-batua) in our interactive demo 

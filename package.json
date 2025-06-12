@@ -2,9 +2,11 @@
     "name": "registry-template",
     "version": "0.1.0",
     "private": true,
+    "type": "module",
     "scripts": {
-        "dev": "next dev --turbopack",
-        "build": "next build && pnpm run batua:build",
+        "dev": "vocs dev",
+        "build": "vocs build && pnpm run batua:build",
+        "preview": "vocs preview",
         "start": "next start",
         "format": "biome format . --write",
         "lint": "biome check .",
@@ -40,6 +42,7 @@
         "tailwind-merge": "^2.6.0",
         "tailwindcss-animate": "^1.0.7",
         "viem": "^2.27.0",
+        "vocs": "latest",
         "wagmi": "^2.14.16",
         "zod": "^3.24.1",
         "zustand": "^5.0.3"

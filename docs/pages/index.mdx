@@ -1,0 +1,38 @@
+---
+layout: landing
+---
+
+import { HomePage } from 'vocs/components'
+
+<HomePage.Root>
+  <HomePage.Logo />
+  <HomePage.Tagline>batua.sh</HomePage.Tagline>
+  <HomePage.InstallPackage name="shadcn@latest add https://batua.sh/install" type="init" />
+  <HomePage.Description>
+    Easy to integrate embedded smart account secured by passkeys. 
+    Support for sponsoring transactions, batching multiple transactions, 
+    and complete code ownership with shadcn integration.
+  </HomePage.Description>
+  <HomePage.Buttons>
+    <HomePage.Button href="/getting-started" variant="accent">Get started</HomePage.Button>
+    <HomePage.Button href="/try-batua">Try Batua</HomePage.Button>
+    <HomePage.Button href="https://github.com/pimlicolabs/batua">GitHub</HomePage.Button>
+  </HomePage.Buttons>
+</HomePage.Root>
+
+## Key Features
+
+- **Easy Integration**: Embedded smart account secured by passkeys
+- **Transaction Sponsoring**: Support for sponsoring transactions  
+- **Batch Transactions**: Support for batching multiple transactions
+- **Complete Ownership**: You have the complete ownership of the code
+- **Theme Integration**: Embeds into your application's theme due to shadcn
+- **Wide Compatibility**: Works with wagmi, viem, ethers, privy, dynamic, and more
+
+:::warning
+Do not use in production environments as of now.
+:::
+
+---
+
+*Made with ❤️ from [Pimlico](https://pimlico.io)*
