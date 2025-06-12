@@ -156,7 +156,7 @@ export const SendCalls = ({
             <DialogContent
                 className={`sm:max-w-[400px] p-0 flex justify-start gap-0 flex-col ${isLoading ? "max-h-[370px] overflow-hidden" : "max-h-[75vh] overflow-y-auto"} transition-[max-height] duration-500 ease-in-out`}
             >
-                <div className="p-6">
+                <div className="p-6 pb-0">
                     <SendCallsHeader userOperation={userOperation} />
 
                     {error && (

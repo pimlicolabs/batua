@@ -5,6 +5,7 @@
     "scripts": {
         "dev": "next dev --turbopack",
         "build": "next build && pnpm run batua:build",
+        "analyze": "ANALYZE=true next build",
         "start": "next start",
         "format": "biome format . --write",
         "lint": "biome check .",
@@ -47,6 +48,7 @@
     "devDependencies": {
         "@biomejs/biome": "^1.9.4",
         "@eslint/eslintrc": "^3",
+        "@next/bundle-analyzer": "^15.3.3",
         "@tailwindcss/postcss": "^4.1.1",
         "@types/node": "^20",
         "@types/react": "^19",
