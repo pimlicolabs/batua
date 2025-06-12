@@ -4,7 +4,7 @@ import type { Internal, QueuedRequest } from "@/registry/batua/lib/batua/type"
 import { Provider } from "ox"
 import { Button } from "@/components/ui/button"
 import { useCallback, useEffect, useMemo, useState } from "react"
-import { AlertCircle, Bug, Fingerprint, Loader2 } from "lucide-react"
+import { AlertCircle, Fingerprint, Loader2 } from "lucide-react"
 
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { useSmartAccount } from "@/registry/batua/hooks/batua/useSmartAccount"
@@ -12,14 +12,12 @@ import { useSendCallsRequest } from "@/registry/batua/hooks/batua/useSendCallsRe
 import { useUserOperation } from "@/registry/batua/hooks/batua/useUserOperation"
 import { useEthPrice } from "@/registry/batua/hooks/batua/useEthPrice"
 import { useChain } from "@/registry/batua/hooks/batua/useChain"
-import { useDecodedCallData } from "@/registry/batua/hooks/batua/useDecodedCallData"
 import { useGasCost } from "@/registry/batua/hooks/batua/useGasCost"
 import { useBalance } from "@/registry/batua/hooks/batua/useBalance"
 import { useAssetChangeEvents } from "@/registry/batua/hooks/batua/useAssetChangeEvents"
 import { useClient } from "@/registry/batua/hooks/batua/useClient"
 import { SendCallsHeader } from "@/registry/batua/components/batua/SendCallsHeader"
 import { NetworkInformation } from "@/registry/batua/components/batua/NetworkInformation"
-import { CopyAddress } from "@/registry/batua/components/batua/CopyAddress"
 import { AssetChangeEvents } from "@/registry/batua/components/batua/AssetChangeEvents"
 
 export const SendCalls = ({
@@ -77,7 +75,8 @@ export const SendCalls = ({
 
     const assetChangeEvents = useAssetChangeEvents({
         userOperation,
-        client
+        client,
+        smartAccountClient
     })
 
     const onOpenChange = (open: boolean) => {
@@ -148,73 +147,83 @@ export const SendCalls = ({
         userOperation
     ])
 
+    const isLoading = useMemo(() => {
+        return !userOperation || !smartAccountClient || !assetChangeEvents
+    }, [userOperation, smartAccountClient, assetChangeEvents])
+
     return (
         <Dialog open={!!queueRequest} onOpenChange={onOpenChange}>
-            <DialogContent className="sm:max-w-[400px] flex justify-start gap-0 flex-col max-h-[75vh] overflow-y-scroll transition-[max-height] duration-500">
-                <SendCallsHeader userOperation={userOperation} />
+            <DialogContent
+                className={`sm:max-w-[400px] p-0 flex justify-start gap-0 flex-col ${isLoading ? "max-h-[370px] overflow-hidden" : "max-h-[75vh] overflow-y-auto"} transition-[max-height] duration-500 ease-in-out`}
+            >
+                <div className="p-6 pb-0">
+                    <SendCallsHeader userOperation={userOperation} />
 
-                {error && (
-                    <Alert variant="destructive" className="mb-5">
-                        <AlertCircle className="h-4 w-4" />
-                        <AlertDescription>{error}</AlertDescription>
-                    </Alert>
-                )}
-
-                <NetworkInformation
-                    chainName={chain.name}
-                    dappName={internal.config.dappName}
-                    hasPaymaster={hasPaymaster}
-                    refreshingGasCost={refreshingGasCost}
-                    gasCost={gasCost}
-                    ethPrice={ethPrice}
-                />
-
-                <hr className="my-4" />
-
-                {assetChangeEvents === null ? (
-                    <div className="flex justify-center items-center py-8">
-                        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-                    </div>
-                ) : (
-                    <AssetChangeEvents
-                        assetChangeEvents={assetChangeEvents}
-                        smartAccountAddress={
-                            smartAccountClient?.account.address
-                        }
-                    />
-                )}
-
-                {!hasEnoughBalance && (
-                    <Alert variant="destructive" className="mb-3">
-                        <AlertCircle className="h-4 w-4" />
-                        <AlertDescription>
-                            Insufficient balance to cover gas fees for this
-                            transaction
-                        </AlertDescription>
-                    </Alert>
-                )}
-                <Button
-                    variant="default"
-                    className="w-full mt-8 justify-center h-12 text-base font-medium shadow-sm hover:shadow transition-all"
-                    onClick={sendTransaction}
-                    disabled={
-                        sendingTransaction ||
-                        !hasEnoughBalance ||
-                        !userOperation
-                    }
-                >
-                    {sendingTransaction ? (
-                        <>
-                            <Loader2 className="h-5 w-5 mr-2 animate-spin" />
-                            <span>Processing Transaction...</span>
-                        </>
-                    ) : (
-                        <>
-                            <Fingerprint className="h-4 w-4" />
-                            <span>Confirm and Send</span>
-                        </>
+                    {error && (
+                        <Alert variant="destructive" className="mb-5">
+                            <AlertCircle className="h-4 w-4" />
+                            <AlertDescription>{error}</AlertDescription>
+                        </Alert>
                     )}
-                </Button>
+
+                    <NetworkInformation
+                        chainName={chain.name}
+                        dappName={internal.config.dappName}
+                        hasPaymaster={hasPaymaster}
+                        refreshingGasCost={refreshingGasCost}
+                        gasCost={gasCost}
+                        ethPrice={ethPrice}
+                    />
+
+                    <hr className="my-4" />
+
+                    {assetChangeEvents === null ? (
+                        <div className="flex justify-center items-center py-8">
+                            <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+                        </div>
+                    ) : (
+                        <AssetChangeEvents
+                            assetChangeEvents={assetChangeEvents}
+                            smartAccountAddress={
+                                smartAccountClient?.account.address
+                            }
+                        />
+                    )}
+
+                    {!hasEnoughBalance && (
+                        <Alert variant="destructive" className="mb-3">
+                            <AlertCircle className="h-4 w-4" />
+                            <AlertDescription>
+                                Insufficient balance to cover gas fees for this
+                                transaction
+                            </AlertDescription>
+                        </Alert>
+                    )}
+                </div>
+                <div className="sticky bottom-0 left-0 right-0 bg-background z-10 p-6">
+                    <Button
+                        variant="default"
+                        className="w-full justify-center h-12 text-base font-medium shadow-sm hover:shadow transition-all"
+                        onClick={sendTransaction}
+                        disabled={
+                            sendingTransaction ||
+                            !hasEnoughBalance ||
+                            !userOperation
+                        }
+                    >
+                        {sendingTransaction ? (
+                            <>
+                                <Loader2 className="h-5 w-5 mr-2 animate-spin" />
+                                <span>Processing Transaction...</span>
+                            </>
+                        ) : (
+                            <>
+                                <Fingerprint className="h-4 w-4" />
+                                <span>Confirm and Send</span>
+                            </>
+                        )}
+                    </Button>
+                </div>
             </DialogContent>
         </Dialog>
     )
