@@ -1,3 +1,8 @@
 {
-  "agentCanUpdateSnapshot": true
+  "install": "bun install",
+  "start": "bun run dev",
+  "build": {
+    "context": ".",
+    "dockerfile": "Dockerfile"
+  }
 }

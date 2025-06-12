@@ -5,6 +5,12 @@ export default defineConfig({
   description: 'Easy to integrate embedded smart account secured by passkeys',
   logoUrl: '/logo.svg',
   iconUrl: '/favicon.ico',
+  vite: {
+    server: {
+      host: '0.0.0.0',
+      port: 5173,
+    },
+  },
   sidebar: [
     {
       text: 'Getting Started',

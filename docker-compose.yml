@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  # Development environment (Vocs only)
+  dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: dev
+    ports:
+      - "5173:5173"  # Vocs dev server
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/dist
+    environment:
+      - NODE_ENV=development
+      - HOST=0.0.0.0
+    command: bun run dev
+
+  # Production documentation site
+  docs:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: runner
+    ports:
+      - "80:80"
+    environment:
+      - NODE_ENV=production
+      - HOST=0.0.0.0
+      - PORT=80
+
+networks:
+  default:
+    name: batua-docs-network 
