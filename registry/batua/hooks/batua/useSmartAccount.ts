@@ -1,4 +1,3 @@
-import { getClient } from "@/registry/batua/lib/batua/helpers/getClient"
 import { getSmartAccountClient } from "@/registry/batua/lib/batua/helpers/getSmartAccountClient"
 import { Internal } from "@/registry/batua/lib/batua/type"
 import { Provider } from "ox"

@@ -1,4 +1,3 @@
-import { CopyAddress } from "@/registry/batua/components/batua/CopyAddress"
 import { EventRow } from "@/registry/batua/components/batua/EventRow"
 import { AssetChangeEvent } from "@/registry/batua/hooks/batua/useAssetChangeEvents"
 import { ArrowDownRight, ArrowUpRight } from "lucide-react"

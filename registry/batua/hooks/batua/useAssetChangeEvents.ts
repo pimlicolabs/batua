@@ -277,21 +277,24 @@ export const useAssetChangeEvents = ({
         AssetChangeEvent[] | null
     >(null)
 
-    const [isLoading, setIsLoading] = useState(false)
-
     useEffect(() => {
-        if (!userOperation || isLoading || !smartAccountClient) {
+        if (
+            !userOperation ||
+            assetChangeEvents !== null ||
+            !smartAccountClient
+        ) {
             return
         }
 
-        setIsLoading(true)
-
-        simulate({ userOperation, client, smartAccountClient }).then(
-            (assetChangeEvents) => {
+        simulate({ userOperation, client, smartAccountClient })
+            .then((assetChangeEvents) => {
                 setAssetChangeEvents(assetChangeEvents)
-            }
-        )
-    }, [userOperation, client])
+            })
+            .catch((e) => {
+                console.error(e)
+                setAssetChangeEvents([])
+            })
+    }, [userOperation, client, assetChangeEvents, smartAccountClient])
 
     return assetChangeEvents
 }

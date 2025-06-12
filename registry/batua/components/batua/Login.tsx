@@ -10,14 +10,7 @@ import {
     DialogTitle,
     DialogFooter
 } from "@/components/ui/dialog"
-import {
-    AlertCircle,
-    LogIn,
-    KeyRound,
-    Fingerprint,
-    Loader2,
-    HelpCircle
-} from "lucide-react"
+import { AlertCircle, LogIn, Fingerprint, Loader2 } from "lucide-react"
 import { Provider } from "ox"
 import { toKernelSmartAccount } from "permissionless/accounts"
 import { getClient } from "@/registry/batua/lib/batua/helpers/getClient"
@@ -30,12 +23,6 @@ import { createPasskeyServerClient } from "permissionless/clients/passkeyServer"
 import * as Key from "@/registry/batua/lib/batua/key"
 import { useCallback, useMemo, useState } from "react"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipProvider,
-    TooltipTrigger
-} from "@/components/ui/tooltip"
 import { Errors } from "ox"
 import { BaseError } from "viem"
 import { Separator } from "@/components/ui/separator"
