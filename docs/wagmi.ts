@@ -1,8 +1,9 @@
+
 import { sepolia } from "viem/chains"
 import { http, createConfig } from "wagmi"
 import { Batua } from "@/registry/batua/batua"
 
-const pimlicoApiKey = import.meta.env.NEXT_PUBLIC_PIMLICO_API_KEY || ""
+const pimlicoApiKey =  process.env.VITE_PUBLIC_PIMLICO_API_KEY ?? ""
 
 Batua.create({
     dappName: "Pimlico",
@@ -19,7 +20,7 @@ Batua.create({
             )
         },
         context: {
-            sponsorshipPolicyId: import.meta.env.NEXT_PUBLIC_SPONSORSHIP_POLICY_ID
+            sponsorshipPolicyId: process.env.VITE_PUBLIC_SPONSORSHIP_POLICY_ID ?? ""
         }
     },
     bundler: {

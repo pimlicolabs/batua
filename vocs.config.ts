@@ -1,6 +1,10 @@
 import path, { dirname } from 'path'
 import { fileURLToPath } from 'url'
 import { defineConfig } from 'vocs'
+import dotenv from 'dotenv'
+
+// Load environment variables from .env file
+dotenv.config()
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
@@ -19,6 +23,10 @@ export default defineConfig({
         "@": path.resolve(__dirname, "."),
       }
     },
+    define: {
+      "process.env.VITE_PUBLIC_PIMLICO_API_KEY": JSON.stringify(process.env.VITE_PUBLIC_PIMLICO_API_KEY ?? ""),
+      "process.env.VITE_PUBLIC_SPONSORSHIP_POLICY_ID": JSON.stringify(process.env.VITE_PUBLIC_SPONSORSHIP_POLICY_ID ?? "")
+    }
   },
   sidebar: [
     {
