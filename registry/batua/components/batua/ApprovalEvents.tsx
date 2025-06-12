@@ -129,6 +129,9 @@ export const ApprovalEvents = ({
                             </div>
                         </span>
                     }
+                    thirdColumn={
+                        <div className="text-sm text-muted-foreground">to</div>
+                    }
                     address={spender}
                 />
             )

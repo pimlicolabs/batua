@@ -39,13 +39,11 @@ export const CopyAddress = ({
                     >
                         {typeof name === "string" ? (
                             <div
-                                className={`flex max-w-full text-muted-foreground min-w-0 ${
+                                className={`flex max-w-full text-muted-foreground truncate min-w-0 ${
                                     copied ? "invisible" : "visible"
                                 }`}
                             >
-                                <span className="truncate pr-0.5 flex-shrink">
-                                    {name}
-                                </span>
+                                {name}
                             </div>
                         ) : (
                             <span
