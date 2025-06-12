@@ -16,7 +16,7 @@ export const CopyAddress = ({
     maxLength = 60
 }: {
     name: string | React.ReactNode
-    value: Hex
+    value: Hex | string
     className?: string
     maxLength?: number
     tooltip?: string

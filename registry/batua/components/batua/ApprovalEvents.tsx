@@ -132,7 +132,7 @@ export const ApprovalEvents = ({
                     thirdColumn={
                         <div className="text-sm text-muted-foreground">to</div>
                     }
-                    address={spender}
+                    address={event.ensName ?? spender}
                 />
             )
         }
@@ -152,7 +152,7 @@ export const ApprovalEvents = ({
                     key={`${event.address}-${operator}`}
                     icon={<ListCheck className="h-4 w-4" />}
                     name={`All NFTs ${event.nftInfo?.name ?? event.address}`}
-                    address={operator}
+                    address={event.ensName ?? operator}
                 />
             )
         }

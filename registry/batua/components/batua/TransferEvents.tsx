@@ -116,7 +116,7 @@ export const TransferEvents = ({
                             </div>
                         </span>
                     }
-                    address={event.args.to}
+                    address={event.ensName ?? event.args.to}
                     thirdColumn={
                         <div className="text-sm text-muted-foreground">
                             {isOutgoingTransfer ? "to" : "from"}
@@ -139,7 +139,7 @@ export const TransferEvents = ({
                         )
                     }
                     name={event.nftInfo.name ?? "NFT"}
-                    address={event.args.to}
+                    address={event.ensName ?? event.args.to}
                 />
             )
         }
@@ -156,7 +156,7 @@ export const TransferEvents = ({
                     )
                 }
                 name={event.address}
-                address={event.args.to}
+                address={event.ensName ?? event.args.to}
             />
         )
     })

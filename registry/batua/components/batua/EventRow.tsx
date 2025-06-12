@@ -9,14 +9,15 @@ export const EventRow = ({
 }: {
     icon: React.ReactNode
     name: React.ReactNode
-    address: Address
+    address: Address | string
     thirdColumn?: React.ReactNode
 }) => {
+
     return (
         <>
             {/* Icon cell */}
             <div
-                className={`flex items-center gap-2 min-w-0 ${!thirdColumn ? "col-span-2" : ""}`}
+                className={`flex gap-2 min-w-0 ${!thirdColumn ? "col-span-2" : ""}`}
             >
                 <div className="flex items-center justify-center">{icon}</div>
 
