@@ -39,7 +39,7 @@ export const SendCallsHeader = ({
                                 name={
                                     <Bug className="h-4 w-4 text-muted-foreground" />
                                 }
-                                tooltip={`Raw transaction data: ${userOperation?.callData ?? "0x"}`}
+                                tooltip={`Click to copy raw transaction data`}
                                 value={userOperation?.callData ?? "0x"}
                             />
                         </span>

@@ -36,7 +36,7 @@ export const NetworkFee = ({
                                 </div>
                             )}
                             {hasPaymaster && gasCost && (
-                                <span>
+                                <span className="tabular-nums">
                                     {gasCost.toLocaleString("en-US", {
                                         style: "currency",
                                         currency: "USD",

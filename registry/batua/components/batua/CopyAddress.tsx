@@ -13,7 +13,7 @@ export const CopyAddress = ({
     value,
     className,
     tooltip = value,
-    maxLength = 30
+    maxLength = 60
 }: {
     name: string | React.ReactNode
     value: Hex
@@ -28,13 +28,14 @@ export const CopyAddress = ({
                 <TooltipTrigger asChild>
                     <button
                         type="button"
+                        tabIndex={-1}
                         onClick={() => {
                             navigator.clipboard.writeText(value)
                             setCopied(true)
                             setTimeout(() => setCopied(false), 1000)
                         }}
                         className={`relative flex items-center justify-center font-mono text-xs bg-muted/10 hover:bg-muted px-3 py-0.5 rounded-md border-dashed border cursor-pointer transition-colors min-w-0 ${className}`}
-                        title="Click to copy address"
+                        title=""
                     >
                         {typeof name === "string" ? (
                             <div

@@ -28,13 +28,13 @@ export const AssetChangeEvents = ({
     )
 
     return (
-        <div className="bg-muted/5 grid grid-cols-[fit-content(60%)_1fr] gap-y-2 gap-x-6">
+        <div className="bg-muted/5 grid grid-cols-[fit-content(60%)_1fr, fit-content(60%)_1fr] gap-y-3 gap-x-3">
             {approvals && approvals.length > 0 && (
-                <div className="text-sm mb-2 col-span-2">Approvals</div>
+                <div className="text-sm mb-2 col-span-3">Approvals</div>
             )}
             <ApprovalEvents approvals={approvals} />
             {transfers && transfers.length > 0 && (
-                <div className="text-sm my-2 col-span-2">Transfers</div>
+                <div className="text-sm my-2 col-span-3">Transfers</div>
             )}
             <TransferEvents
                 transfers={transfers}

@@ -4,16 +4,20 @@ import { Address } from "viem"
 export const EventRow = ({
     icon,
     name,
-    address
+    address,
+    thirdColumn
 }: {
     icon: React.ReactNode
     name: React.ReactNode
     address: Address
+    thirdColumn?: React.ReactNode
 }) => {
     return (
         <>
             {/* Icon cell */}
-            <div className="flex items-center gap-2 min-w-0">
+            <div
+                className={`flex items-center gap-2 min-w-0 ${!thirdColumn ? "col-span-2" : ""}`}
+            >
                 <div className="flex items-center justify-center">{icon}</div>
 
                 {/* Amount / token symbol (or NFT name) with optional logo */}
@@ -21,6 +25,8 @@ export const EventRow = ({
                     {name}
                 </div>
             </div>
+
+            {thirdColumn}
 
             {/* Address cell – fills remaining space and truncates if required */}
             <CopyAddress
