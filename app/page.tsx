@@ -756,7 +756,7 @@ export default function Home() {
                         alt="GitHub"
                         width={24}
                         height={24}
-                        className="w-6 h-6"
+                        className="w-6 h-6 fill-current"
                         aria-hidden="true"
                     />
                     <span className="font-medium">View on GitHub</span>

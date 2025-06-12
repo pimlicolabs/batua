@@ -54,6 +54,7 @@
         "eslint": "^9",
         "eslint-config-next": "15.1.4",
         "postcss": "^8",
+        "puppeteer": "^24.10.0",
         "tailwindcss": "^4.1.1",
         "typescript": "^5"
     },
