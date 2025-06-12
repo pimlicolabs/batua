@@ -2,7 +2,7 @@ import { sepolia } from "viem/chains"
 import { http, createConfig } from "wagmi"
 import { Batua } from "@/registry/batua/batua"
 
-const pimlicoApiKey = process.env.NEXT_PUBLIC_PIMLICO_API_KEY || ""
+const pimlicoApiKey = import.meta.env.NEXT_PUBLIC_PIMLICO_API_KEY || ""
 
 Batua.create({
     dappName: "Pimlico",
@@ -19,7 +19,7 @@ Batua.create({
             )
         },
         context: {
-            sponsorshipPolicyId: process.env.NEXT_PUBLIC_SPONSORSHIP_POLICY_ID
+            sponsorshipPolicyId: import.meta.env.NEXT_PUBLIC_SPONSORSHIP_POLICY_ID
         }
     },
     bundler: {
@@ -33,6 +33,7 @@ Batua.create({
 
 export const config = createConfig({
     chains: [sepolia],
+    ssr: true,
     transports: {
         [sepolia.id]: http("https://ethereum-sepolia-rpc.publicnode.com")
     }

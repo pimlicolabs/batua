@@ -2,7 +2,7 @@ import { sepolia } from "viem/chains"
 import { http, createConfig } from "wagmi"
 import { Batua } from "@/registry/batua/batua"
 
-const pimlicoApiKey = process.env.NEXT_PUBLIC_PIMLICO_API_KEY || ""
+const pimlicoApiKey = import.meta.env.NEXT_PUBLIC_PIMLICO_API_KEY || ""
 
 Batua.create({
     dappName: "Pimlico",

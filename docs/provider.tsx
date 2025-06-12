@@ -8,7 +8,6 @@ import { capabilities } from "./wagmi"
 const queryClient = new QueryClient()
 
 export const Provider = ({ children }: { children: React.ReactNode }) => {
-    console.log("Provider")
     return (
         <React.StrictMode>
             <WagmiProvider config={config}>
