@@ -241,11 +241,6 @@
                     "target": "hooks/batua/useDecodedCallData.ts"
                 },
                 {
-                    "path": "registry/batua/hooks/batua/useEstimateUserOperation.ts",
-                    "type": "registry:hook",
-                    "target": "hooks/batua/useEstimateUserOperation.ts"
-                },
-                {
                     "path": "registry/batua/hooks/batua/useEthPrice.ts",
                     "type": "registry:hook",
                     "target": "hooks/batua/useEthPrice.ts"

@@ -1,3 +1,4 @@
+import { KernelSmartAccount } from "@/registry/batua/hooks/batua/useSmartAccount"
 import { useEffect, useState } from "react"
 import {
     erc721Abi,
@@ -199,15 +200,21 @@ const getErc721Info = async ({
 
 const simulate = async ({
     userOperation,
-    client
+    client,
+    smartAccountClient
 }: {
     userOperation: UserOperation<"0.7">
     client: PublicClient<Transport, Chain>
+    smartAccountClient: KernelSmartAccount
 }) => {
+    const decodedCalls = await smartAccountClient.account.decodeCalls?.(
+        userOperation.callData
+    )
+
     const { results } = await client
         .simulateCalls({
             account: userOperation.sender,
-            calls: [
+            calls: decodedCalls ?? [
                 {
                     to: userOperation.sender,
                     data: userOperation.callData
@@ -259,10 +266,12 @@ const simulate = async ({
 
 export const useAssetChangeEvents = ({
     userOperation,
-    client
+    client,
+    smartAccountClient
 }: {
     userOperation: UserOperation<"0.7"> | null
     client: PublicClient<Transport, Chain>
+    smartAccountClient: KernelSmartAccount | null
 }) => {
     const [assetChangeEvents, setAssetChangeEvents] = useState<
         AssetChangeEvent[] | null
@@ -271,15 +280,17 @@ export const useAssetChangeEvents = ({
     const [isLoading, setIsLoading] = useState(false)
 
     useEffect(() => {
-        if (!userOperation || isLoading) {
+        if (!userOperation || isLoading || !smartAccountClient) {
             return
         }
 
         setIsLoading(true)
 
-        simulate({ userOperation, client }).then((assetChangeEvents) => {
-            setAssetChangeEvents(assetChangeEvents)
-        })
+        simulate({ userOperation, client, smartAccountClient }).then(
+            (assetChangeEvents) => {
+                setAssetChangeEvents(assetChangeEvents)
+            }
+        )
     }, [userOperation, client])
 
     return assetChangeEvents

@@ -77,7 +77,8 @@ export const SendCalls = ({
 
     const assetChangeEvents = useAssetChangeEvents({
         userOperation,
-        client
+        client,
+        smartAccountClient
     })
 
     const onOpenChange = (open: boolean) => {
