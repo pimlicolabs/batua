@@ -34,24 +34,14 @@ export const CopyAddress = ({
                             setCopied(true)
                             setTimeout(() => setCopied(false), 1000)
                         }}
-                        className={`relative flex items-center justify-center font-mono text-xs bg-muted/10 hover:bg-muted px-3 py-0.5 rounded-md border-dashed border cursor-pointer transition-colors min-w-0 ${className}`}
+                        className={`font-mono text-xs bg-muted/10 hover:bg-muted px-3 py-0.5 rounded-md border-dashed border cursor-pointer min-w-0 ${className}`}
                         title=""
                     >
-                        {typeof name === "string" ? (
-                            <div
-                                className={`flex max-w-full text-muted-foreground truncate min-w-0 ${
-                                    copied ? "invisible" : "visible"
-                                }`}
-                            >
-                                {name}
-                            </div>
-                        ) : (
-                            <span
-                                className={`truncate ${copied ? "invisible" : "visible"}`}
-                            >
-                                {name}
-                            </span>
-                        )}
+                        <span
+                            className={`truncate ${copied ? "invisible" : "visible"}`}
+                        >
+                            {name}
+                        </span>
                         <Check
                             className={`h-5 w-5 text-green-500 absolute ${copied ? "visible" : "invisible"}`}
                         />

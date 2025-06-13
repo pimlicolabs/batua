@@ -27,7 +27,7 @@ export const coingeckoPriceManager = (
         }
         internal.store.setState((x) => ({
             ...x,
-            price: validatedData.data[0].current_price
+            price: Math.round(validatedData.data[0].current_price)
         }))
         return
     }

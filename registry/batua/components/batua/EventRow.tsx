@@ -12,7 +12,6 @@ export const EventRow = ({
     address: Address | string
     thirdColumn?: React.ReactNode
 }) => {
-
     return (
         <>
             {/* Icon cell */}
