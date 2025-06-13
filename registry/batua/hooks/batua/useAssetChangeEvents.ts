@@ -42,6 +42,7 @@ export type AssetChangeEvent<
 > & {
     tokenInfo?: TokenInfo
     nftInfo?: NftInfo
+    ensName?: string
 }
 
 const getErc20Info = async ({
@@ -54,49 +55,85 @@ const getErc20Info = async ({
     const erc20ContractAddresses = [
         ...new Set(events.map((event) => event.address))
     ]
-    const tokenInfoMap = new Map<Address, TokenInfo>()
 
-    await Promise.all(
-        erc20ContractAddresses.map(async (address) => {
-            try {
-                const [name, symbol, decimals] = await Promise.all([
-                    client.readContract({
+    const getSpenderOrToAddress = (event: AssetChangeEvent) => {
+        return "spender" in event.args
+            ? (event.args.spender as Address)
+            : "to" in event.args
+              ? (event.args.to as Address)
+              : undefined
+    }
+
+    const toAddresses = events.map((event) => getSpenderOrToAddress(event))
+
+    const tokenInfoMap = new Map<Address, TokenInfo>()
+    const ensNameMap = new Map<Address, string>()
+
+    await Promise.all([
+        ...toAddresses.map(async (address) => {
+            if (address) {
+                const ensName = await client
+                    .getEnsName({ address })
+                    .catch(() => null)
+                if (ensName) {
+                    ensNameMap.set(address, ensName)
+                }
+            }
+        }),
+        ...erc20ContractAddresses.map(async (address) => {
+            const [name, symbol, decimals] = await Promise.all([
+                client
+                    .readContract({
                         address,
                         abi: erc20Abi,
                         functionName: "name"
-                    }),
-                    client.readContract({
+                    })
+                    .catch(() => "ERC20"),
+                client
+                    .readContract({
                         address,
                         abi: erc20Abi,
                         functionName: "symbol"
-                    }),
-                    client.readContract({
+                    })
+                    .catch(() => "ERC20"),
+                client
+                    .readContract({
                         address,
                         abi: erc20Abi,
                         functionName: "decimals"
                     })
-                ])
+                    .catch(() => 18)
+            ])
 
-                // const logo =
-                //     "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+            // const logo =
+            //     "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
 
-                const logo = `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`
-
-                tokenInfoMap.set(address, {
-                    name,
-                    symbol,
-                    decimals,
-                    logo
-                })
-            } catch {
-                // Ignore errors, might not be an ERC20 token
+            let logo: string | undefined = undefined
+            // const logoUrl = `https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/${address}/logo.png`
+            const logoUrl =
+                "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+            try {
+                const res = await fetch(logoUrl, { method: "HEAD" })
+                if (res.ok) {
+                    logo = logoUrl
+                }
+            } catch (e) {
+                // ignore error, logo will be undefined
             }
+
+            tokenInfoMap.set(address, {
+                name,
+                symbol,
+                decimals,
+                logo
+            })
         })
-    )
+    ])
 
     return events.map((event) => ({
         ...event,
-        tokenInfo: tokenInfoMap.get(event.address)
+        tokenInfo: tokenInfoMap.get(event.address),
+        ensName: ensNameMap.get(getSpenderOrToAddress(event) ?? "0x")
     }))
 }
 
@@ -115,6 +152,29 @@ const getErc721Info = async ({
         Address,
         { name?: string; symbol?: string }
     >()
+
+    const getSpenderOrToAddress = (event: AssetChangeEvent) => {
+        return "spender" in event.args
+            ? (event.args.spender as Address)
+            : "to" in event.args
+              ? (event.args.to as Address)
+              : undefined
+    }
+
+    const toAddresses = events.map((event) => getSpenderOrToAddress(event))
+
+    const ensNameMap = new Map<Address, string>()
+
+    const endNamePromises = toAddresses.map(async (address) => {
+        if (address) {
+            const ensName = await client
+                .getEnsName({ address })
+                .catch(() => null)
+            if (ensName) {
+                ensNameMap.set(address, ensName)
+            }
+        }
+    })
 
     const erc721ContractPromises = erc721ContractAddresses.map(
         async (address) => {
@@ -142,7 +202,7 @@ const getErc721Info = async ({
         }
     )
 
-    await Promise.all(erc721ContractPromises)
+    await Promise.all([...erc721ContractPromises, ...endNamePromises])
 
     const enrichedEvents = await Promise.all(
         events.map(async (event) => {
@@ -154,6 +214,10 @@ const getErc721Info = async ({
                     symbol: contractInfo.symbol
                 }
             }
+
+            enrichedEvent.ensName = ensNameMap.get(
+                getSpenderOrToAddress(event) ?? "0x"
+            )
 
             if (event.eventName === "Transfer" && "tokenId" in event.args) {
                 try {

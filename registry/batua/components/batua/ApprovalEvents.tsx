@@ -111,7 +111,7 @@ export const ApprovalEvents = ({
                     key={`${event.address}-${event.args.spender}`}
                     icon={<ListCheck className="h-4 w-4" />}
                     name={
-                        <span className="inline-flex items-center gap-1">
+                        <span className="inline-flex items-center gap-1.5">
                             {event.tokenInfo?.logo && (
                                 <img
                                     src={event.tokenInfo.logo}
@@ -129,7 +129,10 @@ export const ApprovalEvents = ({
                             </div>
                         </span>
                     }
-                    address={spender}
+                    thirdColumn={
+                        <div className="text-sm text-muted-foreground">to</div>
+                    }
+                    address={event.ensName ?? spender}
                 />
             )
         }
@@ -149,7 +152,7 @@ export const ApprovalEvents = ({
                     key={`${event.address}-${operator}`}
                     icon={<ListCheck className="h-4 w-4" />}
                     name={`All NFTs ${event.nftInfo?.name ?? event.address}`}
-                    address={operator}
+                    address={event.ensName ?? operator}
                 />
             )
         }
