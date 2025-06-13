@@ -703,6 +703,12 @@ export default function Home() {
                             <h4 className="text-xl font-semibold mb-2">
                                 Step 2: Implement Batua
                             </h4>
+                            <div>
+                                Batua must only be used on client side. If you
+                                are using a server side rendering framework like
+                                next.js, you must configure Batua in a client
+                                side component.
+                            </div>
                             <div className="rounded-lg overflow-x-auto">
                                 <RenderCode code={UsageCode} />
                             </div>
