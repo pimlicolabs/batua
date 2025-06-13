@@ -99,7 +99,8 @@ Batua.create({
                 \`https://api.pimlico.io/v2/\${sepolia.id}/rpc?apikey=\${pimlicoApiKey}\`
             )
         }
-    }
+    },
+    chains: [sepolia]
 })`
 
 import { useState, useEffect } from "react"
