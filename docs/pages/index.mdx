@@ -6,8 +6,12 @@ import { HomePage } from 'vocs/components'
 import TryBatua from '@/docs/TryBatua'
 
 <HomePage.Root>
-  <HomePage.Logo />
   <HomePage.Tagline>Batua</HomePage.Tagline>
+  <HomePage.Description>
+    Easy to integrate embedded smart account secured by passkeys. 
+    Support for sponsoring transactions, batching multiple transactions, 
+    and complete code ownership with shadcn integration.
+  </HomePage.Description>
   <HomePage.InstallPackage name="shadcn@latest add https://batua.sh/install" type="init" />
   <HomePage.Description>
     Easy to integrate embedded smart account secured by passkeys. 
@@ -16,13 +20,13 @@ import TryBatua from '@/docs/TryBatua'
   </HomePage.Description>
   <HomePage.Buttons>
     <HomePage.Button href="/getting-started" variant="accent">Get started</HomePage.Button>
-    <HomePage.Button href="/try-batua">Try Batua</HomePage.Button>
+    {/* <HomePage.Button href="/try-batua">Try Batua</HomePage.Button> */}
     <HomePage.Button href="https://github.com/pimlicolabs/batua">GitHub</HomePage.Button>
   </HomePage.Buttons>
 </HomePage.Root>
 
-<TryBatua />
 
+  <TryBatua />
 
 ## Key Features
 
