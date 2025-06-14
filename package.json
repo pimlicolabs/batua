@@ -10,7 +10,7 @@
         "start": "next start",
         "format": "biome format . --write",
         "lint": "biome check .",
-        "batua:build": "shadcn build && bun scripts/update-batua-data.ts"
+        "batua:build": "shadcn build"
     },
     "dependencies": {
         "@openchainxyz/abi-guesser": "^1.0.2",

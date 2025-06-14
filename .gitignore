@@ -19,7 +19,7 @@
 
 # production
 /build
-docs/dist
+/docs/dist
 
 # misc
 .DS_Store
