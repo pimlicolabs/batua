@@ -5,12 +5,12 @@
     "type": "module",
     "scripts": {
         "dev": "vocs dev",
-        "build": "vocs build && pnpm run batua:build",
+        "build": "pnpm run batua:build && vocs build",
         "preview": "vocs preview",
         "start": "next start",
         "format": "biome format . --write",
         "lint": "biome check .",
-        "batua:build": "shadcn build"
+        "batua:build": "shadcn build --output ./docs/public/install"
     },
     "dependencies": {
         "@openchainxyz/abi-guesser": "^1.0.2",
