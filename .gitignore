@@ -20,6 +20,7 @@
 # production
 /build
 /docs/dist
+/docs/public/install/batua.json
 
 # misc
 .DS_Store
