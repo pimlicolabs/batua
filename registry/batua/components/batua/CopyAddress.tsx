@@ -34,16 +34,16 @@ export const CopyAddress = ({
                             setCopied(true)
                             setTimeout(() => setCopied(false), 1000)
                         }}
-                        className={`font-mono text-xs bg-muted/10 hover:bg-muted px-3 py-0.5 rounded-md border-dashed border cursor-pointer min-w-0 ${className}`}
+                        className={`flex items-center justify-center font-mono text-xs bg-muted/10 hover:bg-muted px-3 py-0.5 rounded-md border-dashed border cursor-pointer min-w-0 ${className}`}
                         title=""
                     >
                         <span
-                            className={`truncate ${copied ? "invisible" : "visible"}`}
+                            className={`truncate ${copied ? "hidden" : "block"}`}
                         >
                             {name}
                         </span>
                         <Check
-                            className={`h-5 w-5 text-green-500 absolute ${copied ? "visible" : "invisible"}`}
+                            className={`h-4 w-4 text-green-500 ${copied ? "block" : "hidden"}`}
                         />
                     </button>
                 </TooltipTrigger>
