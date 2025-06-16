@@ -199,16 +199,7 @@ export function ConnectButton() {
     }, [account.address, sendCalls])
 
     return (
-        <div className="max-w-3xl mx-auto px-4 py-12">
-
-            <div className="mt-14 space-y-6">
-                <div className="space-y-4">
-                    <h2 className="text-xl font-bold">Try Batua</h2>
-                    <p className="text-muted-foreground">
-                        Batua will work along side all the other injected and
-                        external wallets.
-                    </p>
-                </div>
+        <div className="w-fit">
                 {account.status === "connected" && (
                     <div className="mt-6 p-4 border rounded-lg bg-card shadow-sm">
                         <div className="mb-3 text-sm">
@@ -334,7 +325,7 @@ export function ConnectButton() {
                     </div>
                 )}
                 {account.status === "disconnected" && (
-                    <div className="flex flex-wrap gap-3">
+                    <div className="flex flex-wrap gap-3 w-fit">
                         {connectors.map(
                             (connector) =>
                                 connector.name === "Batua" && (
@@ -342,14 +333,14 @@ export function ConnectButton() {
                                         key={connector.uid}
                                         onClick={() => connect({ connector })}
                                         type="button"
-                                        className="flex items-center gap-2 w-60"
+                                        className="flex items-center gap-2 w-40"
                                         variant={
                                             connector.name === "Batua"
                                                 ? "default"
                                                 : "outline"
                                         }
                                     >
-                                        {connector.name}
+                                        Try Batua
                                     </Button>
                                 )
                         )}
@@ -361,7 +352,6 @@ export function ConnectButton() {
                     </div>
                 )}
             </div>
-        </div>
     )
 }
 
