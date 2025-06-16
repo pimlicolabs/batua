@@ -52,7 +52,6 @@ export const Login = ({
         [internal.config]
     )
 
-
     const createCredential = useCallback(async () => {
         if (dummy) {
             return
@@ -327,7 +326,10 @@ export const Login = ({
 
                 <div className="p-6 pt-5">
                     {error && (
-                        <Alert variant="destructive" className="mb-5">
+                        <Alert
+                            variant="destructive"
+                            className="mb-5 flex justify-center items-center"
+                        >
                             <AlertCircle className="h-4 w-4" />
                             <AlertDescription>{error}</AlertDescription>
                         </Alert>

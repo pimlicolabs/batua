@@ -1,24 +1,23 @@
-"use client"
-
 import { Button } from "@/components/ui/button";
-import { lazy, Suspense, useEffect, useState } from "react"
+import React, { lazy, Suspense } from "react"
 
-const Provider = lazy(() => import("@/docs/provider").then(mod => ({ default: mod.Provider })))
-const ConnectButton = lazy(() => import("@/docs/connectButton").then(mod => ({ default: mod.ConnectButton })))
+function lazyNoSSR<T extends React.ComponentType<any>>(factory: () => Promise<{ default: T }>): React.LazyExoticComponent<T> {
+    if (typeof window === "undefined") {
+        return lazy(() => new Promise<never>(() => {/* intentionally never resolves */})) as any;
+    }
+    return lazy(factory);
+}
+
+const Provider = lazyNoSSR(() => import("@/docs/provider").then(mod => ({ default: mod.Provider })));
+const ConnectButton = lazyNoSSR(() => import("@/docs/connectButton").then(mod => ({ default: mod.ConnectButton })));
 
 export default function TryBatua() {
-
-    const [isClient, setIsClient] = useState(false);
-
-    useEffect(() => {
-        setIsClient(true);
-    }, []);
 
     return (
         <div className="px-4 py-12 border-dashed border-ring border-2 rounded-lg -mx-50 min-h-96 flex items-center justify-center">
             <div className="mx-auto w-fit">
-                <Suspense fallback={<Button>Loading...</Button>}>
-                {isClient && <Provider><ConnectButton /></Provider>}
+                <Suspense fallback={<Button className="flex items-center gap-2 w-40">Try Batua</Button>}>
+                    <Provider><ConnectButton /></Provider>
                 </Suspense>
             </div>
         </div>

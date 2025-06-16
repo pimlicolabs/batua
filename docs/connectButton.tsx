@@ -199,7 +199,7 @@ export function ConnectButton() {
     }, [account.address, sendCalls])
 
     return (
-        <div className="w-fit">
+        <div className="w-fit flex items-center flex-col gap-2">
                 {account.status === "connected" && (
                     <div className="mt-6 p-4 border rounded-lg bg-card shadow-sm">
                         <div className="mb-3 text-sm">
@@ -324,7 +324,7 @@ export function ConnectButton() {
                         </div>
                     </div>
                 )}
-                {account.status === "disconnected" && (
+                {account.status !== "connected" && (
                     <div className="flex flex-wrap gap-3 w-fit">
                         {connectors.map(
                             (connector) =>

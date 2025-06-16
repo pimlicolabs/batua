@@ -18,7 +18,6 @@ export const Provider = {
         const provider = ProviderOx.from({
             ...emitter,
             request: async (request_) => {
-
                 let request: Rpc.parseRequest.ReturnType
                 try {
                     request = Rpc.parseRequest(request_)
