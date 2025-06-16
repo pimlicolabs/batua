@@ -6,7 +6,6 @@ import { useCallback, useEffect, useState } from "react";
 import { generatePrivateKey, privateKeyToAccount } from "viem/accounts";
 import { Loader2 } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { CopyAddress } from "@/registry/batua/components/batua/CopyAddress";
 
 const TEST_ERC20_TOKEN_ADDRESS =
@@ -22,6 +21,7 @@ export function ConnectButton() {
     const client = usePublicClient({
         chainId: config.state.chainId
     })
+    
 
     const {
         sendTransaction,
@@ -327,7 +327,9 @@ export function ConnectButton() {
                 )}
                 {account.status !== "connected" && (
                     <div className="flex flex-wrap gap-3 w-fit">
-                        {connectors.map(
+                        {Array.from(
+                            new Map(connectors.map(c => [c.id, c])).values()
+                        ).map(
                             (connector) =>
                                 connector.name === "Batua" && (
                                     <Button
@@ -341,7 +343,7 @@ export function ConnectButton() {
                                                 : "outline"
                                         }
                                     >
-                                        Try Batua
+                                        {connector.name === "Batua" ? "Try Batua" : connector.name}
                                     </Button>
                                 )
                         )}
