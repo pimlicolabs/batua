@@ -6,7 +6,7 @@ import {
 } from "@/components/ui/tooltip"
 import { Check } from "lucide-react"
 import { useState } from "react"
-import { Hex } from "viem"
+import type { Hex } from "viem"
 
 export const CopyAddress = ({
     name,

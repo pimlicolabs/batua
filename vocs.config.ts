@@ -11,8 +11,11 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 export default defineConfig({
   title: 'Batua',
   description: 'Easy to integrate embedded smart account secured by passkeys',
-  logoUrl: '/logo.svg',
+  logoUrl: '/logo.png',
   iconUrl: '/favicon.ico',
+  theme: {
+		accentColor: { light: "#7115AA", dark: "#a66cc9" },
+	},
   vite: {
     server: {
       host: '0.0.0.0',

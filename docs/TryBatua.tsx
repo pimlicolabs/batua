@@ -14,12 +14,10 @@ const ConnectButton = lazyNoSSR(() => import("@/docs/connectButton").then(mod =>
 export default function TryBatua() {
 
     return (
-        <div className="px-4 py-12 border-dashed border-ring border-2 rounded-lg -mx-50 min-h-96 flex items-center justify-center">
-            <div className="mx-auto w-fit">
-                <Suspense fallback={<Button className="flex items-center gap-2 w-40">Try Batua</Button>}>
-                    <Provider><ConnectButton /></Provider>
-                </Suspense>
-            </div>
+        <div className="px-4 py-12 border-dashed border-ring border-2 rounded-lg -mx-20 min-h-96 flex items-center justify-center">
+            <Suspense fallback={<Button className="flex items-center gap-2 w-40">Try Batua</Button>}>
+                <Provider><ConnectButton /></Provider>
+            </Suspense>
         </div>
     )
 }

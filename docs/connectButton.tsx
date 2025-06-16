@@ -7,6 +7,7 @@ import { generatePrivateKey, privateKeyToAccount } from "viem/accounts";
 import { Loader2 } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { CopyAddress } from "@/registry/batua/components/batua/CopyAddress";
 
 const TEST_ERC20_TOKEN_ADDRESS =
     "0xFC3e86566895Fb007c6A0d3809eb2827DF94F751" as const
@@ -201,15 +202,15 @@ export function ConnectButton() {
     return (
         <div className="w-fit flex items-center flex-col gap-2">
                 {account.status === "connected" && (
-                    <div className="mt-6 p-4 border rounded-lg bg-card shadow-sm">
+                    <div className="p-4 border rounded-lg bg-card shadow-sm">
                         <div className="mb-3 text-sm">
-                            <span className="font-semibold">Address:</span>{" "}
-                            {account.addresses[0]}
+                            {/* <span className="font-semibold">Address:</span>{" "} */}
+                            <CopyAddress className="py-2 text-2xl w-98" name={account.addresses[0]} value={account.addresses[0]} />
                         </div>
-                        <div className="mb-3 text-sm">
+                        {/* <div className="mb-3 text-sm">
                             <span className="font-semibold">Chain ID:</span>{" "}
                             {account.chainId}
-                        </div>
+                        </div> */}
                         {isPending && (
                             <div className="flex items-center gap-2 text-amber-500 mb-2">
                                 <Loader2 className="h-4 w-4 animate-spin text-amber-500" />
@@ -243,7 +244,7 @@ export function ConnectButton() {
                         {callStatus?.id && !callReceipts?.receipts && (
                             <div className="flex items-center gap-2 text-amber-500 mb-2">
                                 <Loader2 className="h-4 w-4 animate-spin text-amber-500" />
-                                Sending batch transaction...
+                                Sending batch...
                             </div>
                         )}
                         {callReceipts && (
@@ -293,7 +294,7 @@ export function ConnectButton() {
                                                     className="w-full"
                                                     variant="outline"
                                                 >
-                                                    Test batch transaction
+                                                    Send Batch
                                                 </Button>
                                             </span>
                                         </TooltipTrigger>
@@ -310,7 +311,7 @@ export function ConnectButton() {
                                     disabled={isPending}
                                     className="w-full"
                                 >
-                                    Mint test erc20 tokens
+                                    Mint ERC-20
                                 </Button>
                             </div>
                             <Button
