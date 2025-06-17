@@ -216,13 +216,13 @@ export function ConnectButton() {
     }, [account.address, sendCalls])
 
     return (
-        <div className="w-fit flex items-center flex-col gap-2">
+        <div className="w-fit flex items-center flex-col gap-2 max-w-[90vw]">
             {/* <ThemeCustomizer /> */}
                 {account.status === "connected" && (
-                    <div className="p-4 border rounded-lg bg-card shadow-sm">
+                    <div className="p-4 border rounded-lg bg-card shadow-sm max-w-[90vw]">
                         <div className="mb-3 text-sm">
                             {/* <span className="font-semibold">Address:</span>{" "} */}
-                            <CopyAddress className="py-2 text-2xl w-98" name={account.addresses[0]} value={account.addresses[0]} />
+                            <CopyAddress className="py-2 text-2xl w-98 max-w-[80vw]" name={account.addresses[0]} value={account.addresses[0]} />
                         </div>
                         {/* <div className="mb-3 text-sm">
                             <span className="font-semibold">Chain ID:</span>{" "}
@@ -254,7 +254,14 @@ export function ConnectButton() {
                                 <span className="font-semibold">
                                     Transaction hash:
                                 </span>{" "}
-                                {receipt.transactionHash}
+                                <a
+                                    href={`https://sepolia.etherscan.io/tx/${receipt.transactionHash}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="underline text-blue-600 hover:text-blue-800 break-all"
+                                >
+                                    {receipt.transactionHash}
+                                </a>
                             </div>
                         )}
 
@@ -289,7 +296,14 @@ export function ConnectButton() {
                                 <span className="font-semibold">
                                     Transaction hash:
                                 </span>{" "}
-                                {callReceipts.receipts[0].transactionHash}
+                                <a
+                                    href={`https://sepolia.etherscan.io/tx/${callReceipts.receipts[0].transactionHash}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="underline text-blue-600 hover:text-blue-800 break-all"
+                                >
+                                    {callReceipts.receipts[0].transactionHash}
+                                </a>
                             </div>
                         )}
 
@@ -343,7 +357,7 @@ export function ConnectButton() {
                     </div>
                 )}
                 {account.status !== "connected" && (
-                    <div className="flex flex-wrap gap-3 w-fit">
+                    <div className="flex flex-wrap gap-3 w-fit max-w-[90vw]">
                         {Array.from(
                             new Map(connectors.map(c => [c.id, c])).values()
                         ).map(
