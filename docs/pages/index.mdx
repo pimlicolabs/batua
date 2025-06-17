@@ -11,14 +11,13 @@ import TryBatua from '@/docs/TryBatua'
 import { IndexElement } from '@/docs/indexElement'
 import { ScanFace, Fuel, Paintbrush, Wand } from 'lucide-react'
 
-<div className="absolute max-w-[1120px] mx-auto w-full top-20 bottom-0 bg-[url('/banner.png')] dark:bg-[url('/banner.png')] bg-contain bg-center bg-no-repeat max-sm:hidden opacity-15" />
+<div className="absolute max-w-[1120px] mx-auto w-full top-[-600px] bottom-0 bg-[url('/banner.png')] dark:bg-[url('/banner.png')] bg-contain bg-center bg-no-repeat max-sm:hidden opacity-15" />
 
 <div className="max-w-[1120px] mx-auto vp-doc relative px-[24px] mb-[96px] mt-[32px] md:px-0 md:mb-[64px]">
   <div className="pt-[48px] max-sm:pt-0">
-    <div className="max-sm:px-0 flex justify-between z-0 max-md:justify-center">
+    <div className="max-sm:px-0 flex flex-col md:flex-row justify-between z-0 max-md:justify-center">
       <div className="space-y-8 max-w-[400px] flex flex-col items-start max-md:items-center">
-        {/* <img className="h-[72px] dark:invert-[1] max-sm:h-[60px]" src="/logo-light-hug.svg" alt="viem logo" /> */}
-        <div className="flex items-center gap-4 pt-20">
+        <div className="flex items-center gap-4 pt-10 sm:pt-20">
           <img className="h-20" src="/home-logo.svg" alt="Batua logo" />
         </div>
         <div className="font-regular text-[21px] max-sm:text-[18px] text-[#919193] max-md:text-center">A <span className="text-black dark:text-white">simple</span>, <span className="text-black dark:text-white">customizable</span>, and <span className="text-black dark:text-white">type-safe</span> smart account shadcn/ui component</div>
@@ -27,46 +26,46 @@ import { ScanFace, Fuel, Paintbrush, Wand } from 'lucide-react'
           <HomePage.Button href="https://github.com/pimlicolabs/batua">GitHub</HomePage.Button>
         </div>
       </div>
-      <div className="flex flex-col justify-between w-[440px] space-y-10 max-lg:w-[300px] max-md:hidden">
+      <div className="mt-10 md:mt-0 flex flex-col justify-between w-full sm:w-[440px] space-y-10 mx-auto md:mx-0">
           <TryBatua />
       </div>
     </div>
-    <div className='-mx-50 pt-0'>
-  <div className="mt-30 mx-auto w-4/6 grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-4 xl:gap-3 2xl:gap-6 md:grid-cols-12">
+    <div className='pt-0'>
+  <div className="mt-12 md:mt-30 mx-auto w-full px-4 grid grid-cols-1 gap-6 sm:grid-cols-2 md:gap-4 xl:gap-3 2xl:gap-6 md:grid-cols-12">
     <IndexElement contents={
-      <div className='flex flex-row gap-2 items-center'>
-        <div className="flex flex-col gap-4 mb-auto mt-4">
+      <div className='flex flex-col gap-4 items-start'>
+        <ScanFace className="w-24 h-24 text-ring sm:w-20 sm:h-20" strokeWidth={1} />
+        <div className="flex flex-col gap-4">
           <strong className='text-2xl'>Powered by Passkeys</strong>
           <p className="text-primary/60">User accounts are secured 100% by passkeys. No passwords, no emails, unphishable, sharable across devices.</p>
         </div>
-        <ScanFace className="w-40 h-40 text-ring" strokeWidth={1} />
       </div>
     } />
     <IndexElement contents={
-      <div className='flex flex-row gap-2 items-center'>
-        <div className="flex flex-col gap-4 mb-auto mt-4">
+      <div className='flex flex-col gap-4 items-start'>
+        <Fuel className="w-24 h-24 text-ring sm:w-20 sm:h-20" strokeWidth={1} />
+        <div className="flex flex-col gap-4">
           <strong className='text-2xl'>Gasless Transactions</strong>
           <p className="text-primary/60">Full ERC-4337 support, including gasless transactions, batching, and more.</p>
         </div>
-        <Fuel className="w-40 h-40 text-ring" strokeWidth={1} />
       </div>
     } />
     <IndexElement contents={
-      <div className='flex flex-row gap-2 items-center'>
-        <div className="flex flex-col gap-4 mb-auto mt-4">
+      <div className='flex flex-col gap-4 items-start'>
+        <Paintbrush className="w-24 h-24 text-ring sm:w-20 sm:h-20" strokeWidth={1} />
+        <div className="flex flex-col gap-4">
           <strong className='text-2xl'>Theme Integration</strong>
           <p className="text-primary/60">Built as a shadcn/ui component, embedding into your application's theme and letting you own the entire code.</p>
         </div>
-        <Paintbrush className="w-40 h-40 text-ring" strokeWidth={1} />
       </div>
     } />
     <IndexElement contents={
-      <div className='flex flex-row gap-2 items-center'>
-        <div className="flex flex-col gap-4 mb-auto mt-4">
+      <div className='flex flex-col gap-4 items-start'>
+        <Wand className="w-24 h-24 text-ring sm:w-20 sm:h-20" strokeWidth={1} />
+        <div className="flex flex-col gap-4">
           <strong className='text-2xl'>Wide Compatibility</strong>
           <p className="text-primary/60">Integrates smoothly with wagmi, viem, ethers.js, Privy, Dynamic, and more.</p>
         </div>
-        <Wand className="w-40 h-40 text-ring" strokeWidth={1} />
       </div>
     } />
   </div>

@@ -11,6 +11,22 @@ import { CopyAddress } from "@/registry/batua/components/batua/CopyAddress";
 const TEST_ERC20_TOKEN_ADDRESS =
     "0xFC3e86566895Fb007c6A0d3809eb2827DF94F751" as const
 
+    import { useThemeVars } from '@/lib/theme-vars'
+
+    function ThemeCustomizer() {
+  const { themeVars, setThemeVars } = useThemeVars()
+
+  return (
+    <button
+      onClick={() =>
+        setThemeVars({ primary: '#e11d48', foreground: '#ffffff' })
+      }
+    >
+      Make it pink
+    </button>
+  )
+}
+
 
 export function ConnectButton() {
     const account = useAccount()
@@ -201,6 +217,7 @@ export function ConnectButton() {
 
     return (
         <div className="w-fit flex items-center flex-col gap-2">
+            {/* <ThemeCustomizer /> */}
                 {account.status === "connected" && (
                     <div className="p-4 border rounded-lg bg-card shadow-sm">
                         <div className="mb-3 text-sm">
