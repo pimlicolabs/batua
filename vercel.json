@@ -1,3 +1,5 @@
 {
-    "rewrites": []
+    "rewrites": [
+      { "source": "/install", "destination": "/install/batua.json" }
+    ]
   }
