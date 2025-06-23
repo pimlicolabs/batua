@@ -29,7 +29,19 @@ export default defineConfig({
     define: {
       "process.env.VITE_PUBLIC_PIMLICO_API_KEY": JSON.stringify(process.env.VITE_PUBLIC_PIMLICO_API_KEY ?? ""),
       "process.env.VITE_PUBLIC_SPONSORSHIP_POLICY_ID": JSON.stringify(process.env.VITE_PUBLIC_SPONSORSHIP_POLICY_ID ?? "")
-    }
+    },
+    plugins: [
+      {
+        name: "batua-install-api-route",
+        configureServer(server) {
+          server.middlewares.use("/install", (req: any, res: any) => handler(req, res))
+        },
+        configurePreviewServer(server) {
+          server.middlewares.use("/install", (req: any, res: any) => handler(req, res))
+        },
+        apply: "serve",
+      },
+    ],
   },
   sidebar: [
     {
