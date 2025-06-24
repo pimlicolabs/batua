@@ -1,5 +1,7 @@
 {
+    "outputDirectory": "docs/dist",
     "rewrites": [
-      { "source": "/install", "destination": "/install/batua.json" }
+      { "source": "/install", "destination": "/api/install" },
+      { "source": "/count", "destination": "/api/count" }
     ]
   }
