@@ -16,7 +16,6 @@ Your todos in order are:
 <shadcn>
     Follow the instructions in order:
 
-    - Check if shadcn//ui is already installed or not. if installed, skip all the steps after this instructions and go back.
     - Check if the current project uses `src` directory or not.
     - If project uses `src` directory, then command to install shadcn is `pnpm dlx shadcn@latest init -t next -b neutral -d --src-dir -s`.
     - If the project does not use `src` directory, then command to install shadcn is `pnpm dlx shadcn@latest init -t next -b neutral -d -s`.
@@ -26,7 +25,6 @@ Your todos in order are:
 <wagmi>
     Follow the instructions in order:
 
-    - Check if wagmi is already installed or not. if installed, skip all the steps after this instructions and go back.
     - Following manual wagmi instructions at https://wagmi.sh/react/getting-started#manual-installation to install wagmi. Configure wagmi with only injected provider and no other provider
     - Add a connect button to the main page to allow users to connect to the website using their external wallets.
 
