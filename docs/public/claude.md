@@ -47,6 +47,7 @@ Execute in order:
 
    export const config = createConfig({
        chains: [mainnet, sepolia],
+       ssr: true,
        connectors: [injected()],
        transports: {
            [mainnet.id]: http(),
@@ -170,6 +171,7 @@ Execute in order:
        "your-pimlico-api-key";
 
    Batua.create({
+       chains: [sepolia],
        rpc: {
            transports: {
                [sepolia.id]: http(
