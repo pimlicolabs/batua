@@ -1,6 +1,7 @@
 {
     "outputDirectory": "docs/dist",
     "rewrites": [
-      { "source": "/install", "destination": "/api/install" }
+      { "source": "/install", "destination": "/api/install" },
+      { "source": "/count", "destination": "/api/count" }
     ]
   }
