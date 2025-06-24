@@ -1,3 +1,9 @@
+Your todos in order are:
+
+- Follow the instructions in <shadcn> section.
+- Follow the instructions in <wagmi> section.
+- Follow the instructions in <batua> section.
+
 # NOTES
 
 1. The set of instructions are always written to be executed with pnpm.
@@ -5,16 +11,7 @@
    using a different package manager.
 3. Before executing any command listed below, first convert that command to the
    user's preferred package manager and then execute them.
-
-# Instructions
-
-Follow the instructions in order:
-
-- Follow the instructions in <shadcn> section.
-- Follow the instructions in <wagmi> section.
-- Follow the instructions in <batua> section.
-
-USE only cli and DO NOT manually install anything.
+4. USE only cli and DO NOT manually install anything.
 
 <shadcn>
     Follow the instructions in order:
