@@ -55,8 +55,99 @@ Execute in order:
    });
    ```
 
-4. Set up providers in the root layout file
-5. Add a connect button component to the main page using wagmi's useConnect hook
+4. Create a client-side providers component:
+   - If using src directory: `src/components/providers.tsx`
+   - If not using src directory: `components/providers.tsx`
+
+   ```typescript
+   "use client";
+
+   import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+   import { WagmiProvider } from "wagmi";
+   import { config } from "@/lib/wagmi";
+   import { ReactNode } from "react";
+
+   const queryClient = new QueryClient();
+
+   export function Providers({ children }: { children: ReactNode }) {
+       return (
+           <WagmiProvider config={config}>
+               <QueryClientProvider client={queryClient}>
+                   {children}
+               </QueryClientProvider>
+           </WagmiProvider>
+       );
+   }
+   ```
+
+5. Update the root layout to use the providers (keep it as a server component):
+   ```typescript
+   import { Providers } from "@/components/providers";
+
+   export default function RootLayout({
+       children,
+   }: {
+       children: React.ReactNode;
+   }) {
+       return (
+           <html lang="en">
+               <body>
+                   <Providers>{children}</Providers>
+               </body>
+           </html>
+       );
+   }
+   ```
+
+6. Create a client-side connect button component:
+   - If using src directory: `src/components/connect-button.tsx`
+   - If not using src directory: `components/connect-button.tsx`
+
+   ```typescript
+   "use client";
+
+   import { useAccount, useConnect, useDisconnect } from "wagmi";
+   import { Button } from "@/components/ui/button";
+
+   export function ConnectButton() {
+       const { address, isConnected } = useAccount();
+       const { connect, connectors } = useConnect();
+       const { disconnect } = useDisconnect();
+
+       if (isConnected && address) {
+           return (
+               <div className="flex items-center gap-2">
+                   <span className="text-sm">
+                       {address.slice(0, 6)}...{address.slice(-4)}
+                   </span>
+                   <Button onClick={() => disconnect()} variant="outline">
+                       Disconnect
+                   </Button>
+               </div>
+           );
+       }
+
+       return (
+           <Button onClick={() => connect({ connector: connectors[0] })}>
+               Connect Wallet
+           </Button>
+       );
+   }
+   ```
+
+7. Add the connect button to your main page (can be a server component):
+   ```typescript
+   import { ConnectButton } from "@/components/connect-button";
+
+   export default function HomePage() {
+       return (
+           <main>
+               <ConnectButton />
+               {/* Rest of your page content */}
+           </main>
+       );
+   }
+   ```
 
 ## Task 3: Install and Configure Batua
 
@@ -119,3 +210,7 @@ Execute in order:
 - Always use CLI commands, never manual installation
 - If any command fails, stop and report the error before proceeding
 - Verify each installation step before moving forward
+- **CRITICAL for Next.js**: All wagmi hooks and components MUST be in client
+  components (files with 'use client' directive)
+- The root layout should remain a server component and only wrap children with
+  the client-side Providers component
